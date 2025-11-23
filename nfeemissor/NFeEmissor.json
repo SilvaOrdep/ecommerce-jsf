@@ -1,0 +1,12 @@
+{
+    "porta": "3435",
+    "webserviceUF": "BA",
+    "emitenteUF": "BA",
+    "webserviceAmbiente": 2,
+    "caminhoSchemas": "/home/roberto/schemas/",
+    "caminhoCertificado": "/home/roberto/certificados/certificado.pfx",
+    "senhaCertificado": "1234",
+    "caminhoXML": "/home/roberto/xml",
+    "gerarPDF": "1",
+    "observacoes": "Arquivo de configuração para emissor de NF-e - Versão didática"
+}

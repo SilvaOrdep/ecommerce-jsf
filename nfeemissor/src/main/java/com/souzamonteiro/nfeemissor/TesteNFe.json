@@ -7,7 +7,7 @@
             "mod": "65",
             "serie": "1",
             "nNF": "93",
-            "dhEmi": "2023-05-02 04:49:24",
+            "dhEmi": "2025-11-23 13:05:00",
             "tpNF": "1",
             "idDest": "1",
             "cMunFG": "2927408",
@@ -134,10 +134,12 @@
         "transp": {
             "modFrete": "9"
         },
-        "pag": [{
-            "tPag": "01",
-            "vPag": "13.00"
-        }],
+        "pag": {
+            "detPag": [{
+                "tPag": "01",
+                "vPag": "13.00"
+            }]
+        },
         "infAdic": {
             "infCpl": "Tributos Totais Incidentes (Lei Federal 12.741/2012): R$2,11"
         }
