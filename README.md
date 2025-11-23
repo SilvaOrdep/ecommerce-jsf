@@ -1,2 +1,2 @@
-# nfeemissor
-Emissor de NF-e
+# NFeEmissor
+Emissor de NF-e.
