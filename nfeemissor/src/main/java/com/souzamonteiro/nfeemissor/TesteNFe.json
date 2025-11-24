@@ -1,17 +1,17 @@
 {
     "infNFe": {
         "ide": {
-            "cUF": "13",
-            "cNF": "93",
+            "cUF": "29",
+            "cNF": "00000093",
             "natOp": "NOTA FISCAL CONSUMIDOR ELETRONICA",
-            "mod": "65",
+            "mod": "55",
             "serie": "1",
-            "nNF": "93",
-            "dhEmi": "2025-11-23 13:05:00",
+            "nNF": "95",
+            "dhEmi": "2023-05-02 04:49:24",
             "tpNF": "1",
             "idDest": "1",
             "cMunFG": "2927408",
-            "tpImp": "4",
+            "tpImp": "1",
             "tpEmis": "1",
             "cDV": "6",
             "tpAmb": "2",
@@ -23,7 +23,7 @@
         },
         "emit":{
             "CNPJ": "33630582000149",
-            "xNome": "Editora Roberto Luiz Souza Monteiro",
+            "xNome": "Editora Roberto LIEuiz Souza Monteiro",
             "IE": "158039716",
             "CRT": "3",
             "enderEmit": {

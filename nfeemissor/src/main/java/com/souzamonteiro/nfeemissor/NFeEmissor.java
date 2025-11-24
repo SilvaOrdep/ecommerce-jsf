@@ -220,7 +220,7 @@ public class NFeEmissor {
 
                 // CRIA O OBJETO InfNFe
                 InfNFe infNFe = new InfNFe();
-                infNFe.setId("NFe" + chave);
+                infNFe.setId(chave);
                 infNFe.setVersao(ConstantesUtil.VERSAO.NFE);
 
                 // PREENCHE A IDE (Identificação da NF-e)
@@ -302,7 +302,11 @@ public class NFeEmissor {
                     dest.setEnderDest(enderDest);
                 }
                 
-                dest.setIndIEDest(jsonDest.getString("indIEDest"));
+                if (jsonDest.has("indIEDest")) {
+                    dest.setIndIEDest(jsonDest.getString("indIEDest"));
+                } else {
+                    dest.setIndIEDest("9");
+                }
                 if (jsonDest.has("IE")) {
                     dest.setIE(jsonDest.getString("IE"));
                 }
