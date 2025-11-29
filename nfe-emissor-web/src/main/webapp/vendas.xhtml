@@ -1,172 +1,175 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    
-    <ui:composition template="template.xhtml">
-        <ui:define name="content">
-            <div class="p-p-4">
-                <h:form id="form">
-                    <p:card>
-                        <f:facet name="title">
-                            <div class="p-d-flex p-ai-center p-jc-between">
-                                <div>
-                                    <i class="pi pi-shopping-cart p-mr-2"></i>
-                                    <span>Vendas e Emissão de NF-e</span>
-                                </div>
-                                <p:commandButton value="Nova Venda" icon="pi pi-plus" 
-                                               action="#{vendaController.novaVenda}" 
-                                               update=":form:grid,:form:formPanel"
-                                               rendered="#{!vendaController.editando}"/>
+<ui:composition template="template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:define name="content">
+        <div class="p-p-4">
+            <h:form id="form">
+                <p:card>
+                    <f:facet name="title">
+                        <div class="p-d-flex p-ai-center p-jc-between">
+                            <div>
+                                <i class="pi pi-shopping-cart p-mr-2"></i>
+                                <span>Vendas e Emissão de NF-e</span>
                             </div>
-                        </f:facet>
-                        
-                        <f:facet name="content">
-                            <!-- Grid de Vendas -->
-                            <p:outputPanel id="grid" rendered="#{!vendaController.editando}">
-                                <p:dataTable id="vendasTable" var="venda" value="#{vendaController.vendas}" 
-                                           paginator="true" rows="10" 
-                                           emptyMessage="Nenhuma venda emitida">
-                                    
-                                    <p:column headerText="Número NF-e" style="width: 100px;">
-                                        <h:outputText value="#{venda.numeroNFe}"/>
-                                    </p:column>
-                                    
-                                    <p:column headerText="Cliente">
-                                        <h:outputText value="#{venda.cliente.xnome}"/>
-                                    </p:column>
-                                    
-                                    <p:column headerText="Data" style="width: 150px;">
-                                        <h:outputText value="#{venda.dataVenda}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    
-                                    <p:column headerText="Valor Total" style="width: 120px;">
-                                        <h:outputText value="#{venda.valorTotal}">
-                                            <f:convertNumber type="currency" currencyCode="BRL"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    
-                                    <p:column headerText="Status" style="width: 100px;">
-                                        <p:tag value="#{venda.status}" 
-                                             severity="#{venda.status == 'EMITIDA' ? 'success' : venda.status == 'PENDENTE' ? 'warning' : 'danger'}"/>
-                                    </p:column>
-                                    
-                                    <p:column headerText="Chave NF-e" style="width: 200px;">
-                                        <h:outputText value="#{venda.chaveNFe}" 
-                                                    rendered="#{venda.chaveNFe != null}"/>
-                                        <h:outputText value="-" rendered="#{venda.chaveNFe == null}"/>
-                                    </p:column>
-                                </p:dataTable>
-                            </p:outputPanel>
-                            
-                            <!-- Formulário de Venda -->
-                            <p:outputPanel id="formPanel" rendered="#{vendaController.editando}">
-                                <p:panel header="Nova Venda" style="margin-bottom: 20px;">
-                                    <div class="p-fluid">
-                                        <div class="p-grid">
-                                            <div class="p-col-12">
-                                                <p:outputLabel for="cliente" value="Cliente *"/>
-                                                <p:selectOneMenu id="cliente" value="#{vendaController.venda.cliente}" 
-                                                               required="true" requiredMessage="Selecione um cliente"
-                                                               style="width: 100%">
-                                                    <f:selectItem itemLabel="Selecione um cliente" itemValue="#{null}"/>
-                                                    <f:selectItems value="#{vendaController.clientes}" var="cli" 
-                                                                 itemLabel="#{cli.xnome} - #{cli.documento}" 
-                                                                 itemValue="#{cli}"/>
-                                                </p:selectOneMenu>
-                                            </div>
-                                        </div>
-                                        
-                                        <p:panel header="Itens da Venda" style="margin: 20px 0;">
-                                            <div class="p-grid">
-                                                <div class="p-col-12 p-md-6">
-                                                    <p:outputLabel for="produto" value="Produto"/>
-                                                    <p:selectOneMenu id="produto" value="#{vendaController.produtoSelecionado}" 
-                                                                   style="width: 100%">
-                                                        <f:selectItem itemLabel="Selecione um produto" itemValue="#{null}"/>
-                                                        <f:selectItems value="#{vendaController.produtos}" var="prod" 
-                                                                     itemLabel="#{prod.xprod} - R$ #{prod.vuncom}" 
-                                                                     itemValue="#{prod}"/>
-                                                    </p:selectOneMenu>
-                                                </div>
-                                                
-                                                <div class="p-col-12 p-md-4">
-                                                    <p:outputLabel for="quantidade" value="Quantidade"/>
-                                                    <p:inputNumber id="quantidade" value="#{vendaController.itemVenda.quantidade}" 
-                                                                 minValue="0.001" decimalPlaces="3"
-                                                                 style="width: 100%"/>
-                                                </div>
-                                                
-                                                <div class="p-col-12 p-md-2" style="display: flex; align-items: flex-end;">
-                                                    <p:commandButton value="Adicionar" icon="pi pi-plus" 
-                                                                   action="#{vendaController.adicionarItem}"
-                                                                   style="width: 100%;"
-                                                                   update=":form:vendaItens"/>
-                                                </div>
-                                            </div>
-                                            
-                                            <p:dataTable id="vendaItens" var="item" value="#{vendaController.venda.itens}" 
-                                                        emptyMessage="Nenhum item adicionado" style="margin-top: 20px;">
-                                                
-                                                <p:column headerText="Produto">
-                                                    <h:outputText value="#{item.produto.xprod}"/>
-                                                </p:column>
-                                                
-                                                <p:column headerText="Quantidade" style="width: 100px;">
-                                                    <h:outputText value="#{item.quantidade}">
-                                                        <f:convertNumber pattern="0.###"/>
-                                                    </h:outputText>
-                                                </p:column>
-                                                
-                                                <p:column headerText="Valor Unitário" style="width: 120px;">
-                                                    <h:outputText value="#{item.valorUnitario}">
-                                                        <f:convertNumber type="currency" currencyCode="BRL"/>
-                                                    </h:outputText>
-                                                </p:column>
-                                                
-                                                <p:column headerText="Valor Total" style="width: 120px;">
-                                                    <h:outputText value="#{item.valorTotal}">
-                                                        <f:convertNumber type="currency" currencyCode="BRL"/>
-                                                    </h:outputText>
-                                                </p:column>
-                                                
-                                                <p:column headerText="Ações" style="width: 80px;">
-                                                    <p:commandButton icon="pi pi-trash" title="Remover" 
-                                                                   action="#{vendaController.removerItem(item)}"
-                                                                   update=":form:vendaItens"/>
-                                                </p:column>
-                                            </p:dataTable>
-                                            
-                                            <div class="p-d-flex p-jc-end p-mt-3">
-                                                <h:outputText value="Total: " style="font-weight: bold; margin-right: 10px;"/>
-                                                <h:outputText value="#{vendaController.venda.valorTotal}" 
-                                                            style="font-weight: bold; font-size: 1.2rem;">
-                                                    <f:convertNumber type="currency" currencyCode="BRL"/>
-                                                </h:outputText>
-                                            </div>
-                                        </p:panel>
-                                        
-                                        <div class="p-d-flex p-jc-end p-mt-3">
-                                            <p:commandButton value="Finalizar Venda e Emitir NF-e" icon="pi pi-check" 
-                                                           action="#{vendaController.finalizarVenda}"
-                                                           style="background: #4CAF50; border: none;"
-                                                           update=":form:grid,:form:formPanel,:form:growl"/>
-                                            <p:commandButton value="Cancelar" icon="pi pi-times" 
-                                                           action="#{vendaController.cancelarVenda}"
-                                                           style="margin-left: 5px;"
-                                                           update=":form:grid,:form:formPanel"/>
+                            <p:commandButton value="Nova Venda" icon="pi pi-plus" 
+                                           action="#{vendaController.novaVenda}" 
+                                           update=":form:grid,:form:formPanel"
+                                           rendered="#{!vendaController.editando}"/>
+                        </div>
+                    </f:facet>
+
+                    <f:facet name="content">
+                        <!-- Grid de Vendas -->
+                        <p:outputPanel id="grid" rendered="#{!vendaController.editando}">
+                            <p:dataTable id="vendasTable" var="venda" value="#{vendaController.vendas}" 
+                                       paginator="true" rows="10" 
+                                       emptyMessage="Nenhuma venda emitida">
+
+                                <p:column headerText="Número NF-e" style="width: 100px;">
+                                    <h:outputText value="#{venda.numeroNFe}"/>
+                                </p:column>
+
+                                <p:column headerText="Cliente">
+                                    <h:outputText value="#{venda.cliente.xnome}"/>
+                                </p:column>
+
+                                <p:column headerText="Data" style="width: 150px;">
+                                    <h:outputText value="#{venda.dataVenda}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Valor Total" style="width: 120px;">
+                                    <h:outputText value="#{venda.valorTotal}">
+                                        <f:convertNumber type="currency" currencyCode="BRL"/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Status" style="width: 100px;">
+                                    <p:tag value="#{venda.status}" 
+                                         severity="#{venda.status == 'EMITIDA' ? 'success' : venda.status == 'PENDENTE' ? 'warning' : 'danger'}"/>
+                                </p:column>
+
+                                <p:column headerText="Chave NF-e" style="width: 200px;">
+                                    <h:outputText value="#{venda.chaveNFe}" 
+                                                rendered="#{venda.chaveNFe != null}"/>
+                                    <h:outputText value="-" rendered="#{venda.chaveNFe == null}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                        <!-- Formulário de Venda -->
+                        <p:outputPanel id="formPanel" rendered="#{vendaController.editando}">
+                            <p:panel header="Nova Venda" style="margin-bottom: 20px;">
+                                <div class="p-fluid">
+                                    <div class="p-grid">
+                                        <div class="p-col-12">
+                                            <p:outputLabel for="cliente" value="Cliente *"/>
+                                            <p:selectOneMenu id="cliente" value="#{vendaController.venda.cliente}" 
+                                                           required="true" requiredMessage="Selecione um cliente"
+                                                           style="width: 100%">
+                                                <f:selectItem itemLabel="Selecione um cliente" itemValue="#{null}"/>
+                                                <f:selectItems value="#{vendaController.clientes}" var="cli" 
+                                                             itemLabel="#{cli.xnome} - #{cli.documento}" 
+                                                             itemValue="#{cli}"/>
+                                            </p:selectOneMenu>
                                         </div>
                                     </div>
-                                </p:panel>
-                            </p:outputPanel>
-                        </f:facet>
-                    </p:card>
-                </h:form>
-            </div>
-        </ui:define>
-    </ui:composition>
-</html>
+
+                                    <p:panel header="Itens da Venda" style="margin: 20px 0;">
+                                        <div class="p-grid">
+                                            <div class="p-col-12 p-md-6">
+                                                <p:outputLabel for="produto" value="Produto"/>
+                                                <p:selectOneMenu id="produto" value="#{vendaController.produtoSelecionado}" 
+                                                               style="width: 100%">
+                                                    <f:selectItem itemLabel="Selecione um produto" itemValue="#{null}"/>
+                                                    <f:selectItems value="#{vendaController.produtos}" var="prod" 
+                                                                 itemLabel="#{prod.xprod} - R$ #{prod.vuncom}" 
+                                                                 itemValue="#{prod}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+
+                                            <div class="p-col-12 p-md-4">
+                                                <p:outputLabel for="quantidade" value="Quantidade"/>
+                                                <p:inputNumber id="quantidade" value="#{vendaController.itemVenda.quantidade}" 
+                                                             minValue="0.001" decimalPlaces="3"
+                                                             style="width: 100%"/>
+                                            </div>
+
+                                            <div class="p-col-12 p-md-2" style="display: flex; align-items: flex-end;">
+                                                <p:commandButton value="Adicionar" icon="pi pi-plus" 
+                                                               action="#{vendaController.adicionarItem}"
+                                                               style="width: 100%;"
+                                                               update=":form:vendaItens"/>
+                                            </div>
+                                        </div>
+
+                                        <p:dataTable id="vendaItens" var="item" value="#{vendaController.venda.itens}" 
+                                                    emptyMessage="Nenhum item adicionado" style="margin-top: 20px;">
+
+                                            <p:column headerText="Produto">
+                                                <h:outputText value="#{item.produto.xprod}"/>
+                                            </p:column>
+
+                                            <p:column headerText="Quantidade" style="width: 100px;">
+                                                <h:outputText value="#{item.quantidade}">
+                                                    <f:convertNumber pattern="0.###"/>
+                                                </h:outputText>
+                                            </p:column>
+
+                                            <p:column headerText="Valor Unitário" style="width: 120px;">
+                                                <h:outputText value="#{item.valorUnitario}">
+                                                    <f:convertNumber type="currency" currencyCode="BRL"/>
+                                                </h:outputText>
+                                            </p:column>
+
+                                            <p:column headerText="Valor Total" style="width: 120px;">
+                                                <h:outputText value="#{item.valorTotal}">
+                                                    <f:convertNumber type="currency" currencyCode="BRL"/>
+                                                </h:outputText>
+                                            </p:column>
+
+                                            <p:column headerText="Ações" style="width: 80px;">
+                                                <p:commandButton icon="pi pi-trash" title="Remover" 
+                                                               action="#{vendaController.removerItem(item)}"
+                                                               update=":form:vendaItens"/>
+                                            </p:column>
+                                        </p:dataTable>
+
+                                        <div class="p-d-flex p-jc-end p-mt-3">
+                                            <h:outputText value="Total: " style="font-weight: bold; margin-right: 10px;"/>
+                                            <h:outputText value="#{vendaController.venda.valorTotal}" 
+                                                        style="font-weight: bold; font-size: 1.2rem;">
+                                                <f:convertNumber type="currency" currencyCode="BRL"/>
+                                            </h:outputText>
+                                        </div>
+                                    </p:panel>
+
+                                    <div class="p-d-flex p-jc-end p-mt-3">
+                                        <p:commandButton value="Finalizar Venda e Emitir NF-e" icon="pi pi-check" 
+                                                       action="#{vendaController.finalizarVenda}"
+                                                       style="background: #4CAF50; border: none;"
+                                                       update=":form:grid,:form:formPanel,:form:growl"/>
+                                        <p:commandButton value="Cancelar" icon="pi pi-times" 
+                                                       action="#{vendaController.cancelarVenda}"
+                                                       style="margin-left: 5px;"
+                                                       update=":form:grid,:form:formPanel"/>
+                                    </div>
+                                </div>
+                            </p:panel>
+                        </p:outputPanel>
+                    </f:facet>
+                </p:card>
+            </h:form>
+        </div>
+        
+        <div class="p-p-4">
+            <h1>Bem-vindo ao Sistema NF-e</h1>
+            <p>Você está logado como: #{loginController.usuarioLogado.nome}</p>
+        </div>
+    </ui:define>
+</ui:composition>

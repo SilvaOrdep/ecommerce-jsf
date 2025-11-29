@@ -1,9 +1,9 @@
 package com.souzamonteiro.nfe.dao;
 
 import com.souzamonteiro.nfe.model.Empresa;
-//import jakarta.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
-//@Stateless
 public class EmpresaDAO extends GenericDAO<Empresa, Long> {
     
     public EmpresaDAO() {
@@ -16,10 +16,17 @@ public class EmpresaDAO extends GenericDAO<Empresa, Long> {
     }
     
     public Empresa getEmpresa() {
+        EntityManager em = getEntityManager();
         try {
-            return findAll().get(0);
+            TypedQuery<Empresa> query = em.createQuery(
+                "SELECT e FROM Empresa e", 
+                Empresa.class
+            );
+            return query.getResultList().stream().findFirst().orElse(null);
         } catch (Exception e) {
             return null;
+        } finally {
+            em.close();
         }
     }
 }

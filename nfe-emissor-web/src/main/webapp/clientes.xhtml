@@ -1,203 +1,206 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    
-    <ui:composition template="template.xhtml">
-        <ui:define name="content">
-            <div class="p-p-4">
-                <h:form id="form">
-                    <p:card>
-                        <f:facet name="title">
-                            <div class="p-d-flex p-ai-center p-jc-between">
-                                <div>
-                                    <i class="pi pi-users p-mr-2"></i>
-                                    <span>Cadastro de Clientes</span>
-                                </div>
-                                <p:commandButton value="Novo Cliente" icon="pi pi-plus" 
-                                               action="#{clienteController.novoCliente}" 
-                                               update=":form:grid,:form:formPanel"
-                                               rendered="#{!clienteController.editando}"/>
+<ui:composition template="template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:define name="content">
+        <div class="p-p-4">
+            <h:form id="form">
+                <p:card>
+                    <f:facet name="title">
+                        <div class="p-d-flex p-ai-center p-jc-between">
+                            <div>
+                                <i class="pi pi-users p-mr-2"></i>
+                                <span>Cadastro de Clientes</span>
                             </div>
-                        </f:facet>
-                        
-                        <f:facet name="content">
-                            <!-- Grid de Clientes -->
-                            <p:outputPanel id="grid" rendered="#{!clienteController.editando}">
-                                <p:dataTable id="clientesTable" var="cli" value="#{clienteController.clientes}" 
-                                           paginator="true" rows="10" 
-                                           selection="#{clienteController.clienteSelecionado}"
-                                           selectionMode="single"
-                                           emptyMessage="Nenhum cliente cadastrado">
-                                    
-                                    <p:column headerText="Nome/Razão Social">
-                                        <h:outputText value="#{cli.xnome}"/>
-                                    </p:column>
-                                    
-                                    <p:column headerText="CPF/CNPJ" style="width: 150px;">
-                                        <h:outputText value="#{cli.documento}">
-                                            <f:convertNumber type="pattern" pattern="###.###.###-##" rendered="#{cli.tipoDocumento == 'F'}"/>
-                                            <f:convertNumber type="pattern" pattern="##.###.###/####-##" rendered="#{cli.tipoDocumento == 'J'}"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    
-                                    <p:column headerText="Município">
-                                        <h:outputText value="#{cli.xmun}"/>
-                                    </p:column>
-                                    
-                                    <p:column headerText="UF" style="width: 50px;">
-                                        <h:outputText value="#{cli.uf}"/>
-                                    </p:column>
-                                    
-                                    <p:column headerText="Ações" style="width: 120px;">
-                                        <p:commandButton icon="pi pi-pencil" title="Editar" 
-                                                       action="#{clienteController.editarCliente}"
-                                                       update=":form:grid,:form:formPanel"/>
-                                        <p:commandButton icon="pi pi-trash" title="Excluir" 
-                                                       style="margin-left: 5px;"
-                                                       action="#{clienteController.excluirCliente}"
-                                                       update=":form:grid,:form:growl"/>
-                                    </p:column>
-                                </p:dataTable>
-                            </p:outputPanel>
-                            
-                            <!-- Formulário de Cliente -->
-                            <p:outputPanel id="formPanel" rendered="#{clienteController.editando}">
-                                <p:panel header="Cliente" style="margin-bottom: 20px;">
-                                    <div class="p-fluid">
-                                        <div class="p-grid">
-                                            <div class="p-col-12">
-                                                <p:outputLabel for="xnome" value="Nome/Razão Social *"/>
-                                                <p:inputText id="xnome" value="#{clienteController.cliente.xnome}" 
-                                                           required="true" requiredMessage="Nome é obrigatório"
-                                                           style="width: 100%"/>
-                                            </div>
-                                            
-                                            <div class="p-col-12 p-md-6">
-                                                <p:outputLabel for="cpf" value="CPF"/>
-                                                <p:inputMask id="cpf" value="#{clienteController.cliente.cpf}" 
-                                                            mask="999.999.999-99" 
-                                                            style="width: 100%"/>
-                                            </div>
-                                            
-                                            <div class="p-col-12 p-md-6">
-                                                <p:outputLabel for="cnpj" value="CNPJ"/>
-                                                <p:inputMask id="cnpj" value="#{clienteController.cliente.cnpj}" 
-                                                            mask="99.999.999/9999-99" 
-                                                            style="width: 100%"/>
-                                            </div>
-                                            
-                                            <div class="p-col-12 p-md-6">
-                                                <p:outputLabel for="ie" value="Inscrição Estadual"/>
-                                                <p:inputText id="ie" value="#{clienteController.cliente.ie}" 
-                                                           style="width: 100%"/>
-                                            </div>
-                                            
-                                            <div class="p-col-12 p-md-6">
-                                                <p:outputLabel for="indIEDest" value="Indicador IE"/>
-                                                <p:selectOneMenu id="indIEDest" value="#{clienteController.cliente.indIEDest}" 
-                                                               style="width: 100%">
-                                                    <f:selectItem itemLabel="Contribuinte ICMS" itemValue="1"/>
-                                                    <f:selectItem itemLabel="Contribuinte Isento" itemValue="2"/>
-                                                    <f:selectItem itemLabel="Não Contribuinte" itemValue="9"/>
-                                                </p:selectOneMenu>
-                                            </div>
+                            <p:commandButton value="Novo Cliente" icon="pi pi-plus" 
+                                           action="#{clienteController.novoCliente}" 
+                                           update=":form:grid,:form:formPanel"
+                                           rendered="#{!clienteController.editando}"/>
+                        </div>
+                    </f:facet>
+
+                    <f:facet name="content">
+                        <!-- Grid de Clientes -->
+                        <p:outputPanel id="grid" rendered="#{!clienteController.editando}">
+                            <p:dataTable id="clientesTable" var="cli" value="#{clienteController.clientes}" 
+                                       paginator="true" rows="10" 
+                                       selection="#{clienteController.clienteSelecionado}"
+                                       selectionMode="single"
+                                       emptyMessage="Nenhum cliente cadastrado">
+
+                                <p:column headerText="Nome/Razão Social">
+                                    <h:outputText value="#{cli.xnome}"/>
+                                </p:column>
+
+                                <p:column headerText="CPF/CNPJ" style="width: 150px;">
+                                    <h:outputText value="#{cli.documento}">
+                                        <f:convertNumber type="pattern" pattern="###.###.###-##" rendered="#{cli.tipoDocumento == 'F'}"/>
+                                        <f:convertNumber type="pattern" pattern="##.###.###/####-##" rendered="#{cli.tipoDocumento == 'J'}"/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Município">
+                                    <h:outputText value="#{cli.xmun}"/>
+                                </p:column>
+
+                                <p:column headerText="UF" style="width: 50px;">
+                                    <h:outputText value="#{cli.uf}"/>
+                                </p:column>
+
+                                <p:column headerText="Ações" style="width: 120px;">
+                                    <p:commandButton icon="pi pi-pencil" title="Editar" 
+                                                   action="#{clienteController.editarCliente}"
+                                                   update=":form:grid,:form:formPanel"/>
+                                    <p:commandButton icon="pi pi-trash" title="Excluir" 
+                                                   style="margin-left: 5px;"
+                                                   action="#{clienteController.excluirCliente}"
+                                                   update=":form:grid,:form:growl"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                        <!-- Formulário de Cliente -->
+                        <p:outputPanel id="formPanel" rendered="#{clienteController.editando}">
+                            <p:panel header="Cliente" style="margin-bottom: 20px;">
+                                <div class="p-fluid">
+                                    <div class="p-grid">
+                                        <div class="p-col-12">
+                                            <p:outputLabel for="xnome" value="Nome/Razão Social *"/>
+                                            <p:inputText id="xnome" value="#{clienteController.cliente.xnome}" 
+                                                       required="true" requiredMessage="Nome é obrigatório"
+                                                       style="width: 100%"/>
                                         </div>
-                                        
-                                        <p:panel header="Endereço" toggleable="true" collapsed="false">
-                                            <div class="p-grid">
-                                                <div class="p-col-12 p-md-8">
-                                                    <p:outputLabel for="xlgr" value="Logradouro *"/>
-                                                    <p:inputText id="xlgr" value="#{clienteController.cliente.xlgr}" 
-                                                               required="true" requiredMessage="Logradouro é obrigatório"
-                                                               style="width: 100%"/>
-                                                </div>
-                                                
-                                                <div class="p-col-12 p-md-4">
-                                                    <p:outputLabel for="nro" value="Número *"/>
-                                                    <p:inputText id="nro" value="#{clienteController.cliente.nro}" 
-                                                               required="true" requiredMessage="Número é obrigatório"
-                                                               style="width: 100%"/>
-                                                </div>
-                                                
-                                                <div class="p-col-12">
-                                                    <p:outputLabel for="xcpl" value="Complemento"/>
-                                                    <p:inputText id="xcpl" value="#{clienteController.cliente.xcpl}" 
-                                                               style="width: 100%"/>
-                                                </div>
-                                                
-                                                <div class="p-col-12 p-md-6">
-                                                    <p:outputLabel for="xbairro" value="Bairro *"/>
-                                                    <p:inputText id="xbairro" value="#{clienteController.cliente.xbairro}" 
-                                                               required="true" requiredMessage="Bairro é obrigatório"
-                                                               style="width: 100%"/>
-                                                </div>
-                                                
-                                                <div class="p-col-12 p-md-6">
-                                                    <p:outputLabel for="cmun" value="Código Município *"/>
-                                                    <p:inputText id="cmun" value="#{clienteController.cliente.cmun}" 
-                                                               required="true" requiredMessage="Código município é obrigatório"
-                                                               style="width: 100%"/>
-                                                </div>
-                                                
-                                                <div class="p-col-12 p-md-6">
-                                                    <p:outputLabel for="xmun" value="Município *"/>
-                                                    <p:inputText id="xmun" value="#{clienteController.cliente.xmun}" 
-                                                               required="true" requiredMessage="Município é obrigatório"
-                                                               style="width: 100%"/>
-                                                </div>
-                                                
-                                                <div class="p-col-12 p-md-3">
-                                                    <p:outputLabel for="uf" value="UF *"/>
-                                                    <p:selectOneMenu id="uf" value="#{clienteController.cliente.uf}" 
-                                                                   required="true" requiredMessage="UF é obrigatória"
-                                                                   style="width: 100%">
-                                                        <f:selectItems value="#{['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO']}" 
-                                                                     var="estado" itemLabel="#{estado}" itemValue="#{estado}"/>
-                                                    </p:selectOneMenu>
-                                                </div>
-                                                
-                                                <div class="p-col-12 p-md-3">
-                                                    <p:outputLabel for="cep" value="CEP *"/>
-                                                    <p:inputMask id="cep" value="#{clienteController.cliente.cep}" 
-                                                                mask="99999-999" 
-                                                                required="true" requiredMessage="CEP é obrigatório"
-                                                                style="width: 100%"/>
-                                                </div>
-                                                
-                                                <div class="p-col-12 p-md-6">
-                                                    <p:outputLabel for="fone" value="Telefone"/>
-                                                    <p:inputMask id="fone" value="#{clienteController.cliente.fone}" 
-                                                                mask="(99) 99999-9999" 
-                                                                style="width: 100%"/>
-                                                </div>
-                                                
-                                                <div class="p-col-12 p-md-6">
-                                                    <p:outputLabel for="email" value="Email"/>
-                                                    <p:inputText id="email" value="#{clienteController.cliente.email}" 
-                                                               style="width: 100%"/>
-                                                </div>
-                                            </div>
-                                        </p:panel>
-                                        
-                                        <div class="p-d-flex p-jc-end p-mt-3">
-                                            <p:commandButton value="Salvar" icon="pi pi-check" 
-                                                           action="#{clienteController.salvarCliente}"
-                                                           update=":form:grid,:form:formPanel,:form:growl"/>
-                                            <p:commandButton value="Cancelar" icon="pi pi-times" 
-                                                           action="#{clienteController.cancelarEdicao}"
-                                                           style="margin-left: 5px;"
-                                                           update=":form:grid,:form:formPanel"/>
+
+                                        <div class="p-col-12 p-md-6">
+                                            <p:outputLabel for="cpf" value="CPF"/>
+                                            <p:inputMask id="cpf" value="#{clienteController.cliente.cpf}" 
+                                                        mask="999.999.999-99" 
+                                                        style="width: 100%"/>
+                                        </div>
+
+                                        <div class="p-col-12 p-md-6">
+                                            <p:outputLabel for="cnpj" value="CNPJ"/>
+                                            <p:inputMask id="cnpj" value="#{clienteController.cliente.cnpj}" 
+                                                        mask="99.999.999/9999-99" 
+                                                        style="width: 100%"/>
+                                        </div>
+
+                                        <div class="p-col-12 p-md-6">
+                                            <p:outputLabel for="ie" value="Inscrição Estadual"/>
+                                            <p:inputText id="ie" value="#{clienteController.cliente.ie}" 
+                                                       style="width: 100%"/>
+                                        </div>
+
+                                        <div class="p-col-12 p-md-6">
+                                            <p:outputLabel for="indIEDest" value="Indicador IE"/>
+                                            <p:selectOneMenu id="indIEDest" value="#{clienteController.cliente.indIEDest}" 
+                                                           style="width: 100%">
+                                                <f:selectItem itemLabel="Contribuinte ICMS" itemValue="1"/>
+                                                <f:selectItem itemLabel="Contribuinte Isento" itemValue="2"/>
+                                                <f:selectItem itemLabel="Não Contribuinte" itemValue="9"/>
+                                            </p:selectOneMenu>
                                         </div>
                                     </div>
-                                </p:panel>
-                            </p:outputPanel>
-                        </f:facet>
-                    </p:card>
-                </h:form>
-            </div>
-        </ui:define>
-    </ui:composition>
-</html>
+
+                                    <p:panel header="Endereço" toggleable="true" collapsed="false">
+                                        <div class="p-grid">
+                                            <div class="p-col-12 p-md-8">
+                                                <p:outputLabel for="xlgr" value="Logradouro *"/>
+                                                <p:inputText id="xlgr" value="#{clienteController.cliente.xlgr}" 
+                                                           required="true" requiredMessage="Logradouro é obrigatório"
+                                                           style="width: 100%"/>
+                                            </div>
+
+                                            <div class="p-col-12 p-md-4">
+                                                <p:outputLabel for="nro" value="Número *"/>
+                                                <p:inputText id="nro" value="#{clienteController.cliente.nro}" 
+                                                           required="true" requiredMessage="Número é obrigatório"
+                                                           style="width: 100%"/>
+                                            </div>
+
+                                            <div class="p-col-12">
+                                                <p:outputLabel for="xcpl" value="Complemento"/>
+                                                <p:inputText id="xcpl" value="#{clienteController.cliente.xcpl}" 
+                                                           style="width: 100%"/>
+                                            </div>
+
+                                            <div class="p-col-12 p-md-6">
+                                                <p:outputLabel for="xbairro" value="Bairro *"/>
+                                                <p:inputText id="xbairro" value="#{clienteController.cliente.xbairro}" 
+                                                           required="true" requiredMessage="Bairro é obrigatório"
+                                                           style="width: 100%"/>
+                                            </div>
+
+                                            <div class="p-col-12 p-md-6">
+                                                <p:outputLabel for="cmun" value="Código Município *"/>
+                                                <p:inputText id="cmun" value="#{clienteController.cliente.cmun}" 
+                                                           required="true" requiredMessage="Código município é obrigatório"
+                                                           style="width: 100%"/>
+                                            </div>
+
+                                            <div class="p-col-12 p-md-6">
+                                                <p:outputLabel for="xmun" value="Município *"/>
+                                                <p:inputText id="xmun" value="#{clienteController.cliente.xmun}" 
+                                                           required="true" requiredMessage="Município é obrigatório"
+                                                           style="width: 100%"/>
+                                            </div>
+
+                                            <div class="p-col-12 p-md-3">
+                                                <p:outputLabel for="uf" value="UF *"/>
+                                                <p:selectOneMenu id="uf" value="#{clienteController.cliente.uf}" 
+                                                               required="true" requiredMessage="UF é obrigatória"
+                                                               style="width: 100%">
+                                                    <f:selectItems value="#{['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO']}" 
+                                                                 var="estado" itemLabel="#{estado}" itemValue="#{estado}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+
+                                            <div class="p-col-12 p-md-3">
+                                                <p:outputLabel for="cep" value="CEP *"/>
+                                                <p:inputMask id="cep" value="#{clienteController.cliente.cep}" 
+                                                            mask="99999-999" 
+                                                            required="true" requiredMessage="CEP é obrigatório"
+                                                            style="width: 100%"/>
+                                            </div>
+
+                                            <div class="p-col-12 p-md-6">
+                                                <p:outputLabel for="fone" value="Telefone"/>
+                                                <p:inputMask id="fone" value="#{clienteController.cliente.fone}" 
+                                                            mask="(99) 99999-9999" 
+                                                            style="width: 100%"/>
+                                            </div>
+
+                                            <div class="p-col-12 p-md-6">
+                                                <p:outputLabel for="email" value="Email"/>
+                                                <p:inputText id="email" value="#{clienteController.cliente.email}" 
+                                                           style="width: 100%"/>
+                                            </div>
+                                        </div>
+                                    </p:panel>
+
+                                    <div class="p-d-flex p-jc-end p-mt-3">
+                                        <p:commandButton value="Salvar" icon="pi pi-check" 
+                                                       action="#{clienteController.salvarCliente}"
+                                                       update=":form:grid,:form:formPanel,:form:growl"/>
+                                        <p:commandButton value="Cancelar" icon="pi pi-times" 
+                                                       action="#{clienteController.cancelarEdicao}"
+                                                       style="margin-left: 5px;"
+                                                       update=":form:grid,:form:formPanel"/>
+                                    </div>
+                                </div>
+                            </p:panel>
+                        </p:outputPanel>
+                    </f:facet>
+                </p:card>
+            </h:form>
+        </div>
+
+        <div class="p-p-4">
+            <h1>Bem-vindo ao Sistema NF-e</h1>
+            <p>Você está logado como: #{loginController.usuarioLogado.nome}</p>
+        </div>
+    </ui:define>
+</ui:composition>

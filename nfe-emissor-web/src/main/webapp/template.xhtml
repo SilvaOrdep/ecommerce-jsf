@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets">
     
     <f:view locale="pt_BR">
         <h:head>
@@ -12,32 +12,25 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             
             <h:outputStylesheet library="css" name="styles.css"/>
-            
-            <script type="text/javascript">
-                function handleCommand(args) {
-                    if (args && args.validationFailed) {
-                        PF('dlg').show();
-                    }
-                }
-            </script>
         </h:head>
         
         <h:body>
             <p:growl id="growl" showDetail="true" life="3000" />
             
-            <p:layout fullPage="true">
+            <!-- VERIFICAR SE ESTÁ LOGADO ANTES DE MOSTRAR O MENU -->
+            <p:layout fullPage="true" rendered="#{loginController.loggedIn}">
                 <p:layoutUnit position="north" size="60" header="NF-e Emissor" resizable="false">
                     <h:form id="menuForm">
                         <p:menubar>
                             <p:menuitem value="Início" icon="pi pi-home" outcome="index"/>
                             
-                            <p:submenu label="Cadastros" icon="pi pi-fw pi-database" rendered="#{loginController.isAdmin()}">
+                            <p:submenu label="Cadastros" icon="pi pi-fw pi-database" rendered="#{loginController.admin}">
                                 <p:menuitem value="Produtos" icon="pi pi-fw pi-box" outcome="produtos"/>
                                 <p:menuitem value="Clientes" icon="pi pi-fw pi-users" outcome="clientes"/>
                                 <p:menuitem value="Usuários" icon="pi pi-fw pi-user" outcome="usuarios"/>
                             </p:submenu>
                             
-                            <p:submenu label="Configurações" icon="pi pi-fw pi-cog" rendered="#{loginController.isAdmin()}">
+                            <p:submenu label="Configurações" icon="pi pi-fw pi-cog" rendered="#{loginController.admin}">
                                 <p:menuitem value="Empresa" icon="pi pi-fw pi-building" outcome="empresa"/>
                                 <p:menuitem value="Sistema" icon="pi pi-fw pi-sliders-h" outcome="configuracao"/>
                             </p:submenu>
@@ -58,6 +51,13 @@
                     <ui:insert name="content">Conteúdo</ui:insert>
                 </p:layoutUnit>
             </p:layout>
+            
+            <!-- SE NÃO ESTIVER LOGADO, REDIRECIONAR PARA LOGIN -->
+            <ui:fragment rendered="#{not loginController.loggedIn}">
+                <script type="text/javascript">
+                    window.location.href = '#{facesContext.externalContext.requestContextPath}/login.xhtml';
+                </script>
+            </ui:fragment>
         </h:body>
     </f:view>
 </html>

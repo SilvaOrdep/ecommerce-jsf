@@ -1,11 +1,10 @@
 package com.souzamonteiro.nfe.dao;
 
 import com.souzamonteiro.nfe.model.Cliente;
-//import jakarta.ejb.Stateless;
-import jakarta.persistence.TypedQuery;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
-//@Stateless
 public class ClienteDAO extends GenericDAO<Cliente, Long> {
     
     public ClienteDAO() {
@@ -18,14 +17,20 @@ public class ClienteDAO extends GenericDAO<Cliente, Long> {
     }
     
     public List<Cliente> findAtivos() {
-        TypedQuery<Cliente> query = em.createQuery(
-            "SELECT c FROM Cliente c WHERE c.ativo = true ORDER BY c.xnome", 
-            Cliente.class
-        );
-        return query.getResultList();
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Cliente> query = em.createQuery(
+                "SELECT c FROM Cliente c WHERE c.ativo = true ORDER BY c.xnome", 
+                Cliente.class
+            );
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
     }
     
     public Cliente findByDocumento(String documento) {
+        EntityManager em = getEntityManager();
         try {
             TypedQuery<Cliente> query = em.createQuery(
                 "SELECT c FROM Cliente c WHERE c.cpf = :doc OR c.cnpj = :doc", 
@@ -35,6 +40,8 @@ public class ClienteDAO extends GenericDAO<Cliente, Long> {
             return query.getSingleResult();
         } catch (Exception e) {
             return null;
+        } finally {
+            em.close();
         }
     }
 }

@@ -14,99 +14,92 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <version.jakarta.faces>4.0.1</version.jakarta.faces>
+        <version.jakarta.faces>2.3.9</version.jakarta.faces>
         <version.primefaces>12.0.0</version.primefaces>
-        <version.hibernate>6.2.7.Final</version.hibernate>
+        <version.hibernate>5.6.15.Final</version.hibernate>
         <version.mysql>8.0.33</version.mysql>
-        <version.weld>3.1.9.Final</version.weld>
+        <version.jakarta.persistence>3.0.0</version.jakarta.persistence>
+        <version.hibernate.validator>8.0.1.Final</version.hibernate.validator>
+        <version.jakarta.validation>3.0.2</version.jakarta.validation>
     </properties>
-    
+
     <dependencies>
-        <!-- Jakarta Faces API + Implementation -->
+        <!-- JSF -->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.faces</artifactId>
             <version>${version.jakarta.faces}</version>
         </dependency>
-        
-        <!-- Jakarta Servlet -->
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>5.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- Jakarta Persistence -->
-        <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-        
-        <!-- Jakarta Validation -->
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <version>3.0.2</version>
-        </dependency>
-        
-        <!-- Jakarta CDI -->
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-        
-        <!-- Jakarta Annotations -->
-        <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        
+
         <!-- PrimeFaces -->
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>${version.primefaces}</version>
         </dependency>
-        
-        <!-- Hibernate Core -->
+
+        <!-- Hibernate -->
         <dependency>
-            <groupId>org.hibernate.orm</groupId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${version.hibernate}</version>
         </dependency>
-        
-        <!-- MySQL Connector -->
+
+        <!-- JPA API -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>${version.jakarta.persistence}</version>
+        </dependency>
+
+        <!-- MySQL -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>${version.mysql}</version>
         </dependency>
-        
-        <!-- CDI Weld para Tomcat -->
+
+        <!-- Servlet API -->
         <dependency>
-            <groupId>org.jboss.weld.servlet</groupId>
-            <artifactId>weld-servlet-core</artifactId>
-            <version>${version.weld}</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>5.0.0</version>
+            <scope>provided</scope>
         </dependency>
-        
-        <!-- JSON -->
+
+        <!-- JSTL -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <!-- JSON Processing -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20231013</version>
         </dependency>
-        
-        <!-- Hibernate Validator -->
+
+        <!-- Bean Validation -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${version.jakarta.validation}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>8.0.0.Final</version>
+            <version>${version.hibernate.validator}</version>
         </dependency>
-        
+
         <!-- EL Implementation -->
         <dependency>
             <groupId>org.glassfish</groupId>
@@ -125,18 +118,12 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
-                    <parameters>true</parameters>
                 </configuration>
             </plugin>
-            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <packagingExcludes>WEB-INF/lib/jakarta.faces-*.jar</packagingExcludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,11 +1,10 @@
 package com.souzamonteiro.nfe.dao;
 
 import com.souzamonteiro.nfe.model.Produto;
-//import jakarta.ejb.Stateless;
-import jakarta.persistence.TypedQuery;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
-//@Stateless
 public class ProdutoDAO extends GenericDAO<Produto, Long> {
     
     public ProdutoDAO() {
@@ -18,14 +17,20 @@ public class ProdutoDAO extends GenericDAO<Produto, Long> {
     }
     
     public List<Produto> findAtivos() {
-        TypedQuery<Produto> query = em.createQuery(
-            "SELECT p FROM Produto p WHERE p.ativo = true ORDER BY p.xprod", 
-            Produto.class
-        );
-        return query.getResultList();
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Produto> query = em.createQuery(
+                "SELECT p FROM Produto p WHERE p.ativo = true ORDER BY p.xprod", 
+                Produto.class
+            );
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
     }
     
     public Produto findByCodigo(String codigo) {
+        EntityManager em = getEntityManager();
         try {
             TypedQuery<Produto> query = em.createQuery(
                 "SELECT p FROM Produto p WHERE p.cprod = :codigo", 
@@ -35,6 +40,8 @@ public class ProdutoDAO extends GenericDAO<Produto, Long> {
             return query.getSingleResult();
         } catch (Exception e) {
             return null;
+        } finally {
+            em.close();
         }
     }
 }

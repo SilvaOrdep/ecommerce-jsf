@@ -1,9 +1,9 @@
 package com.souzamonteiro.nfe.dao;
 
 import com.souzamonteiro.nfe.model.Configuracao;
-//import jakarta.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
-//@Stateless
 public class ConfiguracaoDAO extends GenericDAO<Configuracao, Long> {
     
     public ConfiguracaoDAO() {
@@ -16,10 +16,17 @@ public class ConfiguracaoDAO extends GenericDAO<Configuracao, Long> {
     }
     
     public Configuracao getConfiguracao() {
+        EntityManager em = getEntityManager();
         try {
-            return findAll().get(0);
+            TypedQuery<Configuracao> query = em.createQuery(
+                "SELECT c FROM Configuracao c", 
+                Configuracao.class
+            );
+            return query.getResultList().stream().findFirst().orElse(null);
         } catch (Exception e) {
             return null;
+        } finally {
+            em.close();
         }
     }
 }

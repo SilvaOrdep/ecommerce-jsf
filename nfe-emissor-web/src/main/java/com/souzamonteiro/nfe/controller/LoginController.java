@@ -2,80 +2,71 @@ package com.souzamonteiro.nfe.controller;
 
 import com.souzamonteiro.nfe.dao.UsuarioDAO;
 import com.souzamonteiro.nfe.model.Usuario;
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import java.io.Serializable;
 
-@Named
+@ManagedBean
 @SessionScoped
 public class LoginController implements Serializable {
-    
-    @Inject
-    private UsuarioDAO usuarioDAO;
     
     private String login;
     private String senha;
     private Usuario usuarioLogado;
+    private UsuarioDAO usuarioDAO = new UsuarioDAO();
     
     public String login() {
         try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-            
-            // Tentar autenticar via container
-            request.login(login, senha);
-            
             // Buscar usuário no banco
             usuarioLogado = usuarioDAO.findByLogin(login);
             if (usuarioLogado == null) {
                 usuarioLogado = usuarioDAO.findByEmail(login);
             }
             
-            if (usuarioLogado != null && usuarioLogado.getAtivo()) {
+            if (usuarioLogado != null && usuarioLogado.getAtivo() 
+                && usuarioLogado.getSenha().equals(senha)) {
                 return "index?faces-redirect=true";
             } else {
-                request.logout();
-                context.addMessage(null, 
+                FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Erro", "Usuário inativo ou não encontrado."));
+                    "Erro", "Login ou senha inválidos."));
                 return null;
             }
             
-        } catch (ServletException e) {
+        } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                "Erro", "Login ou senha inválidos."));
+                "Erro", "Erro ao realizar login: " + e.getMessage()));
             return null;
         }
     }
     
     public String logout() {
-        try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-            request.logout();
-            
-            usuarioLogado = null;
-            login = null;
-            senha = null;
-            
-            return "/login?faces-redirect=true";
-        } catch (ServletException e) {
-            return "/login?faces-redirect=true";
-        }
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        usuarioLogado = null;
+        login = null;
+        senha = null;
+        return "/login?faces-redirect=true";
+    }
+    
+    // Métodos para o template.xhtml
+    public boolean isAdmin() {
+        return usuarioLogado != null && "ADMIN".equals(usuarioLogado.getPerfil());
     }
     
     public boolean isLoggedIn() {
         return usuarioLogado != null;
     }
     
-    public boolean isAdmin() {
-        return usuarioLogado != null && "ADMIN".equals(usuarioLogado.getPerfil());
+    // Getters para o template.xhtml (propriedades)
+    public boolean getAdmin() {
+        return isAdmin();
+    }
+    
+    public boolean getLoggedIn() {
+        return isLoggedIn();
     }
     
     // Getters e Setters

@@ -2,24 +2,19 @@ package com.souzamonteiro.nfe.controller;
 
 import com.souzamonteiro.nfe.dao.ProdutoDAO;
 import com.souzamonteiro.nfe.model.Produto;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import jakarta.annotation.PostConstruct;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import org.primefaces.PrimeFaces;
-
 import java.io.Serializable;
 import java.util.List;
 
-@Named
+@ManagedBean
 @ViewScoped
 public class ProdutoController implements Serializable {
     
-    @Inject
-    private ProdutoDAO produtoDAO;
-    
+    private ProdutoDAO produtoDAO = new ProdutoDAO();
     private List<Produto> produtos;
     private Produto produto;
     private Produto produtoSelecionado;
@@ -66,7 +61,6 @@ public class ProdutoController implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_INFO, 
                 "Sucesso", "Produto salvo com sucesso."));
                 
-            PrimeFaces.current().executeScript("PF('produtoDialog').hide()");
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, 

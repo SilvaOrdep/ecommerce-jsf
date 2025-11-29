@@ -2,24 +2,19 @@ package com.souzamonteiro.nfe.controller;
 
 import com.souzamonteiro.nfe.dao.ClienteDAO;
 import com.souzamonteiro.nfe.model.Cliente;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import jakarta.annotation.PostConstruct;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import org.primefaces.PrimeFaces;
-
 import java.io.Serializable;
 import java.util.List;
 
-@Named
+@ManagedBean
 @ViewScoped
 public class ClienteController implements Serializable {
     
-    @Inject
-    private ClienteDAO clienteDAO;
-    
+    private ClienteDAO clienteDAO = new ClienteDAO();
     private List<Cliente> clientes;
     private Cliente cliente;
     private Cliente clienteSelecionado;
@@ -75,7 +70,6 @@ public class ClienteController implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_INFO, 
                 "Sucesso", "Cliente salvo com sucesso."));
                 
-            PrimeFaces.current().executeScript("PF('clienteDialog').hide()");
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, 

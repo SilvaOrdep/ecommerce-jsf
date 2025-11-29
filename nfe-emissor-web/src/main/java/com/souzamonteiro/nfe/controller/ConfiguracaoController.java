@@ -2,22 +2,18 @@ package com.souzamonteiro.nfe.controller;
 
 import com.souzamonteiro.nfe.dao.ConfiguracaoDAO;
 import com.souzamonteiro.nfe.model.Configuracao;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import jakarta.annotation.PostConstruct;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
 import java.io.Serializable;
 
-@Named
+@ManagedBean
 @ViewScoped
 public class ConfiguracaoController implements Serializable {
     
-    @Inject
-    private ConfiguracaoDAO configuracaoDAO;
-    
+    private ConfiguracaoDAO configuracaoDAO = new ConfiguracaoDAO();
     private Configuracao configuracao;
     
     @PostConstruct

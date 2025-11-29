@@ -1,99 +1,102 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    
-    <ui:composition template="template.xhtml">
-        <ui:define name="content">
-            <div class="p-p-4">
-                <div class="p-grid">
-                    <div class="p-col-12">
-                        <p:card>
-                            <f:facet name="title">
-                                <div class="p-d-flex p-ai-center">
-                                    <i class="pi pi-home p-mr-2"></i>
-                                    <span>Dashboard</span>
+<ui:composition template="template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:define name="content">
+        <div class="p-p-4">
+            <div class="p-grid">
+                <div class="p-col-12">
+                    <p:card>
+                        <f:facet name="title">
+                            <div class="p-d-flex p-ai-center">
+                                <i class="pi pi-home p-mr-2"></i>
+                                <span>Dashboard</span>
+                            </div>
+                        </f:facet>
+                        <f:facet name="content">
+                            <div class="p-grid">
+                                <div class="p-col-12 p-md-4">
+                                    <p:card style="background: #4CAF50; color: white;">
+                                        <f:facet name="title">
+                                            <div class="p-d-flex p-ai-center">
+                                                <i class="pi pi-shopping-cart p-mr-2"></i>
+                                                <span>Vendas Hoje</span>
+                                            </div>
+                                        </f:facet>
+                                        <f:facet name="content">
+                                            <h1 style="font-size: 2.5rem; margin: 0; text-align: center;">0</h1>
+                                            <p style="text-align: center; margin: 0;">NF-e emitidas</p>
+                                        </f:facet>
+                                    </p:card>
                                 </div>
-                            </f:facet>
-                            <f:facet name="content">
+
+                                <div class="p-col-12 p-md-4">
+                                    <p:card style="background: #2196F3; color: white;">
+                                        <f:facet name="title">
+                                            <div class="p-d-flex p-ai-center">
+                                                <i class="pi pi-box p-mr-2"></i>
+                                                <span>Produtos</span>
+                                            </div>
+                                        </f:facet>
+                                        <f:facet name="content">
+                                            <h1 style="font-size: 2.5rem; margin: 0; text-align: center;">#{produtoController.produtos.size()}</h1>
+                                            <p style="text-align: center; margin: 0;">Cadastrados</p>
+                                        </f:facet>
+                                    </p:card>
+                                </div>
+
+                                <div class="p-col-12 p-md-4">
+                                    <p:card style="background: #FF9800; color: white;">
+                                        <f:facet name="title">
+                                            <div class="p-d-flex p-ai-center">
+                                                <i class="pi pi-users p-mr-2"></i>
+                                                <span>Clientes</span>
+                                            </div>
+                                        </f:facet>
+                                        <f:facet name="content">
+                                            <h1 style="font-size: 2.5rem; margin: 0; text-align: center;">#{clienteController.clientes.size()}</h1>
+                                            <p style="text-align: center; margin: 0;">Cadastrados</p>
+                                        </f:facet>
+                                    </p:card>
+                                </div>
+                            </div>
+
+                            <div class="p-mt-4">
+                                <h3>Ações Rápidas</h3>
                                 <div class="p-grid">
-                                    <div class="p-col-12 p-md-4">
-                                        <p:card style="background: #4CAF50; color: white;">
-                                            <f:facet name="title">
-                                                <div class="p-d-flex p-ai-center">
-                                                    <i class="pi pi-shopping-cart p-mr-2"></i>
-                                                    <span>Vendas Hoje</span>
-                                                </div>
-                                            </f:facet>
-                                            <f:facet name="content">
-                                                <h1 style="font-size: 2.5rem; margin: 0; text-align: center;">0</h1>
-                                                <p style="text-align: center; margin: 0;">NF-e emitidas</p>
-                                            </f:facet>
-                                        </p:card>
+                                    <div class="p-col-12 p-md-3">
+                                        <p:commandButton value="Nova Venda" icon="pi pi-plus" 
+                                                       outcome="vendas" style="width: 100%;"/>
                                     </div>
-                                    
-                                    <div class="p-col-12 p-md-4">
-                                        <p:card style="background: #2196F3; color: white;">
-                                            <f:facet name="title">
-                                                <div class="p-d-flex p-ai-center">
-                                                    <i class="pi pi-box p-mr-2"></i>
-                                                    <span>Produtos</span>
-                                                </div>
-                                            </f:facet>
-                                            <f:facet name="content">
-                                                <h1 style="font-size: 2.5rem; margin: 0; text-align: center;">#{produtoController.produtos.size()}</h1>
-                                                <p style="text-align: center; margin: 0;">Cadastrados</p>
-                                            </f:facet>
-                                        </p:card>
+                                    <div class="p-col-12 p-md-3">
+                                        <p:commandButton value="Cadastrar Produto" icon="pi pi-box" 
+                                                       outcome="produtos" rendered="#{loginController.isAdmin()}" 
+                                                       style="width: 100%;"/>
                                     </div>
-                                    
-                                    <div class="p-col-12 p-md-4">
-                                        <p:card style="background: #FF9800; color: white;">
-                                            <f:facet name="title">
-                                                <div class="p-d-flex p-ai-center">
-                                                    <i class="pi pi-users p-mr-2"></i>
-                                                    <span>Clientes</span>
-                                                </div>
-                                            </f:facet>
-                                            <f:facet name="content">
-                                                <h1 style="font-size: 2.5rem; margin: 0; text-align: center;">#{clienteController.clientes.size()}</h1>
-                                                <p style="text-align: center; margin: 0;">Cadastrados</p>
-                                            </f:facet>
-                                        </p:card>
+                                    <div class="p-col-12 p-md-3">
+                                        <p:commandButton value="Cadastrar Cliente" icon="pi pi-user-plus" 
+                                                       outcome="clientes" rendered="#{loginController.isAdmin()}" 
+                                                       style="width: 100%;"/>
+                                    </div>
+                                    <div class="p-col-12 p-md-3">
+                                        <p:commandButton value="Configurações" icon="pi pi-cog" 
+                                                       outcome="configuracao" rendered="#{loginController.isAdmin()}" 
+                                                       style="width: 100%;"/>
                                     </div>
                                 </div>
-                                
-                                <div class="p-mt-4">
-                                    <h3>Ações Rápidas</h3>
-                                    <div class="p-grid">
-                                        <div class="p-col-12 p-md-3">
-                                            <p:commandButton value="Nova Venda" icon="pi pi-plus" 
-                                                           outcome="vendas" style="width: 100%;"/>
-                                        </div>
-                                        <div class="p-col-12 p-md-3">
-                                            <p:commandButton value="Cadastrar Produto" icon="pi pi-box" 
-                                                           outcome="produtos" rendered="#{loginController.isAdmin()}" 
-                                                           style="width: 100%;"/>
-                                        </div>
-                                        <div class="p-col-12 p-md-3">
-                                            <p:commandButton value="Cadastrar Cliente" icon="pi pi-user-plus" 
-                                                           outcome="clientes" rendered="#{loginController.isAdmin()}" 
-                                                           style="width: 100%;"/>
-                                        </div>
-                                        <div class="p-col-12 p-md-3">
-                                            <p:commandButton value="Configurações" icon="pi pi-cog" 
-                                                           outcome="configuracao" rendered="#{loginController.isAdmin()}" 
-                                                           style="width: 100%;"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </f:facet>
-                        </p:card>
-                    </div>
+                            </div>
+                        </f:facet>
+                    </p:card>
                 </div>
             </div>
-        </ui:define>
-    </ui:composition>
-</html>
+        </div>
+
+        <div class="p-p-4">
+            <h1>Bem-vindo ao Sistema NF-e</h1>
+            <p>Você está logado como: #{loginController.usuarioLogado.nome}</p>
+        </div>
+    </ui:define>
+</ui:composition>

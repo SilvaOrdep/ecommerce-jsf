@@ -2,22 +2,18 @@ package com.souzamonteiro.nfe.controller;
 
 import com.souzamonteiro.nfe.dao.EmpresaDAO;
 import com.souzamonteiro.nfe.model.Empresa;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import jakarta.annotation.PostConstruct;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
 import java.io.Serializable;
 
-@Named
+@ManagedBean
 @ViewScoped
 public class EmpresaController implements Serializable {
     
-    @Inject
-    private EmpresaDAO empresaDAO;
-    
+    private EmpresaDAO empresaDAO = new EmpresaDAO();
     private Empresa empresa;
     
     @PostConstruct

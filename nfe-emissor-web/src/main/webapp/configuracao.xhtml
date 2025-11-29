@@ -1,172 +1,175 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<ui:composition template="template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
     
-    <ui:composition template="template.xhtml">
-        <ui:define name="content">
-            <div class="p-p-4">
-                <h:form id="form">
-                    <p:card>
-                        <f:facet name="title">
-                            <div class="p-d-flex p-ai-center">
-                                <i class="pi pi-cog p-mr-2"></i>
-                                <span>Configurações do Sistema</span>
-                            </div>
-                        </f:facet>
-                        
-                        <f:facet name="content">
-                            <div class="p-fluid">
-                                <p:panel header="Configurações de Ambiente" toggleable="true" collapsed="false">
-                                    <div class="p-grid">
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="webserviceUF" value="UF do WebService *"/>
-                                            <p:selectOneMenu id="webserviceUF" value="#{configuracaoController.configuracao.webserviceUF}" 
-                                                           required="true" requiredMessage="UF é obrigatória"
-                                                           style="width: 100%">
-                                                <f:selectItems value="#{['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO']}" 
-                                                             var="estado" itemLabel="#{estado}" itemValue="#{estado}"/>
-                                            </p:selectOneMenu>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="emitenteUF" value="UF do Emitente *"/>
-                                            <p:selectOneMenu id="emitenteUF" value="#{configuracaoController.configuracao.emitenteUF}" 
-                                                           required="true" requiredMessage="UF é obrigatória"
-                                                           style="width: 100%">
-                                                <f:selectItems value="#{['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO']}" 
-                                                             var="estado" itemLabel="#{estado}" itemValue="#{estado}"/>
-                                            </p:selectOneMenu>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="webserviceAmbiente" value="Ambiente *"/>
-                                            <p:selectOneMenu id="webserviceAmbiente" value="#{configuracaoController.configuracao.webserviceAmbiente}" 
-                                                           required="true" requiredMessage="Ambiente é obrigatório"
-                                                           style="width: 100%">
-                                                <f:selectItem itemLabel="1 - Produção" itemValue="1"/>
-                                                <f:selectItem itemLabel="2 - Homologação" itemValue="2"/>
-                                            </p:selectOneMenu>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="portaServidor" value="Porta do Servidor *"/>
-                                            <p:inputText id="portaServidor" value="#{configuracaoController.configuracao.portaServidor}" 
-                                                       required="true" requiredMessage="Porta é obrigatória"
-                                                       style="width: 100%"/>
-                                        </div>
+    <ui:define name="content">
+        <div class="p-p-4">
+            <h:form id="form">
+                <p:card>
+                    <f:facet name="title">
+                        <div class="p-d-flex p-ai-center">
+                            <i class="pi pi-cog p-mr-2"></i>
+                            <span>Configurações do Sistema</span>
+                        </div>
+                    </f:facet>
+
+                    <f:facet name="content">
+                        <div class="p-fluid">
+                            <p:panel header="Configurações de Ambiente" toggleable="true" collapsed="false">
+                                <div class="p-grid">
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="webserviceUF" value="UF do WebService *"/>
+                                        <p:selectOneMenu id="webserviceUF" value="#{configuracaoController.configuracao.webserviceUF}" 
+                                                       required="true" requiredMessage="UF é obrigatória"
+                                                       style="width: 100%">
+                                            <f:selectItems value="#{['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO']}" 
+                                                         var="estado" itemLabel="#{estado}" itemValue="#{estado}"/>
+                                        </p:selectOneMenu>
                                     </div>
-                                </p:panel>
-                                
-                                <p:panel header="Configurações de Emissão" toggleable="true" collapsed="false">
-                                    <div class="p-grid">
-                                        <div class="p-col-12 p-md-4">
-                                            <p:outputLabel for="serieNFe" value="Série NF-e *"/>
-                                            <p:inputText id="serieNFe" value="#{configuracaoController.configuracao.serieNFe}" 
-                                                       required="true" requiredMessage="Série é obrigatória"
-                                                       style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-4">
-                                            <p:outputLabel for="finalidadeEmissao" value="Finalidade Emissão *"/>
-                                            <p:selectOneMenu id="finalidadeEmissao" value="#{configuracaoController.configuracao.finalidadeEmissao}" 
-                                                           required="true" requiredMessage="Finalidade é obrigatória"
-                                                           style="width: 100%">
-                                                <f:selectItem itemLabel="1 - Normal" itemValue="1"/>
-                                                <f:selectItem itemLabel="2 - Complementar" itemValue="2"/>
-                                                <f:selectItem itemLabel="3 - Ajuste" itemValue="3"/>
-                                                <f:selectItem itemLabel="4 - Devolução" itemValue="4"/>
-                                            </p:selectOneMenu>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-4">
-                                            <p:outputLabel for="consumidorFinal" value="Consumidor Final *"/>
-                                            <p:selectOneMenu id="consumidorFinal" value="#{configuracaoController.configuracao.consumidorFinal}" 
-                                                           required="true" requiredMessage="Consumidor final é obrigatório"
-                                                           style="width: 100%">
-                                                <f:selectItem itemLabel="0 - Normal" itemValue="0"/>
-                                                <f:selectItem itemLabel="1 - Consumidor Final" itemValue="1"/>
-                                            </p:selectOneMenu>
-                                        </div>
-                                        
-                                        <div class="p-col-12">
-                                            <p:outputLabel for="naturezaOperacao" value="Natureza da Operação *"/>
-                                            <p:inputText id="naturezaOperacao" value="#{configuracaoController.configuracao.naturezaOperacao}" 
-                                                       required="true" requiredMessage="Natureza é obrigatória"
-                                                       style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="presencaComprador" value="Presença Comprador *"/>
-                                            <p:selectOneMenu id="presencaComprador" value="#{configuracaoController.configuracao.presencaComprador}" 
-                                                           required="true" requiredMessage="Presença é obrigatória"
-                                                           style="width: 100%">
-                                                <f:selectItem itemLabel="0 - Não se aplica" itemValue="0"/>
-                                                <f:selectItem itemLabel="1 - Operação presencial" itemValue="1"/>
-                                                <f:selectItem itemLabel="2 - Operação não presencial, Internet" itemValue="2"/>
-                                                <f:selectItem itemLabel="3 - Operação não presencial, Teleatendimento" itemValue="3"/>
-                                                <f:selectItem itemLabel="4 - NFC-e entrega em domicílio" itemValue="4"/>
-                                                <f:selectItem itemLabel="5 - Operação presencial, fora do estabelecimento" itemValue="5"/>
-                                                <f:selectItem itemLabel="9 - Operação não presencial, outros" itemValue="9"/>
-                                            </p:selectOneMenu>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="gerarPDF" value="Gerar PDF DANFE"/>
-                                            <p:selectOneMenu id="gerarPDF" value="#{configuracaoController.configuracao.gerarPDF}" 
-                                                           style="width: 100%">
-                                                <f:selectItem itemLabel="Sim" itemValue="1"/>
-                                                <f:selectItem itemLabel="Não" itemValue="0"/>
-                                            </p:selectOneMenu>
-                                        </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="emitenteUF" value="UF do Emitente *"/>
+                                        <p:selectOneMenu id="emitenteUF" value="#{configuracaoController.configuracao.emitenteUF}" 
+                                                       required="true" requiredMessage="UF é obrigatória"
+                                                       style="width: 100%">
+                                            <f:selectItems value="#{['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO']}" 
+                                                         var="estado" itemLabel="#{estado}" itemValue="#{estado}"/>
+                                        </p:selectOneMenu>
                                     </div>
-                                </p:panel>
-                                
-                                <p:panel header="Configurações de Arquivos" toggleable="true" collapsed="false">
-                                    <div class="p-grid">
-                                        <div class="p-col-12">
-                                            <p:outputLabel for="caminhoCertificado" value="Caminho do Certificado *"/>
-                                            <p:inputText id="caminhoCertificado" value="#{configuracaoController.configuracao.caminhoCertificado}" 
-                                                       required="true" requiredMessage="Caminho do certificado é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="senhaCertificado" value="Senha do Certificado *"/>
-                                            <p:password id="senhaCertificado" value="#{configuracaoController.configuracao.senhaCertificado}" 
-                                                      feedback="false" required="true" 
-                                                      requiredMessage="Senha do certificado é obrigatória"
-                                                      style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="caminhoSchemas" value="Caminho dos Schemas *"/>
-                                            <p:inputText id="caminhoSchemas" value="#{configuracaoController.configuracao.caminhoSchemas}" 
-                                                       required="true" requiredMessage="Caminho dos schemas é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12">
-                                            <p:outputLabel for="caminhoXML" value="Caminho dos XMLs *"/>
-                                            <p:inputText id="caminhoXML" value="#{configuracaoController.configuracao.caminhoXML}" 
-                                                       required="true" requiredMessage="Caminho dos XMLs é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="webserviceAmbiente" value="Ambiente *"/>
+                                        <p:selectOneMenu id="webserviceAmbiente" value="#{configuracaoController.configuracao.webserviceAmbiente}" 
+                                                       required="true" requiredMessage="Ambiente é obrigatório"
+                                                       style="width: 100%">
+                                            <f:selectItem itemLabel="1 - Produção" itemValue="1"/>
+                                            <f:selectItem itemLabel="2 - Homologação" itemValue="2"/>
+                                        </p:selectOneMenu>
                                     </div>
-                                </p:panel>
-                                
-                                <div class="p-d-flex p-jc-end p-mt-3">
-                                    <p:commandButton value="Salvar" icon="pi pi-check" 
-                                                   action="#{configuracaoController.salvarConfiguracao}"
-                                                   update=":form:growl"/>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="portaServidor" value="Porta do Servidor *"/>
+                                        <p:inputText id="portaServidor" value="#{configuracaoController.configuracao.portaServidor}" 
+                                                   required="true" requiredMessage="Porta é obrigatória"
+                                                   style="width: 100%"/>
+                                    </div>
                                 </div>
+                            </p:panel>
+
+                            <p:panel header="Configurações de Emissão" toggleable="true" collapsed="false">
+                                <div class="p-grid">
+                                    <div class="p-col-12 p-md-4">
+                                        <p:outputLabel for="serieNFe" value="Série NF-e *"/>
+                                        <p:inputText id="serieNFe" value="#{configuracaoController.configuracao.serieNFe}" 
+                                                   required="true" requiredMessage="Série é obrigatória"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-4">
+                                        <p:outputLabel for="finalidadeEmissao" value="Finalidade Emissão *"/>
+                                        <p:selectOneMenu id="finalidadeEmissao" value="#{configuracaoController.configuracao.finalidadeEmissao}" 
+                                                       required="true" requiredMessage="Finalidade é obrigatória"
+                                                       style="width: 100%">
+                                            <f:selectItem itemLabel="1 - Normal" itemValue="1"/>
+                                            <f:selectItem itemLabel="2 - Complementar" itemValue="2"/>
+                                            <f:selectItem itemLabel="3 - Ajuste" itemValue="3"/>
+                                            <f:selectItem itemLabel="4 - Devolução" itemValue="4"/>
+                                        </p:selectOneMenu>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-4">
+                                        <p:outputLabel for="consumidorFinal" value="Consumidor Final *"/>
+                                        <p:selectOneMenu id="consumidorFinal" value="#{configuracaoController.configuracao.consumidorFinal}" 
+                                                       required="true" requiredMessage="Consumidor final é obrigatório"
+                                                       style="width: 100%">
+                                            <f:selectItem itemLabel="0 - Normal" itemValue="0"/>
+                                            <f:selectItem itemLabel="1 - Consumidor Final" itemValue="1"/>
+                                        </p:selectOneMenu>
+                                    </div>
+
+                                    <div class="p-col-12">
+                                        <p:outputLabel for="naturezaOperacao" value="Natureza da Operação *"/>
+                                        <p:inputText id="naturezaOperacao" value="#{configuracaoController.configuracao.naturezaOperacao}" 
+                                                   required="true" requiredMessage="Natureza é obrigatória"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="presencaComprador" value="Presença Comprador *"/>
+                                        <p:selectOneMenu id="presencaComprador" value="#{configuracaoController.configuracao.presencaComprador}" 
+                                                       required="true" requiredMessage="Presença é obrigatória"
+                                                       style="width: 100%">
+                                            <f:selectItem itemLabel="0 - Não se aplica" itemValue="0"/>
+                                            <f:selectItem itemLabel="1 - Operação presencial" itemValue="1"/>
+                                            <f:selectItem itemLabel="2 - Operação não presencial, Internet" itemValue="2"/>
+                                            <f:selectItem itemLabel="3 - Operação não presencial, Teleatendimento" itemValue="3"/>
+                                            <f:selectItem itemLabel="4 - NFC-e entrega em domicílio" itemValue="4"/>
+                                            <f:selectItem itemLabel="5 - Operação presencial, fora do estabelecimento" itemValue="5"/>
+                                            <f:selectItem itemLabel="9 - Operação não presencial, outros" itemValue="9"/>
+                                        </p:selectOneMenu>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="gerarPDF" value="Gerar PDF DANFE"/>
+                                        <p:selectOneMenu id="gerarPDF" value="#{configuracaoController.configuracao.gerarPDF}" 
+                                                       style="width: 100%">
+                                            <f:selectItem itemLabel="Sim" itemValue="1"/>
+                                            <f:selectItem itemLabel="Não" itemValue="0"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                            </p:panel>
+
+                            <p:panel header="Configurações de Arquivos" toggleable="true" collapsed="false">
+                                <div class="p-grid">
+                                    <div class="p-col-12">
+                                        <p:outputLabel for="caminhoCertificado" value="Caminho do Certificado *"/>
+                                        <p:inputText id="caminhoCertificado" value="#{configuracaoController.configuracao.caminhoCertificado}" 
+                                                   required="true" requiredMessage="Caminho do certificado é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="senhaCertificado" value="Senha do Certificado *"/>
+                                        <p:password id="senhaCertificado" value="#{configuracaoController.configuracao.senhaCertificado}" 
+                                                  feedback="false" required="true" 
+                                                  requiredMessage="Senha do certificado é obrigatória"
+                                                  style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="caminhoSchemas" value="Caminho dos Schemas *"/>
+                                        <p:inputText id="caminhoSchemas" value="#{configuracaoController.configuracao.caminhoSchemas}" 
+                                                   required="true" requiredMessage="Caminho dos schemas é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12">
+                                        <p:outputLabel for="caminhoXML" value="Caminho dos XMLs *"/>
+                                        <p:inputText id="caminhoXML" value="#{configuracaoController.configuracao.caminhoXML}" 
+                                                   required="true" requiredMessage="Caminho dos XMLs é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+                                </div>
+                            </p:panel>
+
+                            <div class="p-d-flex p-jc-end p-mt-3">
+                                <p:commandButton value="Salvar" icon="pi pi-check" 
+                                               action="#{configuracaoController.salvarConfiguracao}"
+                                               update=":form:growl"/>
                             </div>
-                        </f:facet>
-                    </p:card>
-                </h:form>
-            </div>
-        </ui:define>
-    </ui:composition>
-</html>
+                        </div>
+                    </f:facet>
+                </p:card>
+            </h:form>
+        </div>
+
+        <div class="p-p-4">
+            <h1>Bem-vindo ao Sistema NF-e</h1>
+            <p>Você está logado como: #{loginController.usuarioLogado.nome}</p>
+        </div>
+    </ui:define>
+</ui:composition>

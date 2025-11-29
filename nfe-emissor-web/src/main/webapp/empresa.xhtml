@@ -1,152 +1,155 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    
-    <ui:composition template="template.xhtml">
-        <ui:define name="content">
-            <div class="p-p-4">
-                <h:form id="form">
-                    <p:card>
-                        <f:facet name="title">
-                            <div class="p-d-flex p-ai-center">
-                                <i class="pi pi-building p-mr-2"></i>
-                                <span>Dados da Empresa</span>
+<ui:composition template="template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:define name="content">
+        <div class="p-p-4">
+            <h:form id="form">
+                <p:card>
+                    <f:facet name="title">
+                        <div class="p-d-flex p-ai-center">
+                            <i class="pi pi-building p-mr-2"></i>
+                            <span>Dados da Empresa</span>
+                        </div>
+                    </f:facet>
+
+                    <f:facet name="content">
+                        <div class="p-fluid">
+                            <div class="p-grid">
+                                <div class="p-col-12 p-md-6">
+                                    <p:outputLabel for="cnpj" value="CNPJ *"/>
+                                    <p:inputMask id="cnpj" value="#{empresaController.empresa.cnpj}" 
+                                                mask="99.999.999/9999-99" 
+                                                required="true" requiredMessage="CNPJ é obrigatório"
+                                                style="width: 100%"/>
+                                </div>
+
+                                <div class="p-col-12 p-md-6">
+                                    <p:outputLabel for="ie" value="Inscrição Estadual *"/>
+                                    <p:inputText id="ie" value="#{empresaController.empresa.ie}" 
+                                               required="true" requiredMessage="IE é obrigatória"
+                                               style="width: 100%"/>
+                                </div>
+
+                                <div class="p-col-12">
+                                    <p:outputLabel for="xnome" value="Razão Social *"/>
+                                    <p:inputText id="xnome" value="#{empresaController.empresa.xnome}" 
+                                               required="true" requiredMessage="Razão Social é obrigatória"
+                                               style="width: 100%"/>
+                                </div>
+
+                                <div class="p-col-12">
+                                    <p:outputLabel for="xfant" value="Nome Fantasia *"/>
+                                    <p:inputText id="xfant" value="#{empresaController.empresa.xfant}" 
+                                               required="true" requiredMessage="Nome Fantasia é obrigatório"
+                                               style="width: 100%"/>
+                                </div>
+
+                                <div class="p-col-12 p-md-4">
+                                    <p:outputLabel for="crt" value="Regime Tributário *"/>
+                                    <p:selectOneMenu id="crt" value="#{empresaController.empresa.crt}" 
+                                                   required="true" requiredMessage="CRT é obrigatório"
+                                                   style="width: 100%">
+                                        <f:selectItem itemLabel="1 - Simples Nacional" itemValue="1"/>
+                                        <f:selectItem itemLabel="2 - Simples Nacional - Excesso" itemValue="2"/>
+                                        <f:selectItem itemLabel="3 - Regime Normal" itemValue="3"/>
+                                    </p:selectOneMenu>
+                                </div>
                             </div>
-                        </f:facet>
-                        
-                        <f:facet name="content">
-                            <div class="p-fluid">
+
+                            <p:panel header="Endereço" toggleable="true" collapsed="false">
                                 <div class="p-grid">
-                                    <div class="p-col-12 p-md-6">
-                                        <p:outputLabel for="cnpj" value="CNPJ *"/>
-                                        <p:inputMask id="cnpj" value="#{empresaController.empresa.cnpj}" 
-                                                    mask="99.999.999/9999-99" 
-                                                    required="true" requiredMessage="CNPJ é obrigatório"
-                                                    style="width: 100%"/>
-                                    </div>
-                                    
-                                    <div class="p-col-12 p-md-6">
-                                        <p:outputLabel for="ie" value="Inscrição Estadual *"/>
-                                        <p:inputText id="ie" value="#{empresaController.empresa.ie}" 
-                                                   required="true" requiredMessage="IE é obrigatória"
+                                    <div class="p-col-12 p-md-8">
+                                        <p:outputLabel for="xlgr" value="Logradouro *"/>
+                                        <p:inputText id="xlgr" value="#{empresaController.empresa.xlgr}" 
+                                                   required="true" requiredMessage="Logradouro é obrigatório"
                                                    style="width: 100%"/>
                                     </div>
-                                    
-                                    <div class="p-col-12">
-                                        <p:outputLabel for="xnome" value="Razão Social *"/>
-                                        <p:inputText id="xnome" value="#{empresaController.empresa.xnome}" 
-                                                   required="true" requiredMessage="Razão Social é obrigatória"
-                                                   style="width: 100%"/>
-                                    </div>
-                                    
-                                    <div class="p-col-12">
-                                        <p:outputLabel for="xfant" value="Nome Fantasia *"/>
-                                        <p:inputText id="xfant" value="#{empresaController.empresa.xfant}" 
-                                                   required="true" requiredMessage="Nome Fantasia é obrigatório"
-                                                   style="width: 100%"/>
-                                    </div>
-                                    
+
                                     <div class="p-col-12 p-md-4">
-                                        <p:outputLabel for="crt" value="Regime Tributário *"/>
-                                        <p:selectOneMenu id="crt" value="#{empresaController.empresa.crt}" 
-                                                       required="true" requiredMessage="CRT é obrigatório"
+                                        <p:outputLabel for="nro" value="Número *"/>
+                                        <p:inputText id="nro" value="#{empresaController.empresa.nro}" 
+                                                   required="true" requiredMessage="Número é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12">
+                                        <p:outputLabel for="xcpl" value="Complemento"/>
+                                        <p:inputText id="xcpl" value="#{empresaController.empresa.xcpl}" 
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="xbairro" value="Bairro *"/>
+                                        <p:inputText id="xbairro" value="#{empresaController.empresa.xbairro}" 
+                                                   required="true" requiredMessage="Bairro é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="cmun" value="Código Município *"/>
+                                        <p:inputText id="cmun" value="#{empresaController.empresa.cmun}" 
+                                                   required="true" requiredMessage="Código município é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="xmun" value="Município *"/>
+                                        <p:inputText id="xmun" value="#{empresaController.empresa.xmun}" 
+                                                   required="true" requiredMessage="Município é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-3">
+                                        <p:outputLabel for="uf" value="UF *"/>
+                                        <p:selectOneMenu id="uf" value="#{empresaController.empresa.uf}" 
+                                                       required="true" requiredMessage="UF é obrigatória"
                                                        style="width: 100%">
-                                            <f:selectItem itemLabel="1 - Simples Nacional" itemValue="1"/>
-                                            <f:selectItem itemLabel="2 - Simples Nacional - Excesso" itemValue="2"/>
-                                            <f:selectItem itemLabel="3 - Regime Normal" itemValue="3"/>
+                                            <f:selectItems value="#{['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO']}" 
+                                                         var="estado" itemLabel="#{estado}" itemValue="#{estado}"/>
                                         </p:selectOneMenu>
                                     </div>
-                                </div>
-                                
-                                <p:panel header="Endereço" toggleable="true" collapsed="false">
-                                    <div class="p-grid">
-                                        <div class="p-col-12 p-md-8">
-                                            <p:outputLabel for="xlgr" value="Logradouro *"/>
-                                            <p:inputText id="xlgr" value="#{empresaController.empresa.xlgr}" 
-                                                       required="true" requiredMessage="Logradouro é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-4">
-                                            <p:outputLabel for="nro" value="Número *"/>
-                                            <p:inputText id="nro" value="#{empresaController.empresa.nro}" 
-                                                       required="true" requiredMessage="Número é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12">
-                                            <p:outputLabel for="xcpl" value="Complemento"/>
-                                            <p:inputText id="xcpl" value="#{empresaController.empresa.xcpl}" 
-                                                       style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="xbairro" value="Bairro *"/>
-                                            <p:inputText id="xbairro" value="#{empresaController.empresa.xbairro}" 
-                                                       required="true" requiredMessage="Bairro é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="cmun" value="Código Município *"/>
-                                            <p:inputText id="cmun" value="#{empresaController.empresa.cmun}" 
-                                                       required="true" requiredMessage="Código município é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="xmun" value="Município *"/>
-                                            <p:inputText id="xmun" value="#{empresaController.empresa.xmun}" 
-                                                       required="true" requiredMessage="Município é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-3">
-                                            <p:outputLabel for="uf" value="UF *"/>
-                                            <p:selectOneMenu id="uf" value="#{empresaController.empresa.uf}" 
-                                                           required="true" requiredMessage="UF é obrigatória"
-                                                           style="width: 100%">
-                                                <f:selectItems value="#{['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO']}" 
-                                                             var="estado" itemLabel="#{estado}" itemValue="#{estado}"/>
-                                            </p:selectOneMenu>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-3">
-                                            <p:outputLabel for="cep" value="CEP *"/>
-                                            <p:inputMask id="cep" value="#{empresaController.empresa.cep}" 
-                                                        mask="99999-999" 
-                                                        required="true" requiredMessage="CEP é obrigatório"
-                                                        style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="fone" value="Telefone"/>
-                                            <p:inputMask id="fone" value="#{empresaController.empresa.fone}" 
-                                                        mask="(99) 99999-9999" 
-                                                        style="width: 100%"/>
-                                        </div>
-                                        
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="email" value="Email"/>
-                                            <p:inputText id="email" value="#{empresaController.empresa.email}" 
-                                                       style="width: 100%"/>
-                                        </div>
+
+                                    <div class="p-col-12 p-md-3">
+                                        <p:outputLabel for="cep" value="CEP *"/>
+                                        <p:inputMask id="cep" value="#{empresaController.empresa.cep}" 
+                                                    mask="99999-999" 
+                                                    required="true" requiredMessage="CEP é obrigatório"
+                                                    style="width: 100%"/>
                                     </div>
-                                </p:panel>
-                                
-                                <div class="p-d-flex p-jc-end p-mt-3">
-                                    <p:commandButton value="Salvar" icon="pi pi-check" 
-                                                   action="#{empresaController.salvarEmpresa}"
-                                                   update=":form:growl"/>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="fone" value="Telefone"/>
+                                        <p:inputMask id="fone" value="#{empresaController.empresa.fone}" 
+                                                    mask="(99) 99999-9999" 
+                                                    style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="email" value="Email"/>
+                                        <p:inputText id="email" value="#{empresaController.empresa.email}" 
+                                                   style="width: 100%"/>
+                                    </div>
                                 </div>
+                            </p:panel>
+
+                            <div class="p-d-flex p-jc-end p-mt-3">
+                                <p:commandButton value="Salvar" icon="pi pi-check" 
+                                               action="#{empresaController.salvarEmpresa}"
+                                               update=":form:growl"/>
                             </div>
-                        </f:facet>
-                    </p:card>
-                </h:form>
-            </div>
-        </ui:define>
-    </ui:composition>
-</html>
+                        </div>
+                    </f:facet>
+                </p:card>
+            </h:form>
+        </div>
+
+        <div class="p-p-4">
+            <h1>Bem-vindo ao Sistema NF-e</h1>
+            <p>Você está logado como: #{loginController.usuarioLogado.nome}</p>
+        </div>
+    </ui:define>
+</ui:composition>
