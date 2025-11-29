@@ -4,7 +4,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets">
-    
+
     <f:view locale="pt_BR">
         <h:head>
             <title>NF-e Emissor</title>
@@ -18,39 +18,56 @@
             <p:growl id="growl" showDetail="true" life="3000" />
             
             <!-- VERIFICAR SE ESTÁ LOGADO ANTES DE MOSTRAR O MENU -->
-            <p:layout fullPage="true" rendered="#{loginController.loggedIn}">
-                <p:layoutUnit position="north" size="60" header="NF-e Emissor" resizable="false">
-                    <h:form id="menuForm">
-                        <p:menubar>
-                            <p:menuitem value="Início" icon="pi pi-home" outcome="index"/>
+            <div class="layout-container" rendered="#{loginController.loggedIn}">
+                <!-- Header -->
+                <div class="layout-header">
+                    <div class="header-content">
+                        <h:form id="menuForm">
+                            <div class="header-title">
+                                <i class="pi pi-file" style="font-size: 1.5rem; margin-right: 10px;"></i>
+                                <span style="font-size: 1.5rem; font-weight: bold;">NF-e Emissor</span>
+                            </div>
                             
-                            <p:submenu label="Cadastros" icon="pi pi-fw pi-database" rendered="#{loginController.admin}">
-                                <p:menuitem value="Produtos" icon="pi pi-fw pi-box" outcome="produtos"/>
-                                <p:menuitem value="Clientes" icon="pi pi-fw pi-users" outcome="clientes"/>
-                                <p:menuitem value="Usuários" icon="pi pi-fw pi-user" outcome="usuarios"/>
-                            </p:submenu>
-                            
-                            <p:submenu label="Configurações" icon="pi pi-fw pi-cog" rendered="#{loginController.admin}">
-                                <p:menuitem value="Empresa" icon="pi pi-fw pi-building" outcome="empresa"/>
-                                <p:menuitem value="Sistema" icon="pi pi-fw pi-sliders-h" outcome="configuracao"/>
-                            </p:submenu>
-                            
-                            <p:menuitem value="Vendas" icon="pi pi-shopping-cart" outcome="vendas"/>
-                            
-                            <f:facet name="options">
-                                <p:outputLabel value="Bem-vindo, #{loginController.usuarioLogado.nome}" 
-                                              style="margin-right: 10px;"/>
-                                <p:commandButton value="Sair" icon="pi pi-power-off" 
-                                               action="#{loginController.logout}"/>
-                            </f:facet>
-                        </p:menubar>
-                    </h:form>
-                </p:layoutUnit>
+                            <p:menubar styleClass="main-menu">
+                                <p:menuitem value="Início" icon="pi pi-home" outcome="index"/>
+                                
+                                <p:submenu label="Cadastros" icon="pi pi-fw pi-database" rendered="#{loginController.admin}">
+                                    <p:menuitem value="Produtos" icon="pi pi-fw pi-box" outcome="produtos"/>
+                                    <p:menuitem value="Clientes" icon="pi pi-fw pi-users" outcome="clientes"/>
+                                    <p:menuitem value="Usuários" icon="pi pi-fw pi-user" outcome="usuarios"/>
+                                </p:submenu>
+                                
+                                <p:submenu label="Configurações" icon="pi pi-fw pi-cog" rendered="#{loginController.admin}">
+                                    <p:menuitem value="Empresa" icon="pi pi-fw pi-building" outcome="empresa"/>
+                                    <p:menuitem value="Sistema" icon="pi pi-fw pi-sliders-h" outcome="configuracao"/>
+                                </p:submenu>
+                                
+                                <p:menuitem value="Vendas" icon="pi pi-shopping-cart" outcome="vendas"/>
+                                
+                                <f:facet name="options">
+                                    <div class="user-info">
+                                        <p:outputLabel value="Bem-vindo, #{loginController.usuarioLogado.nome}" 
+                                                      style="margin-right: 10px;"/>
+                                        <p:commandButton value="Sair" icon="pi pi-power-off" 
+                                                       action="#{loginController.logout}"
+                                                       styleClass="logout-button"/>
+                                    </div>
+                                </f:facet>
+                            </p:menubar>
+                        </h:form>
+                    </div>
+                </div>
                 
-                <p:layoutUnit position="center">
-                    <ui:insert name="content">Conteúdo</ui:insert>
-                </p:layoutUnit>
-            </p:layout>
+                <!-- Main Content -->
+                <div class="layout-content">
+                    <ui:insert name="content">
+                        <div class="welcome-content">
+                            <h1>Bem-vindo ao Sistema NF-e Emissor</h1>
+                            <p>Selecione uma opção no menu acima para começar.</p>
+                        </div>
+                    </ui:insert>
+                </div>
+            </div>
             
             <!-- SE NÃO ESTIVER LOGADO, REDIRECIONAR PARA LOGIN -->
             <ui:fragment rendered="#{not loginController.loggedIn}">

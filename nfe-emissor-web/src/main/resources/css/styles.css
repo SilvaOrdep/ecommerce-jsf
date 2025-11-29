@@ -1,117 +1,163 @@
-/* Estilos gerais */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
+/* Layout Principal */
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     background-color: #f8f9fa;
 }
 
-/* Layout improvements */
-.p-card {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border: 1px solid #e0e0e0;
-}
-
-.p-panel .p-panel-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* Header */
+.layout-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
     color: white;
-    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.p-button {
-    border-radius: 4px;
+.header-content {
+    padding: 0.5rem 1rem;
 }
 
-/* DataTable improvements */
-.p-datatable .p-datatable-thead > tr > th {
-    background: #f8f9fa;
-    color: #495057;
+.header-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 0;
+}
+
+/* Menu */
+.main-menu {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.main-menu .ui-menuitem-link {
+    color: white !important;
+}
+
+.main-menu .ui-menuitem-link:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.main-menu .ui-submenu-header {
+    background: transparent !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* User Info */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logout-button {
+    background-color: #e74c3c !important;
+    border: 1px solid #c0392b !important;
+}
+
+.logout-button:hover {
+    background-color: #c0392b !important;
+}
+
+/* Main Content */
+.layout-content {
+    flex: 1;
+    padding: 2rem;
+    background-color: #ffffff;
+    margin: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.welcome-content {
+    text-align: center;
+    padding: 3rem;
+    color: #2c3e50;
+}
+
+.welcome-content h1 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.welcome-content p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .layout-content {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .header-title {
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+/* Cards e Formulários */
+.p-card {
+    margin-bottom: 1.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+}
+
+.p-card .p-card-title {
+    color: #2c3e50;
+    font-size: 1.25rem;
     font-weight: 600;
 }
 
-/* Form improvements */
-.p-field > label {
-    font-weight: 500;
-    margin-bottom: 0.25rem;
+/* Tabelas */
+.p-datatable {
+    margin-top: 1rem;
 }
 
-/* Login page specific */
-.login-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.p-datatable .p-datatable-thead > tr > th {
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    font-weight: 600;
 }
 
-/* Dashboard cards */
-.dashboard-card {
-    transition: transform 0.2s;
+/* Botões */
+.p-button {
+    border-radius: 6px;
 }
 
-.dashboard-card:hover {
-    transform: translateY(-2px);
+.p-button-primary {
+    background: #3498db;
+    border: 1px solid #2980b9;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .p-grid {
-        margin: 0;
-    }
-    
-    .p-col-12 {
-        padding: 0.5rem;
-    }
+.p-button-primary:hover {
+    background: #2980b9;
 }
 
-/* Custom button colors */
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
+/* Campos de formulário */
+.p-inputtext, .p-dropdown, .p-selectonemenu {
+    width: 100%;
 }
 
-.btn-success {
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-    border: none;
+.p-field {
+    margin-bottom: 1.5rem;
 }
 
-.btn-warning {
-    background: linear-gradient(135deg, #ff9800 0%, #e68900 100%);
-    border: none;
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-    border: none;
-}
-
-/* Status badges */
-.status-emitida {
-    background: #4CAF50;
-    color: white;
-}
-
-.status-pendente {
-    background: #ff9800;
-    color: white;
-}
-
-.status-erro {
-    background: #f44336;
-    color: white;
-}
-
-/* Loading spinner */
-.loading-spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #667eea;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.p-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #2c3e50;
 }

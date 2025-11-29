@@ -6,7 +6,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import jakarta.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,8 +19,7 @@ public class ClienteController implements Serializable {
     private Cliente clienteSelecionado;
     private boolean editando;
     
-    @PostConstruct
-    public void init() {
+    public ClienteController() {
         carregarClientes();
         novoCliente();
     }
@@ -100,15 +98,35 @@ public class ClienteController implements Serializable {
     }
     
     // Getters e Setters
-    public List<Cliente> getClientes() { return clientes; }
-    public void setClientes(List<Cliente> clientes) { this.clientes = clientes; }
+    public List<Cliente> getClientes() { 
+        return clientes; 
+    }
     
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public void setClientes(List<Cliente> clientes) { 
+        this.clientes = clientes; 
+    }
     
-    public Cliente getClienteSelecionado() { return clienteSelecionado; }
-    public void setClienteSelecionado(Cliente clienteSelecionado) { this.clienteSelecionado = clienteSelecionado; }
+    public Cliente getCliente() { 
+        return cliente; 
+    }
     
-    public boolean isEditando() { return editando; }
-    public void setEditando(boolean editando) { this.editando = editando; }
+    public void setCliente(Cliente cliente) { 
+        this.cliente = cliente; 
+    }
+    
+    public Cliente getClienteSelecionado() { 
+        return clienteSelecionado; 
+    }
+    
+    public void setClienteSelecionado(Cliente clienteSelecionado) { 
+        this.clienteSelecionado = clienteSelecionado; 
+    }
+    
+    public boolean isEditando() { 
+        return editando; 
+    }
+    
+    public void setEditando(boolean editando) { 
+        this.editando = editando; 
+    }
 }
