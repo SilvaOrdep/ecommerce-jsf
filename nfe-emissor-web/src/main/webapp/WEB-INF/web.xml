@@ -7,10 +7,27 @@
     
     <display-name>NF-e Emissor</display-name>
     
-    <!-- JSF Configuration -->
+    <!-- Context Parameters -->
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
+    </context-param>
+    
+    <!-- TEMA DO PRIMEFACES -->
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>saga</param-value> <!-- ou nova-light se preferir -->
+    </context-param>
+    
+    <!-- Configurações JSF -->
+    <context-param>
+        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+        <param-value>true</param-value>
     </context-param>
     
     <!-- Faces Servlet -->
@@ -28,12 +45,38 @@
     <!-- Welcome Files -->
     <welcome-file-list>
         <welcome-file>login.xhtml</welcome-file>
+        <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
     
     <!-- Session Configuration -->
     <session-config>
         <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
     </session-config>
+    
+    <!-- Filtro de Login -->
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>com.souzamonteiro.nfe.filter.LoginFilter</filter-class>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    
+    <!-- Exceções para o filtro (páginas que não precisam de login) -->
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/login.xhtml</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
     
     <!-- Error Pages -->
     <error-page>

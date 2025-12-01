@@ -3,8 +3,11 @@ package com.souzamonteiro.nfe.dao;
 import com.souzamonteiro.nfe.model.Empresa;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.io.Serializable;
 
-public class EmpresaDAO extends GenericDAO<Empresa> {
+public class EmpresaDAO extends GenericDAO<Empresa> implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     public EmpresaDAO() {
         super(Empresa.class);

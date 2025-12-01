@@ -2,11 +2,14 @@ package com.souzamonteiro.nfe.dao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.io.Serializable;
 import java.util.List;
 
 import com.souzamonteiro.nfe.util.HibernateUtil;
 
-public class GenericDAO<T> {
+public class GenericDAO<T> implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private final Class<T> clazz;
     

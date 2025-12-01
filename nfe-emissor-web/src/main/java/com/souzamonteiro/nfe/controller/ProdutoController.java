@@ -14,7 +14,7 @@ import java.util.List;
 @ViewScoped
 public class ProdutoController implements Serializable {
     
-    private ProdutoDAO produtoDAO = new ProdutoDAO();
+    private transient ProdutoDAO produtoDAO = new ProdutoDAO();
     private List<Produto> produtos;
     private Produto produto;
     private Produto produtoSelecionado;

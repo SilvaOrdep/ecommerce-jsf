@@ -4,9 +4,12 @@ import com.souzamonteiro.nfe.model.Usuario;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import java.io.Serializable;
 import java.util.List;
 
-public class UsuarioDAO extends GenericDAO<Usuario> {
+public class UsuarioDAO extends GenericDAO<Usuario> implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     public UsuarioDAO() {
         super(Usuario.class);

@@ -14,7 +14,7 @@ import java.util.List;
 @ViewScoped
 public class ClienteController implements Serializable {
     
-    private ClienteDAO clienteDAO = new ClienteDAO();
+    private transient ClienteDAO clienteDAO = new ClienteDAO();
     private List<Cliente> clientes;
     private Cliente cliente;
     private Cliente clienteSelecionado;

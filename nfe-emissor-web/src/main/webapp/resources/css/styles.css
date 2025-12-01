@@ -1,37 +1,37 @@
-/* Layout Principal */
+/* TESTE - Se isto aparecer, o CSS está funcionando */
+body {
+    background-color: #f8f9fa !important;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
 .layout-container {
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    background-color: #f8f9fa;
 }
 
-/* Header */
 .layout-header {
-    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-    color: white;
+    background-color: #2c3e50 !important;
+    padding: 15px 20px;
+    color: white !important;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.header-content {
-    padding: 0.5rem 1rem;
 }
 
 .header-title {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    padding: 0.5rem 0;
+    margin-bottom: 10px;
 }
 
-/* Menu */
+.header-title span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white !important;
+}
+
 .main-menu {
     background: transparent !important;
     border: none !important;
-    padding: 0 !important;
 }
 
 .main-menu .ui-menuitem-link {
@@ -42,122 +42,67 @@
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-.main-menu .ui-submenu-header {
-    background: transparent !important;
-    color: white !important;
-    border: none !important;
-}
-
-/* User Info */
 .user-info {
+    color: white !important;
     display: flex;
     align-items: center;
-    gap: 1rem;
 }
 
 .logout-button {
     background-color: #e74c3c !important;
     border: 1px solid #c0392b !important;
+    color: white !important;
+    padding: 5px 15px !important;
+    border-radius: 4px !important;
 }
 
 .logout-button:hover {
     background-color: #c0392b !important;
 }
 
-/* Main Content */
 .layout-content {
     flex: 1;
-    padding: 2rem;
-    background-color: #ffffff;
-    margin: 1rem;
+    padding: 30px;
+    background-color: white;
+    margin: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
 }
 
 .welcome-content {
     text-align: center;
-    padding: 3rem;
-    color: #2c3e50;
+    padding: 60px 20px;
 }
 
 .welcome-content h1 {
-    margin-bottom: 1rem;
     color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
 }
 
 .welcome-content p {
-    font-size: 1.1rem;
     color: #7f8c8d;
+    font-size: 1.2rem;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .layout-content {
-        padding: 1rem;
-        margin: 0.5rem;
-    }
-    
-    .user-info {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .header-title {
-        justify-content: center;
-        text-align: center;
-    }
+/* Cards */
+.ui-card {
+    border: 1px solid #e9ecef !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
 }
 
-/* Cards e Formulários */
-.p-card {
-    margin-bottom: 1.5rem;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
+.ui-card-title {
+    color: #2c3e50 !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    border-bottom: 1px solid #e9ecef !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 15px !important;
 }
 
-.p-card .p-card-title {
-    color: #2c3e50;
-    font-size: 1.25rem;
-    font-weight: 600;
-}
-
-/* Tabelas */
-.p-datatable {
-    margin-top: 1rem;
-}
-
-.p-datatable .p-datatable-thead > tr > th {
-    background-color: #f8f9fa;
-    color: #2c3e50;
-    font-weight: 600;
-}
-
-/* Botões */
-.p-button {
-    border-radius: 6px;
-}
-
-.p-button-primary {
-    background: #3498db;
-    border: 1px solid #2980b9;
-}
-
-.p-button-primary:hover {
-    background: #2980b9;
-}
-
-/* Campos de formulário */
-.p-inputtext, .p-dropdown, .p-selectonemenu {
-    width: 100%;
-}
-
-.p-field {
-    margin-bottom: 1.5rem;
-}
-
-.p-field label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #2c3e50;
+/* Teste visual - BORDA VERMELHA se o CSS não carregar */
+body:before {
+    content: "CSS CARREGADO";
+    display: none;
 }

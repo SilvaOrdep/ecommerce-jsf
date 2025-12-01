@@ -3,9 +3,12 @@ package com.souzamonteiro.nfe.dao;
 import com.souzamonteiro.nfe.model.Venda;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.io.Serializable;
 import java.util.List;
 
-public class VendaDAO extends GenericDAO<Venda> {
+public class VendaDAO extends GenericDAO<Venda> implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     public VendaDAO() {
         super(Venda.class);

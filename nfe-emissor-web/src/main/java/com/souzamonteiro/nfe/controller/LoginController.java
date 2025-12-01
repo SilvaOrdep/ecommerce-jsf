@@ -16,7 +16,7 @@ public class LoginController implements Serializable {
     private String login;
     private String senha;
     private Usuario usuarioLogado;
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private transient UsuarioDAO usuarioDAO = new UsuarioDAO();
     
     public LoginController() {
         System.out.println("=== LoginController INSTANCIADO ===");

@@ -13,7 +13,7 @@ import java.io.Serializable;
 @ViewScoped
 public class ConfiguracaoController implements Serializable {
     
-    private ConfiguracaoDAO configuracaoDAO = new ConfiguracaoDAO();
+    private transient ConfiguracaoDAO configuracaoDAO = new ConfiguracaoDAO();
     private Configuracao configuracao;
     
     public ConfiguracaoController() {

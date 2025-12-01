@@ -3,9 +3,12 @@ package com.souzamonteiro.nfe.dao;
 import com.souzamonteiro.nfe.model.Produto;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.io.Serializable;
 import java.util.List;
 
-public class ProdutoDAO extends GenericDAO<Produto> {
+public class ProdutoDAO extends GenericDAO<Produto> implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     public ProdutoDAO() {
         super(Produto.class);

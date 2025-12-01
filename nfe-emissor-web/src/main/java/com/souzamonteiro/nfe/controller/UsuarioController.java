@@ -14,7 +14,7 @@ import java.util.List;
 @ViewScoped
 public class UsuarioController implements Serializable {
     
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private transient UsuarioDAO usuarioDAO = new UsuarioDAO();
     private List<Usuario> usuarios;
     private Usuario usuario;
     private Usuario usuarioSelecionado;

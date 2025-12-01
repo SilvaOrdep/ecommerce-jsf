@@ -13,7 +13,7 @@ import java.io.Serializable;
 @ViewScoped
 public class EmpresaController implements Serializable {
     
-    private EmpresaDAO empresaDAO = new EmpresaDAO();
+    private transient EmpresaDAO empresaDAO = new EmpresaDAO();
     private Empresa empresa;
     
     public EmpresaController() {

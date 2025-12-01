@@ -24,11 +24,11 @@ import java.util.List;
 @ViewScoped
 public class VendaController implements Serializable {
     
-    private VendaDAO vendaDAO = new VendaDAO();
-    private ClienteDAO clienteDAO = new ClienteDAO();
-    private ProdutoDAO produtoDAO = new ProdutoDAO();
-    private ConfiguracaoDAO configuracaoDAO = new ConfiguracaoDAO();
-    private EmpresaDAO empresaDAO = new EmpresaDAO();
+    private transient VendaDAO vendaDAO = new VendaDAO();
+    private transient ClienteDAO clienteDAO = new ClienteDAO();
+    private transient ProdutoDAO produtoDAO = new ProdutoDAO();
+    private transient ConfiguracaoDAO configuracaoDAO = new ConfiguracaoDAO();
+    private transient EmpresaDAO empresaDAO = new EmpresaDAO();
     
     private List<Venda> vendas;
     private Venda venda;
