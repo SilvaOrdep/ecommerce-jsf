@@ -65,28 +65,30 @@
                             </div>
 
                             <div class="p-mt-4">
-                                <h3>Ações Rápidas</h3>
-                                <div class="p-grid">
-                                    <div class="p-col-12 p-md-3">
-                                        <p:commandButton value="Nova Venda" icon="pi pi-plus" 
-                                                       outcome="vendas" style="width: 100%;"/>
+                                <h:form>
+                                    <h3>Ações Rápidas</h3>
+                                    <div class="p-grid">
+                                        <div class="p-col-12 p-md-3">
+                                            <p:commandButton value="Nova Venda" icon="pi pi-plus" 
+                                                           outcome="vendas" style="width: 100%;"/>
+                                        </div>
+                                        <div class="p-col-12 p-md-3">
+                                            <p:commandButton value="Cadastrar Produto" icon="pi pi-box" 
+                                                           outcome="produtos" rendered="#{loginController.isAdmin()}" 
+                                                           style="width: 100%;"/>
+                                        </div>
+                                        <div class="p-col-12 p-md-3">
+                                            <p:commandButton value="Cadastrar Cliente" icon="pi pi-user-plus" 
+                                                           outcome="clientes" rendered="#{loginController.isAdmin()}" 
+                                                           style="width: 100%;"/>
+                                        </div>
+                                        <div class="p-col-12 p-md-3">
+                                            <p:commandButton value="Configurações" icon="pi pi-cog" 
+                                                           outcome="configuracao" rendered="#{loginController.isAdmin()}" 
+                                                           style="width: 100%;"/>
+                                        </div>
                                     </div>
-                                    <div class="p-col-12 p-md-3">
-                                        <p:commandButton value="Cadastrar Produto" icon="pi pi-box" 
-                                                       outcome="produtos" rendered="#{loginController.isAdmin()}" 
-                                                       style="width: 100%;"/>
-                                    </div>
-                                    <div class="p-col-12 p-md-3">
-                                        <p:commandButton value="Cadastrar Cliente" icon="pi pi-user-plus" 
-                                                       outcome="clientes" rendered="#{loginController.isAdmin()}" 
-                                                       style="width: 100%;"/>
-                                    </div>
-                                    <div class="p-col-12 p-md-3">
-                                        <p:commandButton value="Configurações" icon="pi pi-cog" 
-                                                       outcome="configuracao" rendered="#{loginController.isAdmin()}" 
-                                                       style="width: 100%;"/>
-                                    </div>
-                                </div>
+                                </h:form>
                             </div>
                         </f:facet>
                     </p:card>

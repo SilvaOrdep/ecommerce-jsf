@@ -1,108 +1,634 @@
-/* TESTE - Se isto aparecer, o CSS está funcionando */
-body {
-    background-color: #f8f9fa !important;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+/* ==========================================================================
+   RESET E CONFIGURAÇÕES GERAIS - ALTO CONTRASTE
+   ========================================================================== */
+* {
+    box-sizing: border-box;
 }
 
+body {
+    background-color: #ffffff !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    margin: 0;
+    padding: 0;
+    color: #000000 !important;
+    font-size: 16px !important;
+    line-height: 1.6;
+}
+
+/* Indicador de CSS carregado - REMOVER EM PRODUÇÃO */
+/*
+body::before {
+    content: "✓ CSS ATIVO - ALTO CONTRASTE";
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: #004d40;
+    color: #ffffff;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 99999;
+    border: 2px solid #000000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+*/
+
+/* ==========================================================================
+   LAYOUT CONTAINER
+   ========================================================================== */
 .layout-container {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background: #f5f5f5;
 }
 
+/* ==========================================================================
+   HEADER - MENU SUPERIOR (ALTO CONTRASTE)
+   ========================================================================== */
 .layout-header {
-    background-color: #2c3e50 !important;
+    background: #003366 !important; /* Azul naval muito escuro */
+    padding: 0 !important;
+    border-bottom: 4px solid #ff6600 !important; /* Laranja forte para contraste */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    position: relative;
+    z-index: 1000;
+}
+
+.header-content {
     padding: 15px 20px;
-    color: white !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .header-title {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.header-title i {
+    color: #ffffff !important;
+    margin-right: 15px;
+    font-size: 2rem !important;
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.5));
 }
 
 .header-title span {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white !important;
+    font-size: 1.8rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
+    letter-spacing: 0.5px;
 }
 
+/* ==========================================================================
+   MENU PRINCIPAL - ALTO CONTRASTE
+   ========================================================================== */
 .main-menu {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Container do menubar */
+.main-menu .ui-menubar {
     background: transparent !important;
     border: none !important;
 }
 
+/* Itens do menu PRINCIPAIS */
+.main-menu .ui-menuitem-link,
+.main-menu .ui-menuitem-text,
+.main-menu .ui-menuitem .ui-menuitem-text {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Links dos itens do menu */
 .main-menu .ui-menuitem-link {
-    color: white !important;
-}
-
-.main-menu .ui-menuitem-link:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-.user-info {
-    color: white !important;
+    padding: 15px 25px !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
+    transition: all 0.2s ease !important;
     display: flex;
     align-items: center;
+    gap: 10px;
 }
 
+/* Remover borda do último item */
+.main-menu .ui-menuitem:last-child .ui-menuitem-link {
+    border-right: none !important;
+}
+
+/* Hover dos itens do menu */
+.main-menu .ui-menuitem-link:hover {
+    background-color: #004080 !important; /* Azul mais claro no hover */
+    color: #ffffff !important;
+    text-decoration: underline !important;
+    text-decoration-thickness: 2px;
+}
+
+/* Item ativo/selecionado */
+.main-menu .ui-state-active,
+.main-menu .ui-menuitem.ui-state-active > .ui-menuitem-link {
+    background-color: #ff6600 !important; /* Laranja forte */
+    color: #000000 !important; /* Texto preto sobre laranja */
+    font-weight: 800 !important;
+    text-shadow: none !important;
+}
+
+/* Ícones do menu */
+.main-menu .ui-menuitem-icon {
+    color: #ffffff !important;
+    margin-right: 10px !important;
+    font-size: 1.2rem !important;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.5));
+}
+
+.main-menu .ui-state-active .ui-menuitem-icon {
+    color: #000000 !important;
+    filter: none;
+}
+
+/* Submenus */
+.main-menu .ui-menu-child {
+    background: #003366 !important; /* Mesmo azul escuro do header */
+    border: 2px solid #ff6600 !important; /* Borda laranja */
+    border-radius: 0 !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5) !important;
+    padding: 10px 0 !important;
+    min-width: 220px;
+}
+
+/* Itens do submenu */
+.main-menu .ui-menu-child .ui-menuitem-link {
+    color: #ffffff !important;
+    padding: 12px 25px !important;
+    border-right: none !important;
+    font-weight: 600 !important;
+    text-transform: none;
+    font-size: 15px !important;
+}
+
+.main-menu .ui-menu-child .ui-menuitem-link:hover {
+    background-color: #004080 !important;
+    color: #ffffff !important;
+}
+
+/* Submenu ativo */
+.main-menu .ui-menu-child .ui-state-active {
+    background-color: #ff6600 !important;
+    color: #000000 !important;
+}
+
+/* ==========================================================================
+   ÁREA DO USUÁRIO - ALTO CONTRASTE
+   ========================================================================== */
+.user-info {
+    color: #ffffff !important;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    margin-left: auto;
+    padding: 0 15px;
+}
+
+.user-info .ui-outputlabel {
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5px 15px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* ==========================================================================
+   BOTÃO LOGOUT - ALTO CONTRASTE
+   ========================================================================== */
 .logout-button {
-    background-color: #e74c3c !important;
-    border: 1px solid #c0392b !important;
-    color: white !important;
-    padding: 5px 15px !important;
+    background: #cc0000 !important; /* Vermelho forte */
+    border: 2px solid #000000 !important;
+    color: #ffffff !important;
+    padding: 10px 25px !important;
     border-radius: 4px !important;
+    font-weight: 800 !important;
+    font-size: 15px !important;
+    transition: all 0.2s ease !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .logout-button:hover {
-    background-color: #c0392b !important;
+    background: #990000 !important; /* Vermelho mais escuro */
+    border-color: #000000 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
 }
 
+.logout-button .ui-button-icon-left {
+    color: #ffffff !important;
+}
+
+/* ==========================================================================
+   CONTEÚDO PRINCIPAL
+   ========================================================================== */
 .layout-content {
     flex: 1;
     padding: 30px;
-    background-color: white;
+    background-color: #ffffff;
     margin: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    border-radius: 0;
+    border: 3px solid #003366;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* ==========================================================================
+   CONTEÚDO DE BOAS-VINDAS - ALTO CONTRASTE
+   ========================================================================== */
 .welcome-content {
     text-align: center;
     padding: 60px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #f9f9f9;
+    border: 2px solid #003366;
+    border-radius: 0;
 }
 
 .welcome-content h1 {
-    color: #2c3e50;
-    margin-bottom: 20px;
-    font-size: 2.5rem;
+    color: #003366 !important; /* Azul escuro igual ao header */
+    margin-bottom: 30px;
+    font-size: 2.8rem !important;
+    font-weight: 900 !important;
+    line-height: 1.3;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1);
+    border-bottom: 3px solid #ff6600;
+    padding-bottom: 20px;
+    display: inline-block;
 }
 
 .welcome-content p {
-    color: #7f8c8d;
-    font-size: 1.2rem;
+    color: #000000 !important; /* Preto puro */
+    font-size: 1.4rem !important;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    font-weight: 500;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
 }
+
+/* ==========================================================================
+   COMPONENTES PRIMEFACES - ALTO CONTRASTE
+   ========================================================================== */
 
 /* Cards */
 .ui-card {
-    border: 1px solid #e9ecef !important;
-    border-radius: 8px !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+    border: 3px solid #003366 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+    background: #ffffff !important;
+    margin-bottom: 20px;
 }
 
 .ui-card-title {
-    color: #2c3e50 !important;
-    font-size: 1.25rem !important;
-    font-weight: 600 !important;
-    border-bottom: 1px solid #e9ecef !important;
-    padding-bottom: 10px !important;
-    margin-bottom: 15px !important;
+    color: #003366 !important;
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
+    border-bottom: 3px solid #ff6600 !important;
+    padding-bottom: 15px !important;
+    margin-bottom: 20px !important;
+    background: #f0f8ff;
+    padding: 15px 20px !important;
 }
 
-/* Teste visual - BORDA VERMELHA se o CSS não carregar */
-body:before {
-    content: "CSS CARREGADO";
-    display: none;
+/* Formulários */
+.ui-panelgrid {
+    border: 2px solid #003366 !important;
+}
+
+.ui-panelgrid .ui-panelgrid-cell {
+    padding: 20px !important;
+    border: 1px solid #cccccc !important;
+    background: #ffffff !important;
+}
+
+.ui-outputlabel {
+    color: #003366 !important;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+}
+
+.ui-inputfield {
+    border: 2px solid #003366 !important;
+    border-radius: 0 !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+}
+
+.ui-inputfield:focus {
+    border-color: #ff6600 !important;
+    outline: 3px solid rgba(255, 102, 0, 0.3) !important;
+    background: #fffaf0 !important;
+}
+
+/* Botões gerais */
+.ui-button {
+    font-weight: 700 !important;
+    padding: 12px 25px !important;
+    border-radius: 0 !important;
+    font-size: 15px !important;
+    border: 2px solid #000000 !important;
+}
+
+.ui-button-primary {
+    background: #003366 !important;
+    color: #ffffff !important;
+}
+
+.ui-button-primary:hover {
+    background: #004080 !important;
+}
+
+/* Growl notifications */
+.ui-growl {
+    top: 100px !important;
+    right: 20px !important;
+}
+
+.ui-growl-item-container {
+    border: 2px solid #000000 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    opacity: 1 !important;
+}
+
+.ui-growl-title {
+    font-weight: 800 !important;
+    font-size: 16px !important;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE - MOBILE FIRST
+   ========================================================================== */
+
+/* Dispositivos pequenos (celulares) */
+@media (max-width: 767px) {
+    body {
+        font-size: 14px !important;
+    }
+    
+    .layout-header {
+        padding: 5px 10px !important;
+    }
+    
+    .header-content {
+        padding: 10px;
+    }
+    
+    .header-title {
+        flex-direction: column;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .header-title span {
+        font-size: 1.4rem !important;
+        margin-top: 5px;
+    }
+    
+    .header-title i {
+        margin-right: 0;
+        margin-bottom: 5px;
+        font-size: 1.8rem !important;
+    }
+    
+    /* Menu em mobile - vira hamburguer ou vertical */
+    .main-menu .ui-menubar {
+        flex-direction: column;
+    }
+    
+    .main-menu .ui-menuitem {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .main-menu .ui-menuitem-link {
+        padding: 15px !important;
+        border-right: none !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        margin-top: 15px;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.2);
+        border-top: 2px solid #ff6600;
+    }
+    
+    .user-info .ui-outputlabel {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .layout-content {
+        margin: 10px;
+        padding: 20px;
+        border-width: 2px;
+    }
+    
+    .welcome-content {
+        padding: 30px 15px;
+        margin: 10px;
+    }
+    
+    .welcome-content h1 {
+        font-size: 1.8rem !important;
+        padding-bottom: 15px;
+    }
+    
+    .welcome-content p {
+        font-size: 1.1rem !important;
+    }
+    
+    .logout-button {
+        width: 100%;
+        padding: 12px !important;
+    }
+}
+
+/* Dispositivos médios (tablets) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .header-title span {
+        font-size: 1.5rem !important;
+    }
+    
+    .main-menu .ui-menuitem-link {
+        padding: 12px 15px !important;
+        font-size: 14px !important;
+    }
+    
+    .layout-content {
+        margin: 15px;
+        padding: 25px;
+    }
+    
+    .welcome-content h1 {
+        font-size: 2.2rem !important;
+    }
+    
+    .welcome-content p {
+        font-size: 1.2rem !important;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+/* Dispositivos grandes (desktops) */
+@media (min-width: 1024px) {
+    .header-content {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    
+    .header-title {
+        margin-bottom: 0;
+        margin-right: 30px;
+    }
+    
+    .main-menu {
+        flex: 1;
+    }
+    
+    .user-info {
+        margin-left: auto;
+    }
+}
+
+/* ==========================================================================
+   ACESSIBILIDADE - FEATURES ESPECIAIS
+   ========================================================================== */
+
+/* Foco visível para teclado */
+.ui-menuitem-link:focus,
+.ui-button:focus,
+.ui-inputfield:focus {
+    outline: 3px solid #ff6600 !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.5) !important;
+}
+
+/* Alto contraste para usuários que preferem */
+@media (prefers-contrast: high) {
+    body {
+        background: #000000 !important;
+        color: #ffffff !important;
+    }
+    
+    .layout-content {
+        background: #000000 !important;
+        color: #ffffff !important;
+        border-color: #ffffff !important;
+    }
+    
+    .ui-card {
+        background: #000000 !important;
+        border-color: #ffffff !important;
+    }
+}
+
+/* Texto grande para baixa visão */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Modo de alto contraste ativo */
+body.high-contrast {
+    filter: contrast(1.5) !important;
+}
+
+/* ==========================================================================
+   UTILITÁRIOS
+   ========================================================================== */
+
+/* Texto escondido visualmente mas acessível para screen readers */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Classes de cor para texto */
+.text-high-contrast {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    border: 2px solid #000000 !important;
+}
+
+.text-warning {
+    color: #ff6600 !important;
+    font-weight: 700 !important;
+}
+
+.text-danger {
+    color: #cc0000 !important;
+    font-weight: 700 !important;
+}
+
+/* Classes de fundo */
+.bg-primary-dark {
+    background: #003366 !important;
+    color: #ffffff !important;
+}
+
+.bg-primary-light {
+    background: #f0f8ff !important;
+    color: #003366 !important;
+}
+
+/* Print styles */
+@media print {
+    .layout-header,
+    .logout-button,
+    .ui-growl {
+        display: none !important;
+    }
+    
+    .layout-content {
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+    }
 }

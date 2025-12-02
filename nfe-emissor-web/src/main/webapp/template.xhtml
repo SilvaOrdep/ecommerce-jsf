@@ -11,7 +11,7 @@
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             
-            <!-- CSS customizado -->
+            <!-- CSS customizado - Condicional -->
             <h:outputStylesheet name="css/styles.css"/>
         </h:head>
         
@@ -55,7 +55,7 @@
                                         <div class="user-info">
                                             <p:outputLabel value="Bem-vindo, #{loginController.usuarioLogado.nome}" 
                                                           style="margin-right: 10px;"/>
-                                            <!-- Botão de logout CORRIGIDO -->
+                                            <!-- Botão de logout -->
                                             <p:commandButton value="Sair" icon="pi pi-power-off" 
                                                            action="#{loginController.logout}"
                                                            styleClass="logout-button"
@@ -82,9 +82,11 @@
             
             <ui:fragment rendered="#{not loginController.loggedIn}">
                 <div style="text-align: center; padding: 50px;">
-                    <h2>Acesso não autorizado</h2>
-                    <p>Você precisa fazer login para acessar esta página.</p>
-                    <p:button value="Ir para Login" outcome="/login.xhtml" />
+                    <h:form>
+                        <h2>Acesso não autorizado</h2>
+                        <p>Você precisa fazer login para acessar esta página.</p>
+                        <p:button value="Ir para Login" outcome="/login.xhtml" />
+                    </h:form>
                 </div>
             </ui:fragment>
         </h:body>

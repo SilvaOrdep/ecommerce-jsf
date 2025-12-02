@@ -7,7 +7,19 @@
 
     <ui:define name="content">
         <div class="p-p-4">
+            <!-- Debug info (remover depois) -->
+            <!--
+            <div style="background: #f0f0f0; padding: 5px; margin-bottom: 10px; border: 1px solid #ccc;">
+                Debug: editando = #{usuarioController.editando}, 
+                usuarios = #{not empty usuarioController.usuarios ? usuarioController.usuarios.size() : 0}, 
+                usuario = #{usuarioController.usuario != null},
+                selecionado = #{usuarioController.usuarioSelecionado != null ? usuarioController.usuarioSelecionado.nome : 'Nenhum'}
+            </div>
+            -->
             <h:form id="form">
+                <!-- Adicionar growl específico para este formulário -->
+                <p:growl id="growl" showDetail="true" life="3000" />
+                
                 <p:card>
                     <f:facet name="title">
                         <div class="p-d-flex p-ai-center p-jc-between">
@@ -17,131 +29,146 @@
                             </div>
                             <p:commandButton value="Novo Usuário" icon="pi pi-plus" 
                                            action="#{usuarioController.novoUsuario}" 
-                                           update=":form:grid,:form:formPanel"
-                                           rendered="#{!usuarioController.editando}"/>
+                                           update=":form"
+                                           rendered="#{!usuarioController.editando}"
+                                           immediate="true"/>
                         </div>
                     </f:facet>
 
-                    <f:facet name="content">
-                        <!-- Grid de Usuários -->
-                        <p:outputPanel id="grid" rendered="#{!usuarioController.editando}">
-                            <p:dataTable id="usuariosTable" var="user" value="#{usuarioController.usuarios}" 
-                                       paginator="true" rows="10" 
-                                       selection="#{usuarioController.usuarioSelecionado}"
-                                       selectionMode="single"
-                                       emptyMessage="Nenhum usuário cadastrado">
+                    <!-- Grid de Usuários - Mostrar quando NÃO está editando -->
+                    <p:outputPanel rendered="#{!usuarioController.editando}">
+                        <p:dataTable id="usuariosTable" var="user" value="#{usuarioController.usuarios}" 
+                                   paginator="true" rows="10" 
+                                   selection="#{usuarioController.usuarioSelecionado}"
+                                   selectionMode="single"
+                                   rowKey="#{user.id}"
+                                   emptyMessage="Nenhum usuário cadastrado">
+                            
+                            <!-- Adicionar evento de seleção -->
+                            <p:ajax event="rowSelect" 
+                                   listener="#{usuarioController.onRowSelect}" 
+                                   update="@form"/>
+                            <p:ajax event="rowUnselect" 
+                                   listener="#{usuarioController.onRowUnselect}" 
+                                   update="@form"/>
 
-                                <p:column headerText="Nome">
-                                    <h:outputText value="#{user.nome}"/>
-                                </p:column>
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{user.nome}"/>
+                            </p:column>
 
-                                <p:column headerText="Login">
-                                    <h:outputText value="#{user.login}"/>
-                                </p:column>
+                            <p:column headerText="Login">
+                                <h:outputText value="#{user.login}"/>
+                            </p:column>
 
-                                <p:column headerText="Email">
-                                    <h:outputText value="#{user.email}"/>
-                                </p:column>
+                            <p:column headerText="Email">
+                                <h:outputText value="#{user.email}"/>
+                            </p:column>
 
-                                <p:column headerText="Perfil" style="width: 100px;">
-                                    <p:tag value="#{user.perfil}" 
-                                         severity="#{user.perfil == 'ADMIN' ? 'danger' : 'info'}"/>
-                                </p:column>
+                            <p:column headerText="Perfil" style="width: 100px;">
+                                <p:tag value="#{user.perfil}" 
+                                     severity="#{user.perfil == 'ADMIN' ? 'danger' : 'info'}"/>
+                            </p:column>
 
-                                <p:column headerText="Status" style="width: 100px;">
-                                    <p:tag value="#{user.ativo ? 'Ativo' : 'Inativo'}" 
-                                         severity="#{user.ativo ? 'success' : 'secondary'}"/>
-                                </p:column>
+                            <p:column headerText="Status" style="width: 100px;">
+                                <p:tag value="#{user.ativo ? 'Ativo' : 'Inativo'}" 
+                                     severity="#{user.ativo ? 'success' : 'secondary'}"/>
+                            </p:column>
 
-                                <p:column headerText="Ações" style="width: 120px;">
-                                    <p:commandButton icon="pi pi-pencil" title="Editar" 
-                                                   action="#{usuarioController.editarUsuario}"
-                                                   update=":form:grid,:form:formPanel"/>
-                                    <p:commandButton icon="pi pi-trash" title="Excluir" 
-                                                   style="margin-left: 5px;"
-                                                   action="#{usuarioController.excluirUsuario}"
-                                                   update=":form:grid,:form:growl"/>
-                                </p:column>
-                            </p:dataTable>
-                        </p:outputPanel>
+                            <p:column headerText="Ações" style="width: 120px;">
+                                <!-- Botão Editar - passa o usuário atual como parâmetro -->
+                                <p:commandButton icon="pi pi-pencil" title="Editar" 
+                                               action="#{usuarioController.editarUsuario}"
+                                               update="@form"
+                                               immediate="true">
+                                    <f:setPropertyActionListener target="#{usuarioController.usuarioSelecionado}" value="#{user}" />
+                                </p:commandButton>
+                                
+                                <!-- Botão Excluir - passa o usuário atual como parâmetro -->
+                                <p:commandButton icon="pi pi-trash" title="Excluir" 
+                                               style="margin-left: 5px;"
+                                               action="#{usuarioController.excluirUsuario}"
+                                               update="@form"
+                                               onclick="if(confirm('Tem certeza que deseja excluir o usuário #{user.nome}?')) { return true; } else { return false; }">
+                                    <f:setPropertyActionListener target="#{usuarioController.usuarioSelecionado}" value="#{user}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
 
-                        <!-- Formulário de Usuário -->
-                        <p:outputPanel id="formPanel" rendered="#{usuarioController.editando}">
-                            <p:panel header="Usuário" style="margin-bottom: 20px;">
-                                <div class="p-fluid">
-                                    <div class="p-grid">
-                                        <div class="p-col-12">
-                                            <p:outputLabel for="nome" value="Nome Completo *"/>
-                                            <p:inputText id="nome" value="#{usuarioController.usuario.nome}" 
-                                                       required="true" requiredMessage="Nome é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
-
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="login" value="Login *"/>
-                                            <p:inputText id="login" value="#{usuarioController.usuario.login}" 
-                                                       required="true" requiredMessage="Login é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
-
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="email" value="Email *"/>
-                                            <p:inputText id="email" value="#{usuarioController.usuario.email}" 
-                                                       required="true" requiredMessage="Email é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
-
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="senha" value="Senha #{usuarioController.usuario.id == null ? '*' : ''}"/>
-                                            <p:password id="senha" value="#{usuarioController.usuario.senha}" 
-                                                      feedback="false" 
-                                                      required="#{usuarioController.usuario.id == null}"
-                                                      requiredMessage="Senha é obrigatória para novo usuário"
-                                                      style="width: 100%"/>
-                                        </div>
-
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="confirmarSenha" value="Confirmar Senha #{usuarioController.usuario.id == null ? '*' : ''}"/>
-                                            <p:password id="confirmarSenha" value="#{usuarioController.confirmarSenha}" 
-                                                      feedback="false" 
-                                                      required="#{usuarioController.usuario.id == null}"
-                                                      requiredMessage="Confirmação de senha é obrigatória"
-                                                      style="width: 100%"/>
-                                        </div>
-
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="perfil" value="Perfil *"/>
-                                            <p:selectOneMenu id="perfil" value="#{usuarioController.usuario.perfil}" 
-                                                           required="true" requiredMessage="Perfil é obrigatório"
-                                                           style="width: 100%">
-                                                <f:selectItem itemLabel="Usuário" itemValue="USER"/>
-                                                <f:selectItem itemLabel="Administrador" itemValue="ADMIN"/>
-                                            </p:selectOneMenu>
-                                        </div>
-
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="ativo" value="Status"/>
-                                            <p:selectOneMenu id="ativo" value="#{usuarioController.usuario.ativo}" 
-                                                           style="width: 100%">
-                                                <f:selectItem itemLabel="Ativo" itemValue="true"/>
-                                                <f:selectItem itemLabel="Inativo" itemValue="false"/>
-                                            </p:selectOneMenu>
-                                        </div>
+                    <!-- Formulário de Usuário - Mostrar quando está editando -->
+                    <p:outputPanel rendered="#{usuarioController.editando}">
+                        <p:panel header="Usuário" style="margin-bottom: 20px;">
+                            <div class="p-fluid">
+                                <div class="p-grid">
+                                    <div class="p-col-12">
+                                        <p:outputLabel for="nome" value="Nome Completo *"/>
+                                        <p:inputText id="nome" value="#{usuarioController.usuario.nome}" 
+                                                   required="true" requiredMessage="Nome é obrigatório"
+                                                   style="width: 100%"/>
                                     </div>
 
-                                    <div class="p-d-flex p-jc-end p-mt-3">
-                                        <p:commandButton value="Salvar" icon="pi pi-check" 
-                                                       action="#{usuarioController.salvarUsuario}"
-                                                       update=":form:grid,:form:formPanel,:form:growl"/>
-                                        <p:commandButton value="Cancelar" icon="pi pi-times" 
-                                                       action="#{usuarioController.cancelarEdicao}"
-                                                       style="margin-left: 5px;"
-                                                       update=":form:grid,:form:formPanel"/>
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="login" value="Login *"/>
+                                        <p:inputText id="login" value="#{usuarioController.usuario.login}" 
+                                                   required="true" requiredMessage="Login é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="email" value="Email *"/>
+                                        <p:inputText id="email" value="#{usuarioController.usuario.email}" 
+                                                   required="true" requiredMessage="Email é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="senha" value="Senha #{usuarioController.usuario.id == null ? '*' : '(deixe em branco para manter)'}"/>
+                                        <p:password id="senha" value="#{usuarioController.usuario.senha}" 
+                                                  feedback="false" 
+                                                  style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="confirmarSenha" value="Confirmar Senha #{usuarioController.usuario.id == null ? '*' : '(deixe em branco para manter)'}"/>
+                                        <p:password id="confirmarSenha" value="#{usuarioController.confirmarSenha}" 
+                                                  feedback="false" 
+                                                  style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="perfil" value="Perfil *"/>
+                                        <p:selectOneMenu id="perfil" value="#{usuarioController.usuario.perfil}" 
+                                                       required="true" requiredMessage="Perfil é obrigatório"
+                                                       style="width: 100%">
+                                            <f:selectItem itemLabel="Usuário" itemValue="USER"/>
+                                            <f:selectItem itemLabel="Administrador" itemValue="ADMIN"/>
+                                        </p:selectOneMenu>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="ativo" value="Status"/>
+                                        <p:selectOneMenu id="ativo" value="#{usuarioController.usuario.ativo}" 
+                                                       style="width: 100%">
+                                            <f:selectItem itemLabel="Ativo" itemValue="true"/>
+                                            <f:selectItem itemLabel="Inativo" itemValue="false"/>
+                                        </p:selectOneMenu>
                                     </div>
                                 </div>
-                            </p:panel>
-                        </p:outputPanel>
-                    </f:facet>
+
+                                <div class="p-d-flex p-jc-end p-mt-3">
+                                    <p:commandButton value="Salvar" icon="pi pi-check" 
+                                                   action="#{usuarioController.salvarUsuario}"
+                                                   update="@form"
+                                                   process="@form"/>
+                                    <p:commandButton value="Cancelar" icon="pi pi-times" 
+                                                   action="#{usuarioController.cancelarEdicao}"
+                                                   style="margin-left: 5px;"
+                                                   update="@form"
+                                                   immediate="true"/>
+                                </div>
+                            </div>
+                        </p:panel>
+                    </p:outputPanel>
                 </p:card>
             </h:form>
         </div>
