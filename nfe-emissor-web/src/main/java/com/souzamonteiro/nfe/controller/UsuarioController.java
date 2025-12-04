@@ -21,7 +21,7 @@ public class UsuarioController implements Serializable {
     private Usuario usuario;
     private Usuario usuarioSelecionado;
     private boolean editando = false;
-    private String confirmarSenha;
+    private String confirmarSenha = "";
     
     @PostConstruct
     public void init() {
@@ -65,11 +65,22 @@ public class UsuarioController implements Serializable {
                 return;
             }
             
-            if (!usuario.getSenha().equals(confirmarSenha)) {
-                FacesContext.getCurrentInstance().addMessage("form:growl",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Erro", "Senha e confirmação não conferem."));
-                return;
+            if (usuarioSelecionado == null) {
+                if (!usuario.getSenha().equals(confirmarSenha)) {
+                    FacesContext.getCurrentInstance().addMessage("form:growl",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                        "Erro", "Senha e confirmação não conferem."));
+                    return;
+                }
+            } else {
+                if (!confirmarSenha.equals("")) {
+                    if (!usuario.getSenha().equals(confirmarSenha)) {
+                        FacesContext.getCurrentInstance().addMessage("form:growl",
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                            "Erro", "Senha e confirmação não conferem."));
+                        return;
+                    }
+                }
             }
             
             // Verificar se login já existe
@@ -115,9 +126,9 @@ public class UsuarioController implements Serializable {
             try {
                 // Não permitir excluir a si mesmo (opcional)
                 FacesContext context = FacesContext.getCurrentInstance();
-                String usuarioLogado = (String) context.getExternalContext().getSessionMap().get("usuarioLogado");
+                Usuario usuarioLogado = (Usuario) context.getExternalContext().getSessionMap().get("usuarioLogado");
                 
-                if (usuarioSelecionado.getLogin().equals(usuarioLogado)) {
+                if (usuarioSelecionado.getLogin().equals(usuarioLogado.getLogin())) {
                     FacesContext.getCurrentInstance().addMessage("form:growl",
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                         "Erro", "Você não pode excluir seu próprio usuário."));

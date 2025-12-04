@@ -10,17 +10,9 @@
             <title>NF-e Emissor</title>
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-            
-            <!-- CSS customizado - Condicional -->
-            <h:outputStylesheet name="css/styles.css"/>
         </h:head>
         
         <h:body>
-            <!-- Growl com form próprio -->
-            <h:form>
-                <p:growl id="growl" showDetail="true" life="3000" />
-            </h:form>
-            
             <ui:fragment rendered="#{loginController.loggedIn}">
                 <div class="layout-container">
                     <!-- Header -->

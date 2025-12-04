@@ -31,6 +31,7 @@
                                    paginator="true" rows="10" 
                                    selection="#{clienteController.clienteSelecionado}"
                                    selectionMode="single"
+                                   rowKey="#{cli.id}"
                                    emptyMessage="Nenhum cliente cadastrado">
 
                             <!-- Adicionar evento de seleção -->
@@ -74,7 +75,7 @@
                                                style="margin-left: 5px;"
                                                action="#{clienteController.excluirCliente}"
                                                update="@form"
-                                               onclick="if(confirm('Tem certeza que deseja excluir o cliente #{cli.nome}?')) { return true; } else { return false; }">
+                                               onclick="if(confirm('Tem certeza que deseja excluir o cliente #{cli.xnome}?')) { return true; } else { return false; }">
                                     <f:setPropertyActionListener target="#{clienteController.clienteSelecionado}" value="#{cli}" />
                                 </p:commandButton>
                             </p:column>
@@ -82,12 +83,12 @@
                     </p:outputPanel>
 
                     <!-- Formulário de Cliente -->
-                    <p:outputPanel id="formPanel" rendered="#{clienteController.editando}">
+                    <p:outputPanel rendered="#{clienteController.editando}">
                         <p:panel header="Cliente" style="margin-bottom: 20px;">
                             <div class="p-fluid">
                                 <div class="p-grid">
                                     <div class="p-col-12">
-                                        <p:outputLabel for="xnome" value="Nome/Razão Social *"/>
+                                        <p:outputLabel for="xnome" value="Nome/Razão Social"/>
                                         <p:inputText id="xnome" value="#{clienteController.cliente.xnome}" 
                                                    required="true" requiredMessage="Nome é obrigatório"
                                                    style="width: 100%"/>
@@ -115,7 +116,7 @@
 
                                     <div class="p-col-12 p-md-6">
                                         <p:outputLabel for="indIEDest" value="Indicador IE"/>
-                                        <p:selectOneMenu id="indIEDest" value="#{clienteController.cliente.indIEDest}" 
+                                        <p:selectOneMenu id="indIEDest" value="#{clienteController.cliente.indiedest}" 
                                                        style="width: 100%">
                                             <f:selectItem itemLabel="Contribuinte ICMS" itemValue="1"/>
                                             <f:selectItem itemLabel="Contribuinte Isento" itemValue="2"/>
@@ -127,14 +128,14 @@
                                 <p:panel header="Endereço" toggleable="true" collapsed="false">
                                     <div class="p-grid">
                                         <div class="p-col-12 p-md-8">
-                                            <p:outputLabel for="xlgr" value="Logradouro *"/>
+                                            <p:outputLabel for="xlgr" value="Logradouro"/>
                                             <p:inputText id="xlgr" value="#{clienteController.cliente.xlgr}" 
                                                        required="true" requiredMessage="Logradouro é obrigatório"
                                                        style="width: 100%"/>
                                         </div>
 
                                         <div class="p-col-12 p-md-4">
-                                            <p:outputLabel for="nro" value="Número *"/>
+                                            <p:outputLabel for="nro" value="Número"/>
                                             <p:inputText id="nro" value="#{clienteController.cliente.nro}" 
                                                        required="true" requiredMessage="Número é obrigatório"
                                                        style="width: 100%"/>
@@ -147,28 +148,28 @@
                                         </div>
 
                                         <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="xbairro" value="Bairro *"/>
+                                            <p:outputLabel for="xbairro" value="Bairro"/>
                                             <p:inputText id="xbairro" value="#{clienteController.cliente.xbairro}" 
                                                        required="true" requiredMessage="Bairro é obrigatório"
                                                        style="width: 100%"/>
                                         </div>
 
                                         <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="cmun" value="Código Município *"/>
+                                            <p:outputLabel for="cmun" value="Código Município"/>
                                             <p:inputText id="cmun" value="#{clienteController.cliente.cmun}" 
                                                        required="true" requiredMessage="Código município é obrigatório"
                                                        style="width: 100%"/>
                                         </div>
 
                                         <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="xmun" value="Município *"/>
+                                            <p:outputLabel for="xmun" value="Município"/>
                                             <p:inputText id="xmun" value="#{clienteController.cliente.xmun}" 
                                                        required="true" requiredMessage="Município é obrigatório"
                                                        style="width: 100%"/>
                                         </div>
 
                                         <div class="p-col-12 p-md-3">
-                                            <p:outputLabel for="uf" value="UF *"/>
+                                            <p:outputLabel for="uf" value="UF"/>
                                             <p:selectOneMenu id="uf" value="#{clienteController.cliente.uf}" 
                                                            required="true" requiredMessage="UF é obrigatória"
                                                            style="width: 100%">
@@ -178,7 +179,7 @@
                                         </div>
 
                                         <div class="p-col-12 p-md-3">
-                                            <p:outputLabel for="cep" value="CEP *"/>
+                                            <p:outputLabel for="cep" value="CEP"/>
                                             <p:inputMask id="cep" value="#{clienteController.cliente.cep}" 
                                                         mask="99999-999" 
                                                         required="true" requiredMessage="CEP é obrigatório"
