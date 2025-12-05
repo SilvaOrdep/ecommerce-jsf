@@ -279,7 +279,10 @@ INSERT INTO cliente (
     '98765432100',
     'Av. Sete de Setembro', '100', 'Centro', '2927408', 'Salvador', 'BA', 
     '40020000', '7133334444', 'maria.oliveira@email.com'
-),
+);
+INSERT INTO cliente (
+    xnome, cnpj, xlgr, nro, xbairro, cmun, xmun, uf, cep, fone, email
+) VALUES 
 (
     'Tech Solutions LTDA', 
     '13937073000156',

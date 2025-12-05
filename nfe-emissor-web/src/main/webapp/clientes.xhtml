@@ -47,10 +47,7 @@
                             </p:column>
 
                             <p:column headerText="CPF/CNPJ" style="width: 150px;">
-                                <h:outputText value="#{cli.documento}">
-                                    <f:convertNumber type="pattern" pattern="###.###.###-##" rendered="#{cli.tipoDocumento == 'F'}"/>
-                                    <f:convertNumber type="pattern" pattern="##.###.###/####-##" rendered="#{cli.tipoDocumento == 'J'}"/>
-                                </h:outputText>
+                                <h:outputText value="#{cli.documentoFormatado}"/>
                             </p:column>
 
                             <p:column headerText="Município">
@@ -98,6 +95,7 @@
                                         <p:outputLabel for="cpf" value="CPF"/>
                                         <p:inputMask id="cpf" value="#{clienteController.cliente.cpf}" 
                                                     mask="999.999.999-99" 
+                                                    converter="numeroConverter"
                                                     style="width: 100%"/>
                                     </div>
 
@@ -105,6 +103,7 @@
                                         <p:outputLabel for="cnpj" value="CNPJ"/>
                                         <p:inputMask id="cnpj" value="#{clienteController.cliente.cnpj}" 
                                                     mask="99.999.999/9999-99" 
+                                                    converter="numeroConverter"
                                                     style="width: 100%"/>
                                     </div>
 
@@ -182,6 +181,7 @@
                                             <p:outputLabel for="cep" value="CEP"/>
                                             <p:inputMask id="cep" value="#{clienteController.cliente.cep}" 
                                                         mask="99999-999" 
+                                                        converter="numeroConverter"
                                                         required="true" requiredMessage="CEP é obrigatório"
                                                         style="width: 100%"/>
                                         </div>
@@ -190,6 +190,7 @@
                                             <p:outputLabel for="fone" value="Telefone"/>
                                             <p:inputMask id="fone" value="#{clienteController.cliente.fone}" 
                                                         mask="(99) 99999-9999" 
+                                                        converter="numeroConverter"
                                                         style="width: 100%"/>
                                         </div>
 
@@ -209,8 +210,7 @@
                                     <p:commandButton value="Cancelar" icon="pi pi-times" 
                                                    action="#{clienteController.cancelarEdicao}"
                                                    style="margin-left: 5px;"
-                                                   update="@form"
-                                                   immediate="true"/>
+                                                   update="@form"/>
                                 </div>
                             </div>
                         </p:panel>

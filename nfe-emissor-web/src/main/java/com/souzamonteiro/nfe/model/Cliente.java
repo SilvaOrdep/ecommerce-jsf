@@ -322,4 +322,83 @@ public class Cliente implements Serializable {
         return null;
     }
     
+    public String getCpfFormatado() {
+        if (cpf == null || cpf.trim().isEmpty()) {
+            return "";
+        }
+        String cpfLimpo = cpf.replaceAll("\\D", "");
+        if (cpfLimpo.length() == 11) {
+            return cpfLimpo.substring(0, 3) + "." + 
+                   cpfLimpo.substring(3, 6) + "." + 
+                   cpfLimpo.substring(6, 9) + "-" + 
+                   cpfLimpo.substring(9);
+        }
+        return cpf;
+    }
+
+    public String getCnpjFormatado() {
+        if (cnpj == null || cnpj.trim().isEmpty()) {
+            return "";
+        }
+        String cnpjLimpo = cnpj.replaceAll("\\D", "");
+        if (cnpjLimpo.length() == 14) {
+            return cnpjLimpo.substring(0, 2) + "." + 
+                   cnpjLimpo.substring(2, 5) + "." + 
+                   cnpjLimpo.substring(5, 8) + "/" + 
+                   cnpjLimpo.substring(8, 12) + "-" + 
+                   cnpjLimpo.substring(12);
+        }
+        return cnpj;
+    }
+
+    public String getCepFormatado() {
+        if (cep == null || cep.trim().isEmpty()) {
+            return "";
+        }
+        String cepLimpo = cep.replaceAll("\\D", "");
+        if (cepLimpo.length() == 8) {
+            return cepLimpo.substring(0, 5) + "-" + cepLimpo.substring(5);
+        }
+        return cep;
+    }
+
+    public String getTelefoneFormatado() {
+        if (fone == null || fone.trim().isEmpty()) {
+            return "";
+        }
+        String foneLimpo = fone.replaceAll("\\D", "");
+        if (foneLimpo.length() == 10) {
+            // Formato: (00) 0000-0000
+            return "(" + foneLimpo.substring(0, 2) + ") " + 
+                   foneLimpo.substring(2, 6) + "-" + 
+                   foneLimpo.substring(6);
+        } else if (foneLimpo.length() == 11) {
+            // Formato: (00) 00000-0000
+            return "(" + foneLimpo.substring(0, 2) + ") " + 
+                   foneLimpo.substring(2, 7) + "-" + 
+                   foneLimpo.substring(7);
+        }
+        return fone;
+    }
+
+    // Método para exibir documento formatado (CPF ou CNPJ)
+    public String getDocumentoFormatado() {
+        if (cpf != null && !cpf.trim().isEmpty()) {
+            return getCpfFormatado();
+        } else if (cnpj != null && !cnpj.trim().isEmpty()) {
+            return getCnpjFormatado();
+        }
+        return "";
+    }
+
+    // Método para identificar tipo de documento
+    public String getTipoDocumento() {
+        if (cpf != null && !cpf.trim().isEmpty()) {
+            return "F"; // Física
+        } else if (cnpj != null && !cnpj.trim().isEmpty()) {
+            return "J"; // Jurídica
+        }
+        return "";
+    }
+    
 }
