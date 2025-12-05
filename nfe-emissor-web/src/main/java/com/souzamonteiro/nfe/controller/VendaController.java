@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @ManagedBean
 @ViewScoped
@@ -58,9 +59,10 @@ public class VendaController implements Serializable {
     
     public void novaVenda() {
         venda = new Venda();
-        venda.setDataVenda(new Date()); // Corrigido: usando Date em vez de LocalDateTime
+        venda.setDataVenda(new Date());
         venda.setStatus("PENDENTE");
         venda.setValorTotal(BigDecimal.ZERO);
+        venda.setItemVendaCollection(new ArrayList<>()); // Inicializar a coleção
         itemVenda = new ItemVenda();
         itemVenda.setQuantidade(BigDecimal.ONE);
         clienteSelecionado = null;
@@ -79,40 +81,43 @@ public class VendaController implements Serializable {
     public void adicionarItem() {
         if (produtoSelecionado != null && itemVenda.getQuantidade() != null && 
             itemVenda.getQuantidade().compareTo(BigDecimal.ZERO) > 0) {
-            
+
             // Verificar se produto já está na venda
-            if (venda.getItemVendaCollection() != null) {
-                for (ItemVenda item : venda.getItemVendaCollection()) {
-                    if (item.getProdutoId() != null && 
-                        item.getProdutoId().getId().equals(produtoSelecionado.getId())) {
-                        FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_WARN, 
-                            "Aviso", "Produto já adicionado à venda."));
-                        return;
-                    }
+            for (ItemVenda item : venda.getItemVendaCollection()) {
+                if (item.getProdutoId() != null && 
+                    item.getProdutoId().getId().equals(produtoSelecionado.getId())) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, 
+                        "Aviso", "Produto já adicionado à venda."));
+                    return;
                 }
-            } else {
-                venda.setItemVendaCollection(new ArrayList<>());
             }
-            
+
             ItemVenda novoItem = new ItemVenda();
-            novoItem.setProdutoId(produtoSelecionado); // Corrigido: setProdutoId em vez de setProduto
+            novoItem.setProdutoId(produtoSelecionado);
             novoItem.setQuantidade(itemVenda.getQuantidade());
             novoItem.setValorUnitario(produtoSelecionado.getVuncom());
             novoItem.setValorTotal(itemVenda.getQuantidade().multiply(produtoSelecionado.getVuncom()));
+            novoItem.setDataCriacao(new Date()); // Adicionar data de criação
             
-            venda.getItemVendaCollection().add(novoItem); // Corrigido: usando getItemVendaCollection()
-            
+            // *** CORREÇÃO CRÍTICA: Associar a venda ao item ***
+            novoItem.setVendaId(venda);
+
+            venda.getItemVendaCollection().add(novoItem);
+
             // Calcular valor total da venda
             calcularTotalVenda();
-            
+
             // Limpar seleção
             produtoSelecionado = null;
             itemVenda = new ItemVenda();
             itemVenda.setQuantidade(BigDecimal.ONE);
-            
+
             // Atualizar componente via AJAX
-            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("form:vendaItens");
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
+                .add("form:vendaItens");
+            FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
+                .add("form:totalVenda");
         }
     }
     
@@ -137,7 +142,8 @@ public class VendaController implements Serializable {
     }
     
     public void finalizarVenda() {
-        if (clienteSelecionado == null) {
+        if (venda.getClienteId() == null) {
+            System.out.println("ERRO: Cliente é null");
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                 "Erro", "Selecione um cliente."));
@@ -152,12 +158,25 @@ public class VendaController implements Serializable {
         }
         
         try {
+            // *** CORREÇÃO CRÍTICA: Garantir que todos os itens tenham referência à venda ***
+            for (ItemVenda item : venda.getItemVendaCollection()) {
+                if (item.getVendaId() == null) {
+                    item.setVendaId(venda);
+                }
+                if (item.getDataCriacao() == null) {
+                    item.setDataCriacao(new Date());
+                }
+            }
+            
             // Associar cliente à venda
-            venda.setClienteId(clienteSelecionado); // Corrigido: setClienteId em vez de setCliente
+            venda.setClienteId(clienteSelecionado);
+            
+            // Preencher datas obrigatórias
+            venda.setDataCriacao(new Date());
             
             // Gerar número da NF-e
             Integer numeroNFe = vendaDAO.getProximoNumeroNFe();
-            venda.setNumeroNfe(numeroNFe); // Corrigido: setNumeroNfe em vez de setNumeroNFe
+            venda.setNumeroNfe(numeroNFe);
             
             // Salvar venda
             vendaDAO.save(venda);
@@ -167,6 +186,7 @@ public class VendaController implements Serializable {
             
             if (sucesso) {
                 venda.setStatus("EMITIDA");
+                venda.setDataAtualizacao(new Date());
                 vendaDAO.save(venda);
                 
                 FacesContext.getCurrentInstance().addMessage(null,
@@ -176,6 +196,7 @@ public class VendaController implements Serializable {
                 carregarVendas();
             } else {
                 venda.setStatus("ERRO");
+                venda.setDataAtualizacao(new Date());
                 vendaDAO.save(venda);
                 
                 FacesContext.getCurrentInstance().addMessage(null,
@@ -187,6 +208,7 @@ public class VendaController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                 "Erro", "Erro ao finalizar venda: " + e.getMessage()));
+            e.printStackTrace(); // Para debug
         }
     }
     
@@ -218,8 +240,8 @@ public class VendaController implements Serializable {
             String cStat = respostaJson.getString("cStat");
             
             if ("100".equals(cStat)) {
-                venda.setChaveNfe(respostaJson.getString("chave")); // Corrigido: setChaveNfe em vez de setChaveNFe
-                venda.setProtocoloNfe(respostaJson.getString("nProt")); // Corrigido: setProtocoloNfe em vez de setProtocoloNFe
+                venda.setChaveNfe(respostaJson.getString("chave"));
+                venda.setProtocoloNfe(respostaJson.getString("nProt"));
                 return true;
             } else {
                 FacesContext.getCurrentInstance().addMessage(null,
@@ -238,182 +260,376 @@ public class VendaController implements Serializable {
     
     private JSONObject construirJsonNFe(Venda venda, Empresa empresa, Configuracao config) {
         JSONObject nfeJson = new JSONObject();
-        
-        // Identificação da NF-e
-        JSONObject identNFe = new JSONObject();
-        identNFe.put("cUF", getCodigoUF(config.getEmitenteUf())); // Corrigido: getEmitenteUf() em vez de getEmitenteUF()
-        identNFe.put("cNF", String.format("%08d", venda.getNumeroNfe())); // Corrigido: getNumeroNfe() em vez de getNumeroNFe()
-        identNFe.put("natOp", config.getNaturezaOperacao());
-        identNFe.put("indPag", "0"); // 0=À vista, 1=A prazo, 2=Outros
-        identNFe.put("mod", "55"); // Modelo NF-e
-        identNFe.put("serie", config.getSerieNfe()); // Corrigido: getSerieNfe() em vez de getSerieNFe()
-        identNFe.put("nNF", venda.getNumeroNfe()); // Corrigido: getNumeroNfe() em vez de getNumeroNFe()
-        identNFe.put("dhEmi", new Date().toInstant().toString()); // Usando Date
-        identNFe.put("tpNF", "1"); // 1=Saída
-        identNFe.put("idDest", "1"); // 1=Operação interna
-        identNFe.put("cMunFG", empresa.getCmun());
-        identNFe.put("tpImp", "1"); // 1=Retrato
-        identNFe.put("tpEmis", "1"); // 1=Normal
-        identNFe.put("cDV", "1"); // Dígito verificador
-        identNFe.put("tpAmb", config.getWebserviceAmbiente());
-        identNFe.put("finNFe", config.getFinalidadeEmissao());
-        identNFe.put("indFinal", config.getConsumidorFinal());
-        identNFe.put("indPres", config.getPresencaComprador());
-        identNFe.put("procEmi", "0"); // 0=Emissão própria
-        identNFe.put("verProc", "1.0");
-        
-        // Emitente
-        JSONObject emitente = new JSONObject();
-        emitente.put("CNPJ", empresa.getCnpj());
-        emitente.put("xNome", empresa.getXnome());
-        emitente.put("xFant", empresa.getXfant());
-        emitente.put("IE", empresa.getIe());
-        emitente.put("CRT", empresa.getCrt());
-        
+        JSONObject infNFe = new JSONObject();
+
+        // 1. IDE (Identificação da NF-e)
+        JSONObject ide = new JSONObject();
+        ide.put("cUF", getCodigoUF(config.getEmitenteUf()));
+
+        // cNF deve ser string com 8 dígitos
+        String cnfStr = String.format("%08d", venda.getNumeroNfe() + 1);
+        ide.put("cNF", cnfStr);
+
+        ide.put("natOp", config.getNaturezaOperacao());
+        ide.put("mod", "55");
+
+        // serie deve ser string
+        ide.put("serie", config.getSerieNfe());
+
+        // nNF deve ser string - CORREÇÃO AQUI
+        String nNFStr = String.valueOf(venda.getNumeroNfe());
+        ide.put("nNF", nNFStr);
+
+        // Formatar data no formato correto
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ide.put("dhEmi", sdf.format(venda.getDataVenda()));
+
+        ide.put("tpNF", "1");
+        ide.put("idDest", "1");
+        ide.put("cMunFG", empresa.getCmun());
+        ide.put("tpImp", "1");
+        ide.put("tpEmis", "1");
+        ide.put("cDV", "6"); // Para homologação
+        ide.put("tpAmb", config.getWebserviceAmbiente());
+        ide.put("finNFe", config.getFinalidadeEmissao());
+        ide.put("indFinal", config.getConsumidorFinal());
+        ide.put("indPres", config.getPresencaComprador());
+        ide.put("procEmi", "0");
+        ide.put("verProc", "1.0");
+
+        infNFe.put("ide", ide);
+
+        // 2. EMITENTE
+        JSONObject emit = new JSONObject();
+        emit.put("CNPJ", empresa.getCnpj());
+        emit.put("xNome", empresa.getXnome());
+        emit.put("IE", empresa.getIe());
+        emit.put("CRT", empresa.getCrt());
+
         JSONObject enderEmit = new JSONObject();
         enderEmit.put("xLgr", empresa.getXlgr());
         enderEmit.put("nro", empresa.getNro());
-        enderEmit.put("xCpl", empresa.getXcpl() != null ? empresa.getXcpl() : "");
+        if (empresa.getXcpl() != null) {
+            enderEmit.put("xCpl", empresa.getXcpl());
+        }
         enderEmit.put("xBairro", empresa.getXbairro());
         enderEmit.put("cMun", empresa.getCmun());
         enderEmit.put("xMun", empresa.getXmun());
         enderEmit.put("UF", empresa.getUf());
         enderEmit.put("CEP", empresa.getCep());
-        enderEmit.put("cPais", empresa.getCpais());
-        enderEmit.put("xPais", empresa.getXpais());
+        enderEmit.put("cPais", "1058");
+        enderEmit.put("xPais", "Brasil");
         enderEmit.put("fone", empresa.getFone() != null ? empresa.getFone() : "");
-        
-        emitente.put("enderEmit", enderEmit);
-        
-        // Destinatário
-        JSONObject destinatario = new JSONObject();
-        Cliente cliente = venda.getClienteId(); // Corrigido: getClienteId() em vez de getCliente()
-        if (cliente.getCpf() != null && !cliente.getCpf().isEmpty()) {
-            destinatario.put("CPF", cliente.getCpf());
-        } else {
-            destinatario.put("CNPJ", cliente.getCnpj());
+        if (empresa.getFone() != null) {
+            enderEmit.put("fone", empresa.getFone());
         }
-        destinatario.put("xNome", cliente.getXnome());
-        destinatario.put("indIEDest", cliente.getIndiedest()); // Corrigido: getIndiedest() em vez de getIndIEDest()
         
+        emit.put("enderEmit", enderEmit);
+        infNFe.put("emit", emit);
+
+        // 3. DESTINATÁRIO
+        JSONObject dest = new JSONObject();
+        Cliente cliente = venda.getClienteId();
+
+        if (cliente.getCpf() != null && !cliente.getCpf().trim().isEmpty()) {
+            dest.put("CPF", cliente.getCpf().replaceAll("\\D", ""));
+            dest.put("xNome", cliente.getXnome());
+            String xNome = cliente.getXnome();
+            if ("2".equals(config.getWebserviceAmbiente())) { // Se for homologação
+                xNome = "NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL";
+            }
+            dest.put("xNome", xNome);
+        } else if (cliente.getCnpj() != null && !cliente.getCnpj().trim().isEmpty()) {
+            dest.put("CNPJ", cliente.getCnpj().replaceAll("\\D", ""));
+            String xNome = cliente.getXnome();
+            if ("2".equals(config.getWebserviceAmbiente())) { // Se for homologação
+                xNome = "NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL";
+            }
+            dest.put("xNome", xNome);
+        } else {
+            // Consumidor não identificado
+            dest.put("CPF", "00000000000");
+            dest.put("xNome", "CONSUMIDOR FINAL");
+        }
+
         JSONObject enderDest = new JSONObject();
         enderDest.put("xLgr", cliente.getXlgr());
         enderDest.put("nro", cliente.getNro());
-        enderDest.put("xCpl", cliente.getXcpl() != null ? cliente.getXcpl() : "");
+        if (cliente.getXcpl() != null) {
+            enderDest.put("xCpl", cliente.getXcpl());
+        }
         enderDest.put("xBairro", cliente.getXbairro());
         enderDest.put("cMun", cliente.getCmun());
         enderDest.put("xMun", cliente.getXmun());
         enderDest.put("UF", cliente.getUf());
-        enderDest.put("CEP", cliente.getCep());
+        enderDest.put("CEP", cliente.getCep().replaceAll("\\D", ""));
         enderDest.put("cPais", "1058");
         enderDest.put("xPais", "Brasil");
-        enderDest.put("fone", cliente.getFone() != null ? cliente.getFone() : "");
-        
-        destinatario.put("enderDest", enderDest);
-        
-        // Produtos
-        JSONArray produtosArray = new JSONArray();
-        for (ItemVenda item : venda.getItemVendaCollection()) { // Corrigido: getItemVendaCollection() em vez de getItens()
-            Produto produto = item.getProdutoId(); // Corrigido: getProdutoId() em vez de getProduto()
-            
-            JSONObject prod = new JSONObject();
-            prod.put("cProd", produto.getCprod());
-            prod.put("cEAN", produto.getCean() != null ? produto.getCean() : "SEM GTIN");
-            prod.put("xProd", produto.getXprod());
-            prod.put("NCM", produto.getNcm());
-            prod.put("CFOP", produto.getCfop());
-            prod.put("uCom", produto.getUcom());
-            prod.put("qCom", item.getQuantidade().toString());
-            prod.put("vUnCom", item.getValorUnitario().toString());
-            prod.put("vProd", item.getValorTotal().toString());
-            prod.put("cEANTrib", produto.getCean() != null ? produto.getCean() : "SEM GTIN");
-            prod.put("uTrib", produto.getUcom());
-            prod.put("qTrib", item.getQuantidade().toString());
-            prod.put("vUnTrib", item.getValorUnitario().toString());
-            prod.put("indTot", "1");
-            
-            // Impostos
-            JSONObject imposto = new JSONObject();
-            JSONObject icms = new JSONObject();
-            JSONObject icms00 = new JSONObject();
-            icms00.put("orig", produto.getOrig());
-            icms00.put("CST", produto.getCstIcms());
-            icms00.put("modBC", produto.getModbcIcms());
-            icms00.put("vBC", item.getValorTotal().toString());
-            icms00.put("pICMS", produto.getPicms().toString());
-            icms00.put("vICMS", item.getValorTotal().multiply(produto.getPicms().divide(new BigDecimal("100"))).toString());
-            
-            icms.put("ICMS00", icms00);
-            
-            JSONObject pis = new JSONObject();
-            JSONObject pisAliq = new JSONObject();
-            pisAliq.put("CST", produto.getCstPis());
-            pisAliq.put("vBC", item.getValorTotal().toString());
-            pisAliq.put("pPIS", produto.getPpis().toString());
-            pisAliq.put("vPIS", item.getValorTotal().multiply(produto.getPpis().divide(new BigDecimal("100"))).toString());
-            
-            pis.put("PISAliq", pisAliq);
-            
-            JSONObject cofins = new JSONObject();
-            JSONObject cofinsAliq = new JSONObject();
-            cofinsAliq.put("CST", produto.getCstCofins());
-            cofinsAliq.put("vBC", item.getValorTotal().toString());
-            cofinsAliq.put("pCOFINS", produto.getPcofins().toString());
-            cofinsAliq.put("vCOFINS", item.getValorTotal().multiply(produto.getPcofins().divide(new BigDecimal("100"))).toString());
-            
-            cofins.put("COFINSAliq", cofinsAliq);
-            
-            imposto.put("ICMS", icms);
-            imposto.put("PIS", pis);
-            imposto.put("COFINS", cofins);
-            
-            prod.put("imposto", imposto);
-            
-            produtosArray.put(prod);
+        if (cliente.getFone() != null) {
+            enderDest.put("fone", cliente.getFone());
         }
         
-        // Total
+        dest.put("enderDest", enderDest);
+        infNFe.put("dest", dest);
+
+        // 4. AUTORIZAÇÃO XML (para homologação)
+        JSONObject autXML = new JSONObject();
+        autXML.put("CNPJ", "13937073000156"); // CNPJ da SEFAZ de homologação
+        infNFe.put("autXML", autXML);
+
+        // 5. DETALHES (produtos)
+        JSONArray detArray = new JSONArray();
+        int itemNum = 1;
+
+        for (ItemVenda item : venda.getItemVendaCollection()) {
+            Produto produto = item.getProdutoId();
+
+            JSONObject det = new JSONObject();
+
+            JSONObject prod = new JSONObject();
+            prod.put("cProd", produto.getCprod());
+
+            // Código EAN
+            String cean = produto.getCean();
+            if (cean == null || cean.trim().isEmpty() || "SEM GTIN".equalsIgnoreCase(cean)) {
+                prod.put("cEAN", "7898480650104"); // Código genérico para homologação
+            } else {
+                prod.put("cEAN", cean);
+            }
+
+            // **APENAS para homologação: usar mensagem obrigatória**
+            // Mantenha a descrição real do produto, mas adicione a mensagem de homologação
+            String xProd = produto.getXprod();
+            if ("2".equals(config.getWebserviceAmbiente())) { // Se for homologação
+                xProd = "NOTA FISCAL EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL";
+            }
+            prod.put("xProd", xProd);
+
+            prod.put("NCM", produto.getNcm());
+
+            // CEST (se disponível)
+            if (produto.getCest() != null && !produto.getCest().trim().isEmpty()) {
+                prod.put("CEST", produto.getCest());
+            }
+
+            prod.put("indEscala", "S"); // Produzido em escala relevante
+            prod.put("CFOP", produto.getCfop());
+            prod.put("uCom", produto.getUcom());
+
+            // Formatar números com casas decimais corretas
+            prod.put("qCom", String.format(Locale.US, "%.4f", item.getQuantidade()));
+            prod.put("vUnCom", String.format(Locale.US, "%.4f", item.getValorUnitario()));
+            prod.put("vProd", String.format(Locale.US, "%.2f", item.getValorTotal()));
+
+            // Código EAN tributário
+            prod.put("cEANTrib", prod.getString("cEAN"));
+            prod.put("uTrib", produto.getUcom());
+            prod.put("qTrib", String.format(Locale.US, "%.4f", item.getQuantidade()));
+            prod.put("vUnTrib", String.format(Locale.US, "%.4f", item.getValorUnitario()));
+            prod.put("indTot", "1");
+
+            det.put("prod", prod);
+
+            // IMPOSTOS
+            JSONObject imposto = new JSONObject();
+
+            // ICMS
+            JSONObject icms = new JSONObject();
+            JSONObject icms00 = new JSONObject();
+            icms00.put("orig", produto.getOrig() != null ? produto.getOrig() : "0");
+            icms00.put("CST", produto.getCstIcms() != null ? produto.getCstIcms() : "00");
+            icms00.put("modBC", "0"); // Margem de valor agregado (%)
+            icms00.put("vBC", String.format(Locale.US, "%.2f", item.getValorTotal()));
+
+            // Usar percentual do produto ou padrão para homologação
+            String pICMS;
+            if (produto.getPicms() != null) {
+                pICMS = String.format(Locale.US, "%.2f", produto.getPicms());
+            } else {
+                pICMS = "7.00"; // Valor padrão para homologação
+            }
+            icms00.put("pICMS", pICMS);
+
+            // Calcular valor do ICMS
+            BigDecimal valorICMS = item.getValorTotal()
+                .multiply(new BigDecimal(pICMS))
+                .divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP);
+            icms00.put("vICMS", String.format(Locale.US, "%.2f", valorICMS));
+
+            icms.put("ICMS00", icms00);
+            imposto.put("ICMS", icms);
+
+            // PIS
+            JSONObject pis = new JSONObject();
+            JSONObject pisAliq = new JSONObject();
+            pisAliq.put("CST", produto.getCstPis() != null ? produto.getCstPis() : "01");
+            pisAliq.put("vBC", String.format(Locale.US, "%.2f", item.getValorTotal()));
+
+            String pPIS;
+            if (produto.getPpis() != null) {
+                pPIS = String.format(Locale.US, "%.2f", produto.getPpis());
+            } else {
+                pPIS = "1.65"; // Valor padrão para homologação
+            }
+            pisAliq.put("pPIS", pPIS);
+
+            BigDecimal valorPIS = item.getValorTotal()
+                .multiply(new BigDecimal(pPIS))
+                .divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP);
+            pisAliq.put("vPIS", String.format(Locale.US, "%.2f", valorPIS));
+
+            pis.put("PISAliq", pisAliq);
+            imposto.put("PIS", pis);
+
+            // COFINS
+            JSONObject cofins = new JSONObject();
+            JSONObject cofinsAliq = new JSONObject();
+            cofinsAliq.put("CST", produto.getCstCofins() != null ? produto.getCstCofins() : "01");
+            cofinsAliq.put("vBC", String.format(Locale.US, "%.2f", item.getValorTotal()));
+
+            String pCOFINS;
+            if (produto.getPcofins() != null) {
+                pCOFINS = String.format(Locale.US, "%.2f", produto.getPcofins());
+            } else {
+                pCOFINS = "7.60"; // Valor padrão para homologação
+            }
+            cofinsAliq.put("pCOFINS", pCOFINS);
+
+            BigDecimal valorCOFINS = item.getValorTotal()
+                .multiply(new BigDecimal(pCOFINS))
+                .divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP);
+            cofinsAliq.put("vCOFINS", String.format(Locale.US, "%.2f", valorCOFINS));
+
+            cofins.put("COFINSAliq", cofinsAliq);
+            imposto.put("COFINS", cofins);
+
+            det.put("imposto", imposto);
+            detArray.put(det);
+        }
+
+        infNFe.put("det", detArray);
+
+        // 6. TOTAL
         JSONObject total = new JSONObject();
         JSONObject icmsTot = new JSONObject();
-        icmsTot.put("vBC", venda.getValorTotal().toString());
-        icmsTot.put("vICMS", venda.getValorTotal().multiply(new BigDecimal("7.00")).divide(new BigDecimal("100")).toString());
+
+        // Calcular totais
+        BigDecimal totalVenda = venda.getValorTotal();
+        BigDecimal totalICMS = BigDecimal.ZERO;
+        BigDecimal totalPIS = BigDecimal.ZERO;
+        BigDecimal totalCOFINS = BigDecimal.ZERO;
+
+        for (ItemVenda item : venda.getItemVendaCollection()) {
+            Produto produto = item.getProdutoId();
+            BigDecimal valorItem = item.getValorTotal();
+
+            // ICMS
+            BigDecimal pICMS = produto.getPicms() != null ? produto.getPicms() : new BigDecimal("7.00");
+            totalICMS = totalICMS.add(valorItem.multiply(pICMS).divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP));
+
+            // PIS
+            BigDecimal pPIS = produto.getPpis() != null ? produto.getPpis() : new BigDecimal("1.65");
+            totalPIS = totalPIS.add(valorItem.multiply(pPIS).divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP));
+
+            // COFINS
+            BigDecimal pCOFINS = produto.getPcofins() != null ? produto.getPcofins() : new BigDecimal("7.60");
+            totalCOFINS = totalCOFINS.add(valorItem.multiply(pCOFINS).divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP));
+        }
+
+        icmsTot.put("vBC", String.format(Locale.US, "%.2f", totalVenda));
+        icmsTot.put("vICMS", String.format(Locale.US, "%.2f", totalICMS));
+        icmsTot.put("vICMSDeson", "0.00");
+        icmsTot.put("vFCP", "0.00");
         icmsTot.put("vBCST", "0.00");
         icmsTot.put("vST", "0.00");
-        icmsTot.put("vProd", venda.getValorTotal().toString());
+        icmsTot.put("vFCPST", "0.00");
+        icmsTot.put("vFCPSTRet", "0.00");
+        icmsTot.put("vProd", String.format(Locale.US, "%.2f", totalVenda));
         icmsTot.put("vFrete", "0.00");
         icmsTot.put("vSeg", "0.00");
         icmsTot.put("vDesc", "0.00");
         icmsTot.put("vII", "0.00");
         icmsTot.put("vIPI", "0.00");
-        icmsTot.put("vPIS", venda.getValorTotal().multiply(new BigDecimal("1.65")).divide(new BigDecimal("100")).toString());
-        icmsTot.put("vCOFINS", venda.getValorTotal().multiply(new BigDecimal("7.60")).divide(new BigDecimal("100")).toString());
+        icmsTot.put("vIPIDevol", "0.00");
+        icmsTot.put("vPIS", String.format(Locale.US, "%.2f", totalPIS));
+        icmsTot.put("vCOFINS", String.format(Locale.US, "%.2f", totalCOFINS));
         icmsTot.put("vOutro", "0.00");
-        icmsTot.put("vNF", venda.getValorTotal().toString());
-        
+        icmsTot.put("vNF", String.format(Locale.US, "%.2f", totalVenda));
+
         total.put("ICMSTot", icmsTot);
+        infNFe.put("total", total);
+
+        // 7. TRANSPORTE
+        JSONObject transp = new JSONObject();
+        transp.put("modFrete", "9"); // 9=Sem frete
+        infNFe.put("transp", transp);
+
+        // 8. PAGAMENTO
+        JSONObject pag = new JSONObject();
+        JSONArray detPagArray = new JSONArray();
+
+        JSONObject detPag = new JSONObject();
+        detPag.put("tPag", "01"); // 01=Dinheiro
+        detPag.put("vPag", String.format(Locale.US, "%.2f", venda.getValorTotal()));
+
+        detPagArray.put(detPag);
+        pag.put("detPag", detPagArray);
+        infNFe.put("pag", pag);
+
+        // 9. INFORMAÇÕES ADICIONAIS
+        JSONObject infAdic = new JSONObject();
+
+        // Calcular total de tributos (Lei Federal 12.741/2012)
+        BigDecimal totalTributos = totalICMS.add(totalPIS).add(totalCOFINS);
+        String infCpl = String.format(Locale.US, "Tributos Totais Incidentes (Lei Federal 12.741/2012): R$%.2f", totalTributos);
         
-        // Montar NF-e completa
-        nfeJson.put("identificacao", identNFe);
-        nfeJson.put("emitente", emitente);
-        nfeJson.put("destinatario", destinatario);
-        nfeJson.put("produtos", produtosArray);
-        nfeJson.put("total", total);
-        
+        infAdic.put("infCpl", infCpl);
+        infNFe.put("infAdic", infAdic);
+
+        // Montar JSON final
+        nfeJson.put("infNFe", infNFe);
+
         return nfeJson;
     }
     
     private String enviarParaServidor(String urlString, String json) throws Exception {
+        System.out.println("=== ENVIANDO PARA SERVIDOR NF-e ===");
+        System.out.println("URL: " + urlString);
+        System.out.println("JSON Enviado:");
+        System.out.println(json);
+        System.out.println("===================================");
+
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Accept", "application/json");
         conn.setDoOutput(true);
-        
+        conn.setConnectTimeout(30000);
+        conn.setReadTimeout(30000);
+
         try (OutputStream os = conn.getOutputStream()) {
             byte[] input = json.getBytes("utf-8");
             os.write(input, 0, input.length);
         }
-        
+
+        int responseCode = conn.getResponseCode();
+        System.out.println("Código de resposta HTTP: " + responseCode);
+
+        if (responseCode >= 400) {
+            // Ler erro
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getErrorStream(), "utf-8"))) {
+                StringBuilder errorResponse = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    errorResponse.append(responseLine.trim());
+                }
+                System.out.println("ERRO HTTP " + responseCode + ": " + errorResponse.toString());
+                throw new RuntimeException("HTTP Error: " + responseCode + " - " + errorResponse.toString());
+            }
+        }
+
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(conn.getInputStream(), "utf-8"))) {
             StringBuilder response = new StringBuilder();
@@ -421,6 +637,11 @@ public class VendaController implements Serializable {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
+
+            System.out.println("Resposta do servidor:");
+            System.out.println(response.toString());
+            System.out.println("===================================");
+
             return response.toString();
         }
     }
@@ -454,11 +675,11 @@ public class VendaController implements Serializable {
             case "SE": return "28";
             case "SP": return "35";
             case "TO": return "17";
-            default: return "29"; // BA como padrão
+            default: return "29";
         }
     }
     
-    // Getters e Setters
+    // *** CORREÇÃO: Getters e Setters simplificados ***
     public List<Venda> getVendas() { return vendas; }
     public void setVendas(List<Venda> vendas) { this.vendas = vendas; }
     
@@ -471,15 +692,19 @@ public class VendaController implements Serializable {
     public List<Produto> getProdutos() { return produtos; }
     public void setProdutos(List<Produto> produtos) { this.produtos = produtos; }
     
+    // *** CORREÇÃO: Usar apenas uma propriedade para o cliente ***
     public Cliente getClienteSelecionado() { 
-        if (clienteSelecionado != null && venda != null) {
-            venda.setClienteId(clienteSelecionado);
+        // Se já temos cliente na venda, retorna ele
+        if (venda != null && venda.getClienteId() != null) {
+            return venda.getClienteId();
         }
+        // Caso contrário, retorna o selecionado temporariamente
         return clienteSelecionado; 
     }
     
     public void setClienteSelecionado(Cliente clienteSelecionado) { 
         this.clienteSelecionado = clienteSelecionado;
+        // Atualiza também na venda
         if (venda != null) {
             venda.setClienteId(clienteSelecionado);
         }
@@ -493,4 +718,26 @@ public class VendaController implements Serializable {
     
     public boolean isEditando() { return editando; }
     public void setEditando(boolean editando) { this.editando = editando; }
+    
+    // *** MANTER os métodos auxiliares para compatibilidade com a página ***
+    public Cliente getClienteSelecionadoParaVenda() {
+        if (venda != null && venda.getClienteId() != null) {
+            return venda.getClienteId();
+        }
+        return null;
+    }
+
+    public void setClienteSelecionadoParaVenda(Cliente cliente) {
+        if (venda != null) {
+            venda.setClienteId(cliente);
+            this.clienteSelecionado = cliente;
+        }
+    }
+
+    public List<ItemVenda> getItensVenda() {
+        if (venda != null && venda.getItemVendaCollection() != null) {
+            return new ArrayList<>(venda.getItemVendaCollection());
+        }
+        return new ArrayList<>();
+    }
 }

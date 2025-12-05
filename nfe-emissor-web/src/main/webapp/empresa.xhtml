@@ -132,6 +132,7 @@
                                             <p:outputLabel for="fone" value="Telefone"/>
                                             <p:inputMask id="fone" value="#{empresaController.empresa.fone}" 
                                                         mask="(99) 99999-9999" 
+                                                        converter="numeroConverter"
                                                         style="width: 100%"/>
                                         </div>
 

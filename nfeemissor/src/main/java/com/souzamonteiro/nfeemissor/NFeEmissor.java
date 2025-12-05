@@ -155,6 +155,9 @@ public class NFeEmissor {
             String dados = scanner.useDelimiter("\\A").next();
             scanner.close();
             
+            System.out.print("INFORMAÇÕES: [JSON]: ");
+            System.out.println(dados);
+            
             JSONObject json = new JSONObject(dados);
             
             String cStat = "";

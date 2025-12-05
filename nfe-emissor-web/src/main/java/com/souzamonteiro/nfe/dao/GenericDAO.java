@@ -62,6 +62,25 @@ public class GenericDAO<T> implements Serializable {
         }
     }
     
+    public T findById(Object id) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.find(clazz, id);
+        } finally {
+            em.close();
+        }
+    }
+
+    // Ou específico para Integer:
+    public T findById(Integer id) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.find(clazz, id);
+        } finally {
+            em.close();
+        }
+    }
+    
     public List<T> findAll() {
         EntityManager em = getEntityManager();
         try {

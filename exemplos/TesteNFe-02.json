@@ -1,0 +1,147 @@
+{
+    "infNFe": {
+        "infAdic": {
+            "infCpl": "Tributos Totais Incidentes (Lei Federal 12.741/2012): R$3.74"
+        },
+        "det": [{
+            "prod": {
+                "cEAN": "7891344013886",
+                "cProd": "7891344013886",
+                "indEscala": "S",
+                "qCom": "1.0000",
+                "cEANTrib": "7891344013886",
+                "vUnTrib": "23.0000",
+                "qTrib": "1.0000",
+                "vProd": "23.00",
+                "xProd": "NOTA FISCAL EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL",
+                "vUnCom": "23.0000",
+                "indTot": "1",
+                "uTrib": "UN",
+                "NCM": "27101932",
+                "uCom": "UN",
+                "CFOP": "5102",
+                "CEST": "0600500"
+            },
+            "imposto": {
+                "ICMS": {
+                    "ICMS00": {
+                        "modBC": "0",
+                        "orig": "0",
+                        "CST": "00",
+                        "vBC": "23.00",
+                        "vICMS": "1.61",
+                        "pICMS": "7.00"
+                    }
+                },
+                "COFINS": {
+                    "COFINSAliq": {
+                        "vCOFINS": "1.75",
+                        "CST": "01",
+                        "vBC": "23.00",
+                        "pCOFINS": "7.60"
+                    }
+                },
+                "PIS": {
+                    "PISAliq": {
+                        "vPIS": "0.38",
+                        "CST": "01",
+                        "vBC": "23.00",
+                        "pPIS": "1.65"
+                    }
+                }
+            }
+        }],
+        "total": {
+            "ICMSTot": {
+                "vCOFINS": "1.75",
+                "vBCST": "0.00",
+                "vICMSDeson": "0.00",
+                "vProd": "23.00",
+                "vSeg": "0.00",
+                "vFCP": "0.00",
+                "vFCPST": "0.00",
+                "vNF": "23.00",
+                "vPIS": "0.38",
+                "vIPIDevol": "0.00",
+                "vBC": "23.00",
+                "vST": "0.00",
+                "vICMS": "1.61",
+                "vII": "0.00",
+                "vFCPSTRet": "0.00",
+                "vDesc": "0.00",
+                "vOutro": "0.00",
+                "vIPI": "0.00",
+                "vFrete": "0.00"
+            }
+        },
+        "pag": {
+            "detPag": [{
+                "vPag": "23.00",
+                "tPag": "01"
+            }]
+        },
+        "ide": {
+            "tpNF": "1",
+            "mod": "55",
+            "indPres": "1",
+            "tpImp": "1",
+            "nNF": "99",
+            "cMunFG": "2927408",
+            "procEmi": "0",
+            "finNFe": "1",
+            "dhEmi": "2025-12-05 19:07:43",
+            "tpAmb": "2",
+            "indFinal": "1",
+            "idDest": "1",
+            "tpEmis": "1",
+            "cDV": "6",
+            "cUF": "29",
+            "serie": "1",
+            "natOp": "VENDA",
+            "cNF": "00000100",
+            "verProc": "1.0"
+        },
+        "autXML": {
+            "CNPJ": "13937073000156"
+        },
+        "emit": {
+            "xNome": "Editora Roberto LIEuiz Souza Monteiro",
+            "CRT": "3",
+            "CNPJ": "33630582000149",
+            "enderEmit": {
+                "xCpl": "Edifício Eduardo De Moraes, sala 606",
+                "fone": "71991721874",
+                "UF": "BA",
+                "xPais": "Brasil",
+                "cPais": "1058",
+                "xLgr": "Rua Chile",
+                "xMun": "Salvador",
+                "nro": "s/n",
+                "cMun": "2927408",
+                "xBairro": "Centro",
+                "CEP": "40020000"
+            },
+            "IE": "158039716"
+        },
+        "dest": {
+            "xNome": "NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL",
+            "CPF": "40325635862",
+            "enderDest": {
+                "xCpl": "Quadra 5",
+                "fone": "71991965292",
+                "UF": "BA",
+                "xPais": "Brasil",
+                "cPais": "1058",
+                "xLgr": "Rua Tanhaçu",
+                "xMun": "Lauro de Freitas",
+                "nro": "11",
+                "cMun": "2919207",
+                "xBairro": "Ipitanga",
+                "CEP": "42706730"
+            }
+        },
+        "transp": {
+            "modFrete": "9"
+        }
+    }
+}
