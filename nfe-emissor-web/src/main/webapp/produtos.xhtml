@@ -8,6 +8,8 @@
     <ui:define name="content">
         <div class="p-p-4">
             <h:form id="form">
+                <p:growl id="growl" showDetail="true" life="3000" />
+                
                 <p:card>
                     <f:facet name="title">
                         <div class="p-d-flex p-ai-center p-jc-between">
@@ -17,201 +19,217 @@
                             </div>
                             <p:commandButton value="Novo Produto" icon="pi pi-plus" 
                                            action="#{produtoController.novoProduto}" 
-                                           update=":form:grid,:form:formPanel"
+                                           update="form"
                                            rendered="#{!produtoController.editando}"/>
                         </div>
                     </f:facet>
 
-                    <f:facet name="content">
-                        <!-- Grid de Produtos -->
-                        <p:outputPanel id="grid" rendered="#{!produtoController.editando}">
-                            <p:dataTable id="produtosTable" var="prod" value="#{produtoController.produtos}" 
-                                       paginator="true" rows="10" 
-                                       selection="#{produtoController.produtoSelecionado}"
-                                       selectionMode="single"
-                                       emptyMessage="Nenhum produto cadastrado">
+                    <!-- Grid de Produtos -->
+                    <p:outputPanel id="grid" rendered="#{!produtoController.editando}">
+                        <p:dataTable id="produtosTable" var="prod" value="#{produtoController.produtos}" 
+                                   paginator="true" rows="10" 
+                                   selection="#{produtoController.produtoSelecionado}"
+                                   selectionMode="single"
+                                   rowKey="#{prod.id}"
+                                   emptyMessage="Nenhum produto cadastrado">
 
-                                <p:column headerText="Código" style="width: 100px;">
-                                    <h:outputText value="#{prod.cprod}"/>
-                                </p:column>
+                            <p:ajax event="rowSelect" 
+                                   listener="#{produtoController.onRowSelect}" 
+                                   update="@form"/>
+                            <p:ajax event="rowUnselect" 
+                                   listener="#{produtoController.onRowUnselect}" 
+                                   update="@form"/>
+                            
+                            <p:column headerText="Código" style="width: 100px;">
+                                <h:outputText value="#{prod.cprod}"/>
+                            </p:column>
 
-                                <p:column headerText="Descrição">
-                                    <h:outputText value="#{prod.xprod}"/>
-                                </p:column>
+                            <p:column headerText="Descrição">
+                                <h:outputText value="#{prod.xprod}"/>
+                            </p:column>
 
-                                <p:column headerText="NCM" style="width: 100px;">
-                                    <h:outputText value="#{prod.ncm}"/>
-                                </p:column>
+                            <p:column headerText="NCM" style="width: 100px;">
+                                <h:outputText value="#{prod.ncm}"/>
+                            </p:column>
 
-                                <p:column headerText="Valor Unitário" style="width: 120px;">
-                                    <h:outputText value="#{prod.vuncom}">
-                                        <f:convertNumber type="currency" currencyCode="BRL"/>
-                                    </h:outputText>
-                                </p:column>
+                            <p:column headerText="Valor Unitário" style="width: 120px;">
+                                <h:outputText value="#{prod.vuncom}">
+                                    <f:convertNumber type="currency" currencyCode="BRL"/>
+                                </h:outputText>
+                            </p:column>
 
-                                <p:column headerText="Ações" style="width: 120px;">
-                                    <p:commandButton icon="pi pi-pencil" title="Editar" 
-                                                   action="#{produtoController.editarProduto}"
-                                                   update=":form:grid,:form:formPanel"/>
-                                    <p:commandButton icon="pi pi-trash" title="Excluir" 
-                                                   style="margin-left: 5px;"
-                                                   action="#{produtoController.excluirProduto}"
-                                                   update=":form:grid,:form:growl"/>
-                                </p:column>
-                            </p:dataTable>
-                        </p:outputPanel>
+                            <p:column headerText="Ações" style="width: 120px;">
+                                <!-- Botão Editar - passa o produto atual como parâmetro -->
+                                <p:commandButton icon="pi pi-pencil" title="Editar" 
+                                               action="#{produtoController.editarProduto}"
+                                               update="@form"
+                                               immediate="true">
+                                    <f:setPropertyActionListener target="#{produtoController.produtoSelecionado}" value="#{prod}"/>
+                                </p:commandButton>
+                                
+                                <!-- Botão Excluir - passa o produto atual como parâmetro -->
+                                <p:commandButton icon="pi pi-trash" title="Excluir" 
+                                               style="margin-left: 5px;"
+                                               action="#{produtoController.excluirProduto}"
+                                               update="@form"
+                                               onclick="if(confirm('Tem certeza que deseja excluir o produto #{prod.xprod}?')) { return true; } else { return false; }">
+                                    <f:setPropertyActionListener target="#{produtoController.produtoSelecionado}" value="#{prod}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
 
-                        <!-- Formulário de Produto -->
-                        <p:outputPanel id="formPanel" rendered="#{produtoController.editando}">
-                            <p:panel header="Produto" style="margin-bottom: 20px;">
-                                <div class="p-fluid">
+                    <!-- Formulário de Produto -->
+                    <p:outputPanel id="formPanel" rendered="#{produtoController.editando}">
+                        <p:panel header="Produto" style="margin-bottom: 20px;">
+                            <div class="p-fluid">
+                                <div class="p-grid">
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="cprod" value="Código do Produto"/>
+                                        <p:inputText id="cprod" value="#{produtoController.produto.cprod}" 
+                                                   required="true" requiredMessage="Código é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6">
+                                        <p:outputLabel for="cean" value="Código EAN"/>
+                                        <p:inputText id="cean" value="#{produtoController.produto.cean}" 
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12">
+                                        <p:outputLabel for="xprod" value="Descrição do Produto"/>
+                                        <p:inputText id="xprod" value="#{produtoController.produto.xprod}" 
+                                                   required="true" requiredMessage="Descrição é obrigatória"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-4">
+                                        <p:outputLabel for="ncm" value="NCM"/>
+                                        <p:inputText id="ncm" value="#{produtoController.produto.ncm}" 
+                                                   required="true" requiredMessage="NCM é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-4">
+                                        <p:outputLabel for="cest" value="CEST"/>
+                                        <p:inputText id="cest" value="#{produtoController.produto.cest}" 
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-4">
+                                        <p:outputLabel for="cfop" value="CFOP"/>
+                                        <p:inputText id="cfop" value="#{produtoController.produto.cfop}" 
+                                                   required="true" requiredMessage="CFOP é obrigatório"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-4">
+                                        <p:outputLabel for="ucom" value="Unidade"/>
+                                        <p:inputText id="ucom" value="#{produtoController.produto.ucom}" 
+                                                   required="true" requiredMessage="Unidade é obrigatória"
+                                                   style="width: 100%"/>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-4">
+                                        <p:outputLabel for="vuncom" value="Valor Unitário"/>
+                                        <p:inputNumber id="vuncom" value="#{produtoController.produto.vuncom}" 
+                                                     required="true" requiredMessage="Valor é obrigatório"
+                                                     minValue="0.01" decimalPlaces="4"
+                                                     style="width: 100%"/>
+                                    </div>
+                                </div>
+
+                                <p:panel header="Impostos" toggleable="true" collapsed="true">
                                     <div class="p-grid">
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="cprod" value="Código do Produto *"/>
-                                            <p:inputText id="cprod" value="#{produtoController.produto.cprod}" 
-                                                       required="true" requiredMessage="Código é obrigatório"
-                                                       style="width: 100%"/>
-                                        </div>
-
-                                        <div class="p-col-12 p-md-6">
-                                            <p:outputLabel for="cean" value="Código EAN"/>
-                                            <p:inputText id="cean" value="#{produtoController.produto.cean}" 
-                                                       style="width: 100%"/>
-                                        </div>
-
-                                        <div class="p-col-12">
-                                            <p:outputLabel for="xprod" value="Descrição do Produto *"/>
-                                            <p:inputText id="xprod" value="#{produtoController.produto.xprod}" 
-                                                       required="true" requiredMessage="Descrição é obrigatória"
-                                                       style="width: 100%"/>
+                                        <div class="p-col-12 p-md-4">
+                                            <p:outputLabel for="orig" value="Origem"/>
+                                            <p:selectOneMenu id="orig" value="#{produtoController.produto.orig}" 
+                                                           style="width: 100%">
+                                                <f:selectItem itemLabel="Nacional" itemValue="0"/>
+                                                <f:selectItem itemLabel="Estrangeira Importação" itemValue="1"/>
+                                                <f:selectItem itemLabel="Estrangeira Adquirida" itemValue="2"/>
+                                            </p:selectOneMenu>
                                         </div>
 
                                         <div class="p-col-12 p-md-4">
-                                            <p:outputLabel for="ncm" value="NCM *"/>
-                                            <p:inputText id="ncm" value="#{produtoController.produto.ncm}" 
-                                                       required="true" requiredMessage="NCM é obrigatório"
-                                                       style="width: 100%"/>
+                                            <p:outputLabel for="cstIcms" value="CST ICMS"/>
+                                            <p:selectOneMenu id="cstIcms" value="#{produtoController.produto.cstIcms}" 
+                                                           style="width: 100%">
+                                                <f:selectItem itemLabel="00 - Tributada integralmente" itemValue="00"/>
+                                                <f:selectItem itemLabel="20 - Com redução de base" itemValue="20"/>
+                                                <f:selectItem itemLabel="40 - Isenta" itemValue="40"/>
+                                                <f:selectItem itemLabel="41 - Não tributada" itemValue="41"/>
+                                                <f:selectItem itemLabel="60 - ICMS cobrado anteriormente" itemValue="60"/>
+                                            </p:selectOneMenu>
                                         </div>
 
                                         <div class="p-col-12 p-md-4">
-                                            <p:outputLabel for="cest" value="CEST"/>
-                                            <p:inputText id="cest" value="#{produtoController.produto.cest}" 
-                                                       style="width: 100%"/>
+                                            <p:outputLabel for="picms" value="Alíquota ICMS (%)"/>
+                                            <p:inputNumber id="picms" value="#{produtoController.produto.picms}" 
+                                                         minValue="0" maxValue="100" decimalPlaces="2"
+                                                         style="width: 100%"/>
                                         </div>
 
                                         <div class="p-col-12 p-md-4">
-                                            <p:outputLabel for="cfop" value="CFOP *"/>
-                                            <p:inputText id="cfop" value="#{produtoController.produto.cfop}" 
-                                                       required="true" requiredMessage="CFOP é obrigatório"
-                                                       style="width: 100%"/>
+                                            <p:outputLabel for="cstPis" value="CST PIS"/>
+                                            <p:selectOneMenu id="cstPis" value="#{produtoController.produto.cstPis}" 
+                                                           style="width: 100%">
+                                                <f:selectItem itemLabel="01 - Operação Tributável" itemValue="01"/>
+                                                <f:selectItem itemLabel="02 - Operação Tributável" itemValue="02"/>
+                                                <f:selectItem itemLabel="03 - Operação Tributável" itemValue="03"/>
+                                                <f:selectItem itemLabel="04 - Operação Tributável" itemValue="04"/>
+                                                <f:selectItem itemLabel="06 - Operação Tributável" itemValue="06"/>
+                                                <f:selectItem itemLabel="07 - Operação Isenta" itemValue="07"/>
+                                                <f:selectItem itemLabel="08 - Operação Sem Incidência" itemValue="08"/>
+                                                <f:selectItem itemLabel="09 - Operação com Suspensão" itemValue="09"/>
+                                            </p:selectOneMenu>
                                         </div>
 
                                         <div class="p-col-12 p-md-4">
-                                            <p:outputLabel for="ucom" value="Unidade *"/>
-                                            <p:inputText id="ucom" value="#{produtoController.produto.ucom}" 
-                                                       required="true" requiredMessage="Unidade é obrigatória"
-                                                       style="width: 100%"/>
+                                            <p:outputLabel for="ppis" value="Alíquota PIS (%)"/>
+                                            <p:inputNumber id="ppis" value="#{produtoController.produto.ppis}" 
+                                                         minValue="0" maxValue="100" decimalPlaces="2"
+                                                         style="width: 100%"/>
                                         </div>
 
                                         <div class="p-col-12 p-md-4">
-                                            <p:outputLabel for="vuncom" value="Valor Unitário *"/>
-                                            <p:inputNumber id="vuncom" value="#{produtoController.produto.vuncom}" 
-                                                         required="true" requiredMessage="Valor é obrigatório"
-                                                         minValue="0.01" decimalPlaces="4"
+                                            <p:outputLabel for="cstCofins" value="CST COFINS"/>
+                                            <p:selectOneMenu id="cstCofins" value="#{produtoController.produto.cstCofins}" 
+                                                           style="width: 100%">
+                                                <f:selectItem itemLabel="01 - Operação Tributável" itemValue="01"/>
+                                                <f:selectItem itemLabel="02 - Operação Tributável" itemValue="02"/>
+                                                <f:selectItem itemLabel="03 - Operação Tributável" itemValue="03"/>
+                                                <f:selectItem itemLabel="04 - Operação Tributável" itemValue="04"/>
+                                                <f:selectItem itemLabel="06 - Operação Tributável" itemValue="06"/>
+                                                <f:selectItem itemLabel="07 - Operação Isenta" itemValue="07"/>
+                                                <f:selectItem itemLabel="08 - Operação Sem Incidência" itemValue="08"/>
+                                                <f:selectItem itemLabel="09 - Operação com Suspensão" itemValue="09"/>
+                                            </p:selectOneMenu>
+                                        </div>
+
+                                        <div class="p-col-12 p-md-4">
+                                            <p:outputLabel for="pcofins" value="Alíquota COFINS (%)"/>
+                                            <p:inputNumber id="pcofins" value="#{produtoController.produto.pcofins}" 
+                                                         minValue="0" maxValue="100" decimalPlaces="2"
                                                          style="width: 100%"/>
                                         </div>
                                     </div>
+                                </p:panel>
 
-                                    <p:panel header="Impostos" toggleable="true" collapsed="true">
-                                        <div class="p-grid">
-                                            <div class="p-col-12 p-md-4">
-                                                <p:outputLabel for="orig" value="Origem *"/>
-                                                <p:selectOneMenu id="orig" value="#{produtoController.produto.orig}" 
-                                                               style="width: 100%">
-                                                    <f:selectItem itemLabel="Nacional" itemValue="0"/>
-                                                    <f:selectItem itemLabel="Estrangeira Importação" itemValue="1"/>
-                                                    <f:selectItem itemLabel="Estrangeira Adquirida" itemValue="2"/>
-                                                </p:selectOneMenu>
-                                            </div>
-
-                                            <div class="p-col-12 p-md-4">
-                                                <p:outputLabel for="cstIcms" value="CST ICMS *"/>
-                                                <p:selectOneMenu id="cstIcms" value="#{produtoController.produto.cstIcms}" 
-                                                               style="width: 100%">
-                                                    <f:selectItem itemLabel="00 - Tributada integralmente" itemValue="00"/>
-                                                    <f:selectItem itemLabel="20 - Com redução de base" itemValue="20"/>
-                                                    <f:selectItem itemLabel="40 - Isenta" itemValue="40"/>
-                                                    <f:selectItem itemLabel="41 - Não tributada" itemValue="41"/>
-                                                    <f:selectItem itemLabel="60 - ICMS cobrado anteriormente" itemValue="60"/>
-                                                </p:selectOneMenu>
-                                            </div>
-
-                                            <div class="p-col-12 p-md-4">
-                                                <p:outputLabel for="picms" value="Alíquota ICMS (%) *"/>
-                                                <p:inputNumber id="picms" value="#{produtoController.produto.picms}" 
-                                                             minValue="0" maxValue="100" decimalPlaces="2"
-                                                             style="width: 100%"/>
-                                            </div>
-
-                                            <div class="p-col-12 p-md-4">
-                                                <p:outputLabel for="cstPis" value="CST PIS *"/>
-                                                <p:selectOneMenu id="cstPis" value="#{produtoController.produto.cstPis}" 
-                                                               style="width: 100%">
-                                                    <f:selectItem itemLabel="01 - Operação Tributável" itemValue="01"/>
-                                                    <f:selectItem itemLabel="02 - Operação Tributável" itemValue="02"/>
-                                                    <f:selectItem itemLabel="03 - Operação Tributável" itemValue="03"/>
-                                                    <f:selectItem itemLabel="04 - Operação Tributável" itemValue="04"/>
-                                                    <f:selectItem itemLabel="06 - Operação Tributável" itemValue="06"/>
-                                                    <f:selectItem itemLabel="07 - Operação Isenta" itemValue="07"/>
-                                                    <f:selectItem itemLabel="08 - Operação Sem Incidência" itemValue="08"/>
-                                                    <f:selectItem itemLabel="09 - Operação com Suspensão" itemValue="09"/>
-                                                </p:selectOneMenu>
-                                            </div>
-
-                                            <div class="p-col-12 p-md-4">
-                                                <p:outputLabel for="ppis" value="Alíquota PIS (%) *"/>
-                                                <p:inputNumber id="ppis" value="#{produtoController.produto.ppis}" 
-                                                             minValue="0" maxValue="100" decimalPlaces="2"
-                                                             style="width: 100%"/>
-                                            </div>
-
-                                            <div class="p-col-12 p-md-4">
-                                                <p:outputLabel for="cstCofins" value="CST COFINS *"/>
-                                                <p:selectOneMenu id="cstCofins" value="#{produtoController.produto.cstCofins}" 
-                                                               style="width: 100%">
-                                                    <f:selectItem itemLabel="01 - Operação Tributável" itemValue="01"/>
-                                                    <f:selectItem itemLabel="02 - Operação Tributável" itemValue="02"/>
-                                                    <f:selectItem itemLabel="03 - Operação Tributável" itemValue="03"/>
-                                                    <f:selectItem itemLabel="04 - Operação Tributável" itemValue="04"/>
-                                                    <f:selectItem itemLabel="06 - Operação Tributável" itemValue="06"/>
-                                                    <f:selectItem itemLabel="07 - Operação Isenta" itemValue="07"/>
-                                                    <f:selectItem itemLabel="08 - Operação Sem Incidência" itemValue="08"/>
-                                                    <f:selectItem itemLabel="09 - Operação com Suspensão" itemValue="09"/>
-                                                </p:selectOneMenu>
-                                            </div>
-
-                                            <div class="p-col-12 p-md-4">
-                                                <p:outputLabel for="pcofins" value="Alíquota COFINS (%) *"/>
-                                                <p:inputNumber id="pcofins" value="#{produtoController.produto.pcofins}" 
-                                                             minValue="0" maxValue="100" decimalPlaces="2"
-                                                             style="width: 100%"/>
-                                            </div>
-                                        </div>
-                                    </p:panel>
-
-                                    <div class="p-d-flex p-jc-end p-mt-3">
-                                        <p:commandButton value="Salvar" icon="pi pi-check" 
-                                                       action="#{produtoController.salvarProduto}"
-                                                       update=":form:grid,:form:formPanel,:form:growl"/>
-                                        <p:commandButton value="Cancelar" icon="pi pi-times" 
-                                                       action="#{produtoController.cancelarEdicao}"
-                                                       style="margin-left: 5px;"
-                                                       update=":form:grid,:form:formPanel"/>
-                                    </div>
+                                <div class="p-d-flex p-jc-end p-mt-3">
+                                    <p:commandButton value="Salvar" icon="pi pi-check" 
+                                                   action="#{produtoController.salvarProduto}"
+                                                   update="@form"
+                                                   process="@form"/>
+                                    <p:commandButton value="Cancelar" icon="pi pi-times" 
+                                                   action="#{produtoController.cancelarEdicao}"
+                                                   style="margin-left: 5px;"
+                                                   update="@form"/>
                                 </div>
-                            </p:panel>
-                        </p:outputPanel>
-                    </f:facet>
+                            </div>
+                        </p:panel>
+                    </p:outputPanel>
                 </p:card>
             </h:form>
         </div>

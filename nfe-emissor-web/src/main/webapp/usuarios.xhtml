@@ -8,7 +8,6 @@
     <ui:define name="content">
         <div class="p-p-4">
             <h:form id="form">
-                <!-- Adicionar growl específico para este formulário -->
                 <p:growl id="growl" showDetail="true" life="3000" />
                 
                 <p:card>
@@ -35,7 +34,6 @@
                                    rowKey="#{user.id}"
                                    emptyMessage="Nenhum usuário cadastrado">
                             
-                            <!-- Adicionar evento de seleção -->
                             <p:ajax event="rowSelect" 
                                    listener="#{usuarioController.onRowSelect}" 
                                    update="@form"/>
@@ -71,7 +69,7 @@
                                                action="#{usuarioController.editarUsuario}"
                                                update="@form"
                                                immediate="true">
-                                    <f:setPropertyActionListener target="#{usuarioController.usuarioSelecionado}" value="#{user}" />
+                                    <f:setPropertyActionListener target="#{usuarioController.usuarioSelecionado}" value="#{user}"/>
                                 </p:commandButton>
                                 
                                 <!-- Botão Excluir - passa o usuário atual como parâmetro -->
@@ -80,7 +78,7 @@
                                                action="#{usuarioController.excluirUsuario}"
                                                update="@form"
                                                onclick="if(confirm('Tem certeza que deseja excluir o usuário #{user.nome}?')) { return true; } else { return false; }">
-                                    <f:setPropertyActionListener target="#{usuarioController.usuarioSelecionado}" value="#{user}" />
+                                    <f:setPropertyActionListener target="#{usuarioController.usuarioSelecionado}" value="#{user}"/>
                                 </p:commandButton>
                             </p:column>
                         </p:dataTable>

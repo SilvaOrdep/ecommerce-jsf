@@ -2,7 +2,6 @@ package com.souzamonteiro.nfe.dao;
 
 import com.souzamonteiro.nfe.model.Cliente;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.util.List;

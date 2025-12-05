@@ -31,12 +31,12 @@ public class ClienteController implements Serializable {
         clientes = clienteDAO.findAtivos();
         editando = false;
         clienteSelecionado = null;
-        cliente = null; // Adicione esta linha
+        cliente = null;
     }
     
     public void novoCliente() {
         cliente = new Cliente();
-        cliente.setAtivo(true); // Se tiver campo ativo
+        cliente.setAtivo(true);
         editando = true;
         clienteSelecionado = null;
     }

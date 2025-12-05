@@ -8,7 +8,6 @@
     <ui:define name="content">
         <div class="p-p-4">
             <h:form id="form">
-                <!-- Adicionar growl específico para este formulário -->
                 <p:growl id="growl" showDetail="true" life="3000" />
                 
                 <p:card>
@@ -34,7 +33,6 @@
                                    rowKey="#{cli.id}"
                                    emptyMessage="Nenhum cliente cadastrado">
 
-                            <!-- Adicionar evento de seleção -->
                             <p:ajax event="rowSelect" 
                                    listener="#{clienteController.onRowSelect}" 
                                    update="@form"/>
@@ -64,7 +62,7 @@
                                                action="#{clienteController.editarCliente}"
                                                update="@form"
                                                immediate="true">
-                                    <f:setPropertyActionListener target="#{clienteController.clienteSelecionado}" value="#{cli}" />
+                                    <f:setPropertyActionListener target="#{clienteController.clienteSelecionado}" value="#{cli}"/>
                                 </p:commandButton>
                                 
                                 <!-- Botão Excluir - passa o usuário atual como parâmetro -->
@@ -73,7 +71,7 @@
                                                action="#{clienteController.excluirCliente}"
                                                update="@form"
                                                onclick="if(confirm('Tem certeza que deseja excluir o cliente #{cli.xnome}?')) { return true; } else { return false; }">
-                                    <f:setPropertyActionListener target="#{clienteController.clienteSelecionado}" value="#{cli}" />
+                                    <f:setPropertyActionListener target="#{clienteController.clienteSelecionado}" value="#{cli}"/>
                                 </p:commandButton>
                             </p:column>
                         </p:dataTable>

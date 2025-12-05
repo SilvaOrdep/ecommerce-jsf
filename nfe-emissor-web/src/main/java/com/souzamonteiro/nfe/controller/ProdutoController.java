@@ -7,6 +7,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.annotation.PostConstruct;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,32 +20,35 @@ public class ProdutoController implements Serializable {
     private List<Produto> produtos;
     private Produto produto;
     private Produto produtoSelecionado;
-    private boolean editando;
-    
-    public ProdutoController() {
-        // Construtor vazio para permitir @PostConstruct
-    }
+    private boolean editando = false; // Inicialize como false
     
     @PostConstruct
     public void init() {
         carregarProdutos();
-        novoProduto();
     }
     
     public void carregarProdutos() {
         produtos = produtoDAO.findAtivos();
         editando = false;
+        produtoSelecionado = null;
+        produto = null;
     }
     
     public void novoProduto() {
         produto = new Produto();
+        produto.setAtivo(true);
         editando = true;
+        produtoSelecionado = null;
     }
     
     public void editarProduto() {
         if (produtoSelecionado != null) {
             produto = produtoSelecionado;
             editando = true;
+        } else {
+            FacesContext.getCurrentInstance().addMessage("form:growl",
+                new FacesMessage(FacesMessage.SEVERITY_WARN, 
+                "Aviso", "Selecione um produto para editar."));
         }
     }
     
@@ -92,6 +97,18 @@ public class ProdutoController implements Serializable {
     
     public void cancelarEdicao() {
         carregarProdutos();
+    }
+    
+    // Métodos para manipular seleção no dataTable
+    public void onRowSelect(SelectEvent<Produto> event) {
+        produtoSelecionado = event.getObject();
+        FacesContext.getCurrentInstance().addMessage("form:growl",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, 
+            "Selecionado", "Usuário selecionado: " + produtoSelecionado.getXprod()));
+    }
+    
+    public void onRowUnselect(UnselectEvent<Produto> event) {
+        produtoSelecionado = null;
     }
     
     // Getters e Setters
