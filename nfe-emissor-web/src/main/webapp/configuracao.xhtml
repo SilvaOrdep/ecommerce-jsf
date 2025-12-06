@@ -65,9 +65,18 @@
                             <p:panel header="Configurações de Emissão" toggleable="true" collapsed="false">
                                 <div class="p-grid">
                                     <div class="p-col-12 p-md-4">
-                                        <p:outputLabel for="serieNFe" value="Série NF-e"/>
-                                        <p:inputText id="serieNFe" value="#{configuracaoController.configuracao.serieNfe}" 
-                                                   required="true" requiredMessage="Série é obrigatória"
+                                        <p:outputLabel for="serieNFe" value="Série da NF-e"/>
+                                        <p:inputNumber id="serieNFe" value="#{configuracaoController.configuracao.serieNfe}" 
+                                                   required="true" requiredMessage="A súérie da NF-e é obrigatória"
+                                                   decimalPlaces="0"
+                                                   minValue="1" maxValue="999"
+                                                   style="width: 100%"/>
+                                        
+                                        <p:outputLabel for="numeroNFe" value="Número inicial da NF-e"/>
+                                        <p:inputNumber id="numeroNFe" value="#{configuracaoController.configuracao.numeroNfe}" 
+                                                   required="true" requiredMessage="O número inicial da NF-e é obrigatório"
+                                                   decimalPlaces="0"
+                                                   minValue="1" maxValue="999999999"
                                                    style="width: 100%"/>
                                     </div>
 

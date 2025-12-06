@@ -85,11 +85,11 @@
             "mod": "55",
             "indPres": "1",
             "tpImp": "1",
-            "nNF": "99",
+            "nNF": "101",
             "cMunFG": "2927408",
             "procEmi": "0",
             "finNFe": "1",
-            "dhEmi": "2025-12-05 19:07:43",
+            "dhEmi": "2025-12-06 15:26:06",
             "tpAmb": "2",
             "indFinal": "1",
             "idDest": "1",
@@ -98,7 +98,7 @@
             "cUF": "29",
             "serie": "1",
             "natOp": "VENDA",
-            "cNF": "00000100",
+            "cNF": "00000102",
             "verProc": "1.0"
         },
         "autXML": {

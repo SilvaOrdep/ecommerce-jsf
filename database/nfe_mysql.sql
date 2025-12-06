@@ -64,7 +64,8 @@ CREATE TABLE configuracao (
     caminho_xml VARCHAR(500) NOT NULL,
     gerar_pdf VARCHAR(1) DEFAULT '1',
     porta_servidor VARCHAR(5) DEFAULT '3435',
-    serie_nfe VARCHAR(3) DEFAULT '1',
+    serie_nfe INT NOT NULL,
+    numero_nfe INT NOT NULL,
     natureza_operacao VARCHAR(100) DEFAULT 'VENDA',
     finalidade_emissao VARCHAR(1) DEFAULT '1',
     consumidor_final VARCHAR(1) DEFAULT '1',
@@ -226,63 +227,43 @@ INSERT INTO configuracao (
 -- Inserir empresa padrão (dados fictícios)
 INSERT INTO empresa (
     cnpj, xnome, xfant, ie, crt, 
-    xlgr, nro, xbairro, cmun, xmun, uf, cep, fone, email
+    xlgr, nro, xcpl, xbairro, cmun, xmun, uf, cep, fone, email
 ) VALUES (
     '33630582000149', 
-    'Editora Roberto LIEuiz Souza Monteiro', 
-    'Editora Monteiro', 
+    'Editora Roberto Luiz Souza Monteiro', 
+    'Editora Science Books', 
     '158039716', '3', 
-    'Rua Chile', 's/n', 'Centro', '2927408', 'Salvador', 'BA', 
-    '40020000', '71991721874', 'contato@editoramonteiro.com'
+    'Rua Chile', 's/n', 'Edifício Eduardo De Moraes, sala 606', 'Centro', '2927408', 'Salvador', 'BA', 
+    '40020000', '71991721874', 'roberto@souzamonteiro.com'
 );
 
 -- Inserir alguns produtos de exemplo
 INSERT INTO produto (
-    cprod, xprod, ncm, cfop, ucom, vuncom,
+    cprod, cean, xprod, ncm, cfop, ucom, vuncom,
     cest, orig, cst_icms, picms, cst_pis, ppis, cst_cofins, pcofins
 ) VALUES 
 (
-    '7898480650104', 
-    'Livro - Gestão Empresarial', 
-    '49019900', '5102', 'UN', 50.00,
-    NULL, '0', '00', 0.00, '01', 1.65, '01', 7.60
+    '7898480650104', '7898480650104',
+    'Óleo de cambio manual SAE 80W Flex Oil 1Ltl', 
+    '27101932', '5102', 'UN', 13.00,
+    '0600500', '0', '00', 7.00, '01', 1.65, '01', 7.60
 ),
 (
-    '7891234567890', 
-    'Mouse Óptico USB', 
-    '84716052', '5102', 'UN', 25.00,
-    '0600500', '0', '00', 12.00, '01', 1.65, '01', 7.60
-),
-(
-    '7899876543210', 
-    'Teclado Mecânico', 
-    '84716072', '5102', 'UN', 120.00,
-    '0600500', '0', '00', 12.00, '01', 1.65, '01', 7.60
+    '7890647097098', '7890647097098',
+    'Caneta esferográfica azul', 
+    '96081000', '5102', 'UN', 1.49,
+    '1902700', '0', '00', 18.50, '01', 1.65, '01', 7.60
 );
 
 -- Inserir alguns clientes de exemplo
 INSERT INTO cliente (
-    xnome, cpf, xlgr, nro, xbairro, cmun, xmun, uf, cep, fone, email
+    xnome, cpf, xlgr, nro, xcpl, xbairro, cmun, xmun, uf, cep, fone, email
 ) VALUES 
 (
-    'João Silva Santos', 
+    'Andréia Rita da Silva', 
     '40325635862',
-    'Rua Tanhaçu', '11', 'Ipitanga', '2919207', 'Lauro de Freitas', 'BA', 
-    '42706730', '71991965292', 'joao.silva@email.com'
-),
-(
-    'Maria Oliveira Souza', 
-    '98765432100',
-    'Av. Sete de Setembro', '100', 'Centro', '2927408', 'Salvador', 'BA', 
-    '40020000', '7133334444', 'maria.oliveira@email.com'
-);
-INSERT INTO cliente (
-    xnome, cnpj, xlgr, nro, xbairro, cmun, xmun, uf, cep, fone, email
-) VALUES (
-    'Tech Solutions LTDA', 
-    '13937073000156',
-    'Rua da Paz', '45', 'Pituba', '2927408', 'Salvador', 'BA', 
-    '41830600', '7132223333', 'contato@techsolutions.com'
+    'Rua Tanhaçu', '11', 'Quadra 5', 'Ipitanga', '2919207', 'Lauro de Freitas', 'BA', 
+    '42706730', '71991965292', 'andreiarita2@gmail.com'
 );
 
 -- =============================================

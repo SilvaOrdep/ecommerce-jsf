@@ -39,6 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Configuracao.findByGerarPdf", query = "SELECT c FROM Configuracao c WHERE c.gerarPdf = :gerarPdf"),
     @NamedQuery(name = "Configuracao.findByPortaServidor", query = "SELECT c FROM Configuracao c WHERE c.portaServidor = :portaServidor"),
     @NamedQuery(name = "Configuracao.findBySerieNfe", query = "SELECT c FROM Configuracao c WHERE c.serieNfe = :serieNfe"),
+    @NamedQuery(name = "Configuracao.findByNumeroNfe", query = "SELECT c FROM Configuracao c WHERE c.numeroNfe = :numeroNfe"),
     @NamedQuery(name = "Configuracao.findByNaturezaOperacao", query = "SELECT c FROM Configuracao c WHERE c.naturezaOperacao = :naturezaOperacao"),
     @NamedQuery(name = "Configuracao.findByFinalidadeEmissao", query = "SELECT c FROM Configuracao c WHERE c.finalidadeEmissao = :finalidadeEmissao"),
     @NamedQuery(name = "Configuracao.findByConsumidorFinal", query = "SELECT c FROM Configuracao c WHERE c.consumidorFinal = :consumidorFinal"),
@@ -79,7 +80,9 @@ public class Configuracao implements Serializable {
     @Column(name = "porta_servidor")
     private String portaServidor;
     @Column(name = "serie_nfe")
-    private String serieNfe;
+    private Integer serieNfe;
+    @Column(name = "numero_nfe")
+    private Integer numeroNfe;
     @Column(name = "natureza_operacao")
     private String naturezaOperacao;
     @Column(name = "finalidade_emissao")
@@ -193,12 +196,20 @@ public class Configuracao implements Serializable {
         this.portaServidor = portaServidor;
     }
 
-    public String getSerieNfe() {
+    public Integer getSerieNfe() {
         return serieNfe;
     }
 
-    public void setSerieNfe(String serieNfe) {
+    public void setSerieNfe(Integer serieNfe) {
         this.serieNfe = serieNfe;
+    }
+
+    public Integer getNumeroNfe() {
+        return numeroNfe;
+    }
+
+    public void setNumeroNfe(Integer numeroNfe) {
+        this.numeroNfe = numeroNfe;
     }
 
     public String getNaturezaOperacao() {
