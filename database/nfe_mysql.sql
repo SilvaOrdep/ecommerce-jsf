@@ -65,7 +65,7 @@ CREATE TABLE configuracao (
     gerar_pdf VARCHAR(1) DEFAULT '1',
     porta_servidor VARCHAR(5) DEFAULT '3435',
     serie_nfe INT NOT NULL,
-    numero_nfe INT NOT NULL,
+    numero_nfe INT,
     natureza_operacao VARCHAR(100) DEFAULT 'VENDA',
     finalidade_emissao VARCHAR(1) DEFAULT '1',
     consumidor_final VARCHAR(1) DEFAULT '1',

@@ -7,7 +7,7 @@
 >
   <f:view locale="pt_BR">
     <h:head>
-      <title>NF-e Emissor - Login</title>
+      <title>NF-e Emissor - Registro</title>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </h:head>
@@ -15,10 +15,11 @@
     <h:body
       style="
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        height: 100vh;
+         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 40px 20px;
       "
     >
       <!-- Mensagens de erro/sucesso -->
@@ -48,47 +49,77 @@
             </div>
           </f:facet>
 
-          <!-- Formulário de login -->
-          <h:form id="loginForm">
+          <!-- Formulário de Registro -->
+          <h:form id="registroForm">
             <div style="padding: 20px">
-              <!-- Campo Login -->
-              <div class="ui-g-12 ui-md-12">
-                <p:outputLabel
-                  for="login"
-                  value="Login ou Email"
-                  style="display: block; margin-bottom: 5px"
+              <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                <p:outputLabel for="nome" value="Nome Completo" />
+                <p:inputText
+                  id="nome"
+                  value="#{usuarioController.usuario.nome}"
+                  required="true"
+                  requiredMessage="Nome é obrigatório"
+                  style="width: 100%; padding: 10px; box-sizing: border-box"
                 />
+              </div>
+
+              <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                <p:outputLabel for="login" value="Login" />
                 <p:inputText
                   id="login"
-                  value="#{loginController.login}"
+                  value="#{usuarioController.usuario.login}"
                   required="true"
                   requiredMessage="Login é obrigatório"
-                  style="width: 100%; padding: 10px"
+                  style="width: 100%; padding: 10px; box-sizing: border-box"
                 />
               </div>
 
-              <!-- Campo Senha -->
-              <div class="ui-g-12 ui-md-12" style="margin-top: 15px">
-                <p:outputLabel
-                  for="senha"
-                  value="Senha"
-                  style="display: block; margin-bottom: 5px"
+              <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                <p:outputLabel for="email" value="Email" />
+                <p:inputText
+                  id="email"
+                  value="#{usuarioController.usuario.email}"
+                  required="true"
+                  requiredMessage="Email é obrigatório"
+                  style="width: 100%; padding: 10px; box-sizing: border-box"
                 />
+              </div>
+
+              <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                <p:outputLabel for="senha" value="Senha" />
                 <p:password
                   id="senha"
-                  value="#{loginController.senha}"
-                  feedback="false"
+                  value="#{usuarioController.usuario.senha}"
+                  feedback="true"
                   required="true"
                   requiredMessage="Senha é obrigatória"
-                  style="width: 100%; padding: 10px"
+                  style="width: 100%; padding: 10px; box-sizing: border-box"
                 />
               </div>
 
-              <!-- Botão Entrar -->
+              <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                <p:outputLabel for="confirmarSenha" value="Confirmar Senha" />
+                <p:password
+                  id="confirmarSenha"
+                  value="#{usuarioController.confirmarSenha}"
+                  feedback="false"
+                  required="true"
+                  requiredMessage="Confirmação de senha é obrigatória"
+                  style="width: 100%; padding: 10px; box-sizing: border-box"
+                />
+              </div>
+
+              <!-- Campo Perfil - Hidden com valor USER -->
+              <h:inputHidden
+                id="perfil"
+                value="#{usuarioController.usuario.perfil}"
+              />
+
+              <!-- Botão Registrar -->
               <div class="ui-g-12 ui-md-12" style="margin-top: 25px">
                 <p:commandButton
-                  value="Entrar"
-                  action="#{loginController.login}"
+                  value="Registrar"
+                  action="#{usuarioController.salvarUsuario}"
                   style="
                     width: 100%;
                     background: #667eea;
@@ -97,10 +128,11 @@
                     font-weight: bold;
                   "
                   update="growl"
+                  process="@form"
                 />
               </div>
 
-              <!-- Mensagem de teste -->
+              <!-- Voltar para login -->
               <div
                 style="
                   text-align: center;
@@ -109,11 +141,8 @@
                   font-size: 12px;
                 "
               >
-                <p>
-                  Utilize a senha de administrador inicial, para o primeiro
-                  login.
-                </p>
-                <p:button value="Registrar" outcome="/registro.xhtml" />
+                <p>Já tem uma conta?</p>
+                <p:button value="Voltar para Login" outcome="/login.xhtml" />
               </div>
             </div>
           </h:form>
@@ -122,7 +151,7 @@
 
       <!-- Script para debug -->
       <script type="text/javascript">
-        console.log("Página de login carregada");
+        console.log("Página de registro carregada");
         console.log(
           "JSF PrimeFaces carregado:",
           typeof PrimeFaces !== "undefined",

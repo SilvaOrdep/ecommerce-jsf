@@ -107,6 +107,8 @@ public class UsuarioController implements Serializable {
                 }
             }
             
+            if(usuario.getAtivo() == null) usuario.setAtivo(true);
+            
             usuarioDAO.save(usuario);
             carregarUsuarios();
             
