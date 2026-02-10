@@ -7,7 +7,7 @@
 
     <f:view locale="pt_BR">
         <h:head>
-            <title>NF-e Emissor</title>
+            <title>Ecommerce</title>
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <h:outputStylesheet name="css/styles.css"/>
@@ -21,11 +21,32 @@
                         <div class="header-content">
                             <!-- Form para o menu -->
                             <h:form id="menuForm">
-                                <div class="header-title">
-                                    <i class="pi pi-file" style="font-size: 1.5rem; margin-right: 10px;"></i>
-                                    <span style="font-size: 1.5rem; font-weight: bold;">NF-e Emissor</span>
+                                <div class="mainHeader">
+                                    <div class="header-title">
+                                        <i class="pi pi-file" style="font-size: 1.5rem; margin-right: 10px;"></i>
+                                        <span style="font-size: 1.5rem; font-weight: bold;">Ecommerce</span>
+                                    </div>
+                                    <div style="width: 40%;">
+                                        <p:inputText
+                                                id="login"
+                                                value=""
+                                                required="true"
+                                                requiredMessage="Login é obrigatório"
+                                                style="width: 100%; padding: 10px; box-sizing: border-box"
+                                                placeholder="Buscar produtos, marcas e muito mais..."
+                                        />
+                                    </div>
+                                    <div class="user-info">
+                                        <p:outputLabel value="Bem-vindo, #{loginController.usuarioLogado.nome}"
+                                                       style="margin-right: 10px;"/>
+                                        <!-- Botão de logout -->
+                                        <p:commandButton value="Sair" icon="pi pi-power-off"
+                                                         action="#{loginController.logout}"
+                                                         styleClass="logout-button"
+                                                         immediate="true"
+                                                         ajax="false"/>
+                                    </div>
                                 </div>
-                                
                                 <p:menubar styleClass="main-menu">
                                     <p:menuitem value="Início" icon="pi pi-home" outcome="/index.xhtml"/>
                                     
@@ -43,18 +64,9 @@
                                     </p:submenu>
                                     
                                     <p:menuitem value="Vendas" icon="pi pi-shopping-cart" outcome="/vendas.xhtml"/>
-                                    
+
                                     <f:facet name="options">
-                                        <div class="user-info">
-                                            <p:outputLabel value="Bem-vindo, #{loginController.usuarioLogado.nome}" 
-                                                          style="margin-right: 10px;"/>
-                                            <!-- Botão de logout -->
-                                            <p:commandButton value="Sair" icon="pi pi-power-off" 
-                                                           action="#{loginController.logout}"
-                                                           styleClass="logout-button"
-                                                           immediate="true"
-                                                           ajax="false"/>
-                                        </div>
+
                                     </f:facet>
                                 </p:menubar>
                             </h:form>
@@ -65,7 +77,7 @@
                     <div class="layout-content">
                         <ui:insert name="content">
                             <div class="welcome-content">
-                                <h1>Bem-vindo ao Sistema NF-e Emissor</h1>
+                                <h1>Bem-vindo ao Sistema Ecommerce</h1>
                                 <p>Selecione uma opção no menu acima para começar.</p>
                             </div>
                         </ui:insert>
