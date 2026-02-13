@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:p="http://primefaces.org/ui"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
 >
-  <f:view locale="pt_BR">
+<f:view locale="pt_BR">
     <h:head>
-      <title>NF-e Emissor - Registro</title>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>NF-e Emissor - Registro</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
 
     <h:body
-      style="
+            style="
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
          min-height: 100vh;
         display: flex;
@@ -22,141 +22,155 @@
         padding: 40px 20px;
       "
     >
-      <!-- Mensagens de erro/sucesso -->
-      <p:growl id="growl" showDetail="true" life="3000" />
+        <!-- Mensagens de erro/sucesso -->
+        <p:growl id="growl" showDetail="true" life="3000"/>
 
-      <div class="login-container">
-        <!-- Card principal -->
-        <p:card
-          style="
+        <div class="login-container">
+            <!-- Card principal -->
+            <p:card
+                    style="
             width: 400px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
           "
-        >
-          <!-- Título do card -->
-          <f:facet name="header">
-            <div style="text-align: center; padding: 20px">
-              <i
-                class="pi pi-building"
-                style="font-size: 3rem; color: #667eea"
-              ></i>
-              <h2 style="margin: 10px 0 0 0; color: #333">NF-e Emissor</h2>
-              <p style="color: #666; margin: 0">
-                Sistema de Emissão de Nota Fiscal
-              </p>
-            </div>
-          </f:facet>
+            >
+                <!-- Título do card -->
+                <f:facet name="header">
+                    <div style="text-align: center; padding: 20px">
+                        <i
+                                class="pi pi-building"
+                                style="font-size: 3rem; color: #667eea"
+                        ></i>
+                        <h2 style="margin: 10px 0 0 0; color: #333">NF-e Emissor</h2>
+                        <p style="color: #666; margin: 0">
+                            Sistema de Emissão de Nota Fiscal
+                        </p>
+                    </div>
+                </f:facet>
 
-          <!-- Formulário de Registro -->
-          <h:form id="registroForm">
-            <div style="padding: 20px">
-              <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
-                <p:outputLabel for="nome" value="Nome Completo" />
-                <p:inputText
-                  id="nome"
-                  value="#{usuarioController.usuario.nome}"
-                  required="true"
-                  requiredMessage="Nome é obrigatório"
-                  style="width: 100%; padding: 10px; box-sizing: border-box"
-                />
-              </div>
+                <!-- Formulário de Registro -->
+                <h:form id="registroForm">
+                    <div style="padding: 20px">
+                        <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                            <p:outputLabel for="nome" value="Nome Completo"/>
+                            <p:inputText
+                                    id="nome"
+                                    value="#{usuarioController.usuario.nome}"
+                                    required="true"
+                                    requiredMessage="Nome é obrigatório"
+                                    style="width: 100%; padding: 10px; box-sizing: border-box"
+                            />
+                        </div>
 
-              <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
-                <p:outputLabel for="login" value="Login" />
-                <p:inputText
-                  id="login"
-                  value="#{usuarioController.usuario.login}"
-                  required="true"
-                  requiredMessage="Login é obrigatório"
-                  style="width: 100%; padding: 10px; box-sizing: border-box"
-                />
-              </div>
+                        <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                            <p:outputLabel for="cpf" value="CPF"/>
+                            <p:inputMask id="cpf" value="#{usuarioController.cliente.cpf}"
+                                         mask="999.999.999-99"
+                                         converter="numeroConverter"
+                                         style="width: 100%"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                            <p:outputLabel for="cnpj" value="CNPJ"/>
+                            <p:inputMask id="cnpj" value="#{usuarioController.cliente.cnpj}"
+                                         mask="99.999.999/9999-99"
+                                         converter="numeroConverter"
+                                         style="width: 100%"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                            <p:outputLabel for="login" value="Login"/>
+                            <p:inputText
+                                    id="login"
+                                    value="#{usuarioController.usuario.login}"
+                                    required="true"
+                                    requiredMessage="Login é obrigatório"
+                                    style="width: 100%; padding: 10px; box-sizing: border-box"
+                            />
+                        </div>
 
-              <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
-                <p:outputLabel for="email" value="Email" />
-                <p:inputText
-                  id="email"
-                  value="#{usuarioController.usuario.email}"
-                  required="true"
-                  requiredMessage="Email é obrigatório"
-                  style="width: 100%; padding: 10px; box-sizing: border-box"
-                />
-              </div>
+                        <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                            <p:outputLabel for="email" value="Email"/>
+                            <p:inputText
+                                    id="email"
+                                    value="#{usuarioController.usuario.email}"
+                                    required="true"
+                                    requiredMessage="Email é obrigatório"
+                                    style="width: 100%; padding: 10px; box-sizing: border-box"
+                            />
+                        </div>
 
-              <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
-                <p:outputLabel for="senha" value="Senha" />
-                <p:password
-                  id="senha"
-                  value="#{usuarioController.usuario.senha}"
-                  feedback="true"
-                  required="true"
-                  requiredMessage="Senha é obrigatória"
-                  style="width: 100%; padding: 10px; box-sizing: border-box"
-                />
-              </div>
+                        <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                            <p:outputLabel for="senha" value="Senha"/>
+                            <p:password
+                                    id="senha"
+                                    value="#{usuarioController.usuario.senha}"
+                                    feedback="true"
+                                    required="true"
+                                    requiredMessage="Senha é obrigatória"
+                                    style="width: 100%; padding: 10px; box-sizing: border-box"
+                            />
+                        </div>
 
-              <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
-                <p:outputLabel for="confirmarSenha" value="Confirmar Senha" />
-                <p:password
-                  id="confirmarSenha"
-                  value="#{usuarioController.confirmarSenha}"
-                  feedback="false"
-                  required="true"
-                  requiredMessage="Confirmação de senha é obrigatória"
-                  style="width: 100%; padding: 10px; box-sizing: border-box"
-                />
-              </div>
+                        <div class="ui-g-12 ui-md-12" style="margin-bottom: 15px">
+                            <p:outputLabel for="confirmarSenha" value="Confirmar Senha"/>
+                            <p:password
+                                    id="confirmarSenha"
+                                    value="#{usuarioController.confirmarSenha}"
+                                    feedback="false"
+                                    required="true"
+                                    requiredMessage="Confirmação de senha é obrigatória"
+                                    style="width: 100%; padding: 10px; box-sizing: border-box"
+                            />
+                        </div>
 
-              <!-- Campo Perfil - Hidden com valor USER -->
-              <h:inputHidden
-                id="perfil"
-                value="#{usuarioController.usuario.perfil}"
-              />
+                        <!-- Campo Perfil - Hidden com valor USER -->
+                        <h:inputHidden
+                                id="perfil"
+                                value="#{usuarioController.usuario.perfil}"
+                        />
 
-              <!-- Botão Registrar -->
-              <div class="ui-g-12 ui-md-12" style="margin-top: 25px">
-                <p:commandButton
-                  value="Registrar"
-                  action="#{usuarioController.salvarUsuario}"
-                  style="
+                        <!-- Botão Registrar -->
+                        <div class="ui-g-12 ui-md-12" style="margin-top: 25px">
+                            <p:commandButton
+                                    value="Registrar"
+                                    action="#{usuarioController.registrarClienteUsuario}"
+                                    style="
                     width: 100%;
                     background: #667eea;
                     border: none;
                     height: 45px;
                     font-weight: bold;
                   "
-                  update="growl"
-                  process="@form"
-                />
-              </div>
+                                    update="growl"
+                                    process="@form"
+                            />
+                        </div>
 
-              <!-- Voltar para login -->
-              <div
-                style="
+                        <!-- Voltar para login -->
+                        <div
+                                style="
                   text-align: center;
                   margin-top: 20px;
                   color: #666;
                   font-size: 12px;
                 "
-              >
-                <p>Já tem uma conta?</p>
-                <p:button value="Voltar para Login" outcome="/login.xhtml" />
-              </div>
-            </div>
-          </h:form>
-        </p:card>
-      </div>
+                        >
+                            <p>Já tem uma conta?</p>
+                            <p:button value="Voltar para Login" outcome="/login.xhtml"/>
+                        </div>
+                    </div>
+                </h:form>
+            </p:card>
+        </div>
 
-      <!-- Script para debug -->
-      <script type="text/javascript">
-        console.log("Página de registro carregada");
-        console.log(
-          "JSF PrimeFaces carregado:",
-          typeof PrimeFaces !== "undefined",
-        );
-      </script>
+        <!-- Script para debug -->
+        <script type="text/javascript">
+            console.log("Página de registro carregada");
+            console.log(
+                "JSF PrimeFaces carregado:",
+                typeof PrimeFaces !== "undefined",
+            );
+        </script>
     </h:body>
-  </f:view>
+</f:view>
 </html>

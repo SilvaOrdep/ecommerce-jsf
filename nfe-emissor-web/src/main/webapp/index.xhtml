@@ -1,99 +1,183 @@
-<ui:composition template="template.xhtml"
-                xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="http://java.sun.com/jsf/facelets">
+<ui:composition
+  template="template.xhtml"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+  <ui:define name="content">
+    <!-- Script para conectar busca do template com grid local -->
+    <h:outputScript>
+      PrimeFaces.widget.InputText.prototype.oldInit =
+      PrimeFaces.widget.InputText.prototype.init;
+      PrimeFaces.widget.InputText.prototype.init = function(cfg) {
+      this.oldInit(cfg); if (this.jq.attr('id') === 'menuForm:searchInput') {
+      var self = this; this.jq.off('keyup').on('keyup', function(e) { var
+      timeout = self.jq.data('timeout'); if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(function() { var searchValue = self.jq.val();
+      PrimeFaces.ajax.Request.handle({ source: 'menuForm:searchInput', process:
+      'menuForm:searchInput', update: 'formProdutos:produtosGrid', params:
+      [{name: 'javax.faces.behavior.event', value: 'change'}] }); }, 300);
+      self.jq.data('timeout', timeout); }); } };
+    </h:outputScript>
 
-    <ui:define name="content">
-        <div class="p-p-4">
-            <div class="p-grid">
-                <div class="p-col-12">
-                    <p:card>
-                        <f:facet name="title">
-                            <div class="p-d-flex p-ai-center">
-                                <i class="pi pi-home p-mr-2"></i>
-                                <span>Dashboard</span>
-                            </div>
-                        </f:facet>
-                        <f:facet name="content">
-                            <div class="p-grid">
-                                <div class="p-col-12 p-md-4">
-                                    <p:card style="background: #4CAF50; color: white;">
-                                        <f:facet name="title">
-                                            <div class="p-d-flex p-ai-center">
-                                                <i class="pi pi-shopping-cart p-mr-2"></i>
-                                                <span>Vendas Hoje</span>
-                                            </div>
-                                        </f:facet>
-                                        <f:facet name="content">
-                                            <h1 style="font-size: 2.5rem; margin: 0; text-align: center;">0</h1>
-                                            <p style="text-align: center; margin: 0;">NF-e emitidas</p>
-                                        </f:facet>
-                                    </p:card>
-                                </div>
+    <div class="ecommerce-container">
+      <!-- Banner Principal -->
+      <div class="hero-banner">
+        <h1 class="hero-title">
+          <i class="pi pi-shopping-cart"></i>
+          Bem-vindo à Nossa Loja
+        </h1>
+        <p class="hero-subtitle">
+          Encontre os melhores produtos com os melhores preços
+        </p>
+      </div>
 
-                                <div class="p-col-12 p-md-4">
-                                    <p:card style="background: #2196F3; color: white;">
-                                        <f:facet name="title">
-                                            <div class="p-d-flex p-ai-center">
-                                                <i class="pi pi-box p-mr-2"></i>
-                                                <span>Produtos</span>
-                                            </div>
-                                        </f:facet>
-                                        <f:facet name="content">
-                                            <h1 style="font-size: 2.5rem; margin: 0; text-align: center;">#{produtoController.produtos.size()}</h1>
-                                            <p style="text-align: center; margin: 0;">Cadastrados</p>
-                                        </f:facet>
-                                    </p:card>
-                                </div>
+      <!-- Grid de Produtos -->
+      <h:form id="formProdutos">
+        <p:growl id="messages" showDetail="true" life="3000" />
 
-                                <div class="p-col-12 p-md-4">
-                                    <p:card style="background: #FF9800; color: white;">
-                                        <f:facet name="title">
-                                            <div class="p-d-flex p-ai-center">
-                                                <i class="pi pi-users p-mr-2"></i>
-                                                <span>Clientes</span>
-                                            </div>
-                                        </f:facet>
-                                        <f:facet name="content">
-                                            <h1 style="font-size: 2.5rem; margin: 0; text-align: center;">#{clienteController.clientes.size()}</h1>
-                                            <p style="text-align: center; margin: 0;">Cadastrados</p>
-                                        </f:facet>
-                                    </p:card>
-                                </div>
-                            </div>
+        <div class="products-section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <i class="pi pi-box"></i>
+              Todos os Produtos
+            </h2>
+            <p:commandButton
+              value="Recarregar"
+              icon="pi pi-refresh"
+              styleClass="p-button-rounded p-button-outlined"
+              action="#{produtoController.carregarProdutos}"
+              update="produtosGrid messages"
+            />
+          </div>
 
-                            <div class="p-mt-4">
-                                <h:form>
-                                    <h3>Ações Rápidas</h3>
-                                    <div class="p-grid">
-                                        <div class="p-col-12 p-md-3">
-                                            <p:commandButton value="Nova Venda" icon="pi pi-plus" 
-                                                           outcome="vendas" style="width: 100%;"/>
-                                        </div>
-                                        <div class="p-col-12 p-md-3">
-                                            <p:commandButton value="Cadastrar Produto" icon="pi pi-box" 
-                                                           outcome="produtos" rendered="#{loginController.isAdmin()}" 
-                                                           style="width: 100%;"/>
-                                        </div>
-                                        <div class="p-col-12 p-md-3">
-                                            <p:commandButton value="Cadastrar Cliente" icon="pi pi-user-plus" 
-                                                           outcome="clientes" rendered="#{loginController.isAdmin()}" 
-                                                           style="width: 100%;"/>
-                                        </div>
-                                        <div class="p-col-12 p-md-3">
-                                            <p:commandButton value="Configurações" icon="pi pi-cog" 
-                                                           outcome="configuracao" rendered="#{loginController.isAdmin()}" 
-                                                           style="width: 100%;"/>
-                                        </div>
-                                    </div>
-                                </h:form>
-                            </div>
-                        </f:facet>
-                    </p:card>
+          <p:dataGrid
+            id="produtosGrid"
+            var="produto"
+            value="#{produtoController.produtos}"
+            columns="4"
+            layout="grid"
+            rows="12"
+            paginator="true"
+            paginatorPosition="bottom"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+            rowsPerPageTemplate="8,12,16,20"
+            emptyMessage="Nenhum produto encontrado"
+          >
+            <div class="product-card">
+              <!-- Imagem do Produto -->
+              <div class="product-image-wrapper">
+                <div class="product-image">
+                  <i class="pi pi-image"></i>
                 </div>
+              </div>
+
+              <!-- Informações do Produto -->
+              <div class="product-info">
+                <h3 class="product-title" title="#{produto.xprod}">
+                  #{produto.xprod}
+                </h3>
+
+                <div class="product-code">Código: #{produto.cprod}</div>
+
+                <div class="product-details">
+                  <span class="detail-item">
+                    <i class="pi pi-box"></i>
+                    Un: #{produto.ucom}
+                  </span>
+                </div>
+
+                <!-- Preço e Ação -->
+                <div class="product-footer">
+                  <div class="product-price-section">
+                    <div class="product-price">
+                      <h:outputText value="#{produto.vuncom}">
+                        <f:convertNumber
+                          type="currency"
+                          currencySymbol="R$ "
+                          groupingUsed="true"
+                          minFractionDigits="2"
+                        />
+                      </h:outputText>
+                    </div>
+                    <div class="product-installment">
+                      em até 12x de
+                      <h:outputText value="#{produto.vuncom / 12}">
+                        <f:convertNumber
+                          type="currency"
+                          currencySymbol="R$ "
+                          groupingUsed="true"
+                          minFractionDigits="2"
+                        />
+                      </h:outputText>
+                    </div>
+                  </div>
+
+                  <div class="product-actions">
+                    <button
+                      type="button"
+                      class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only p-button-success p-button-rounded add-cart-btn"
+                      title="Adicionar ao carrinho"
+                      onclick="alert('Produto adicionado ao carrinho!')"
+                    >
+                      <span
+                        class="ui-button-icon-left ui-icon pi pi-shopping-cart"
+                      ></span>
+                      <span class="ui-button-text ui-c">🛒</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only p-button-rounded p-button-outlined p-button-secondary favorite-btn"
+                      title="Adicionar aos favoritos"
+                      onclick="alert('Adicionado aos favoritos!')"
+                    >
+                      <span
+                        class="ui-button-icon-left ui-icon pi pi-heart"
+                      ></span>
+                      <span class="ui-button-text ui-c">♥</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Estoque disponível -->
+                <div class="product-stock">
+                  <i class="pi pi-check-circle"></i>
+                  Estoque disponível
+                </div>
+              </div>
             </div>
+          </p:dataGrid>
         </div>
-    </ui:define>
+      </h:form>
+
+      <!-- Rodapé informativo -->
+      <div class="info-footer">
+        <div class="info-grid">
+          <div class="info-item">
+            <i class="pi pi-truck"></i>
+            <h4>Frete Grátis</h4>
+            <p>Em compras acima de R$ 200</p>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-shield"></i>
+            <h4>Compra Segura</h4>
+            <p>Seus dados protegidos</p>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-replay"></i>
+            <h4>Devolução Grátis</h4>
+            <p>Até 30 dias para trocar</p>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-credit-card"></i>
+            <h4>Parcele sem Juros</h4>
+            <p>Em até 12x no cartão</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ui:define>
 </ui:composition>

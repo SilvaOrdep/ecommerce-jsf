@@ -21,6 +21,7 @@ public class ProdutoController implements Serializable {
     private Produto produto;
     private Produto produtoSelecionado;
     private boolean editando = false; // Inicialize como false
+    private String searchTerm;
     
     @PostConstruct
     public void init() {
@@ -123,4 +124,21 @@ public class ProdutoController implements Serializable {
     
     public boolean isEditando() { return editando; }
     public void setEditando(boolean editando) { this.editando = editando; }
+    
+    public String getSearchTerm() { return searchTerm; }
+    public void setSearchTerm(String searchTerm) { 
+        this.searchTerm = searchTerm;
+        filtrarProdutos();
+    }
+    
+    private void filtrarProdutos() {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            carregarProdutos();
+        } else {
+            produtos = produtoDAO.findAtivos().stream()
+                .filter(p -> p.getXprod().toLowerCase().contains(searchTerm.toLowerCase()) 
+                          || p.getCprod().toLowerCase().contains(searchTerm.toLowerCase()))
+                .collect(java.util.stream.Collectors.toList());
+        }
+    }
 }

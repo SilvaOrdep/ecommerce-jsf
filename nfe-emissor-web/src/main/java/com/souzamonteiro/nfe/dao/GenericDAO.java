@@ -8,51 +8,62 @@ import java.util.List;
 import com.souzamonteiro.nfe.util.HibernateUtil;
 
 public class GenericDAO<T> implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private final Class<T> clazz;
-    
+
     public GenericDAO(Class<T> clazz) {
         this.clazz = clazz;
     }
-    
+
     protected EntityManager getEntityManager() {
         return HibernateUtil.getEntityManager();
     }
-    
+
     public void save(T entity) {
         EntityManager em = getEntityManager();
         EntityTransaction tx = null;
-        
+
         try {
             tx = em.getTransaction();
             tx.begin();
-            
+
             // Verificar se é novo (não tem ID) ou se já existe
+            Object id = null;
             try {
-                Object id = em.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);
-                if (id == null) {
-                    em.persist(entity);
-                } else {
-                    em.merge(entity);
-                }
-            } catch (Exception e) {
-                // Se não conseguir verificar, tenta merge
-                em.merge(entity);
+                id = em.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);
+            } catch (Exception ignored) {
             }
-            
+
+            boolean isNew = (id == null);
+
+            if (isNew) {
+                em.persist(entity);
+            } else {
+                entity = em.merge(entity);
+            }
+
             tx.commit();
+
+            // IMPORTANTE: Após commit, fazer merge para reattach a entidade e obter ID
+            // atualizado
+            // Isso é necessário quando o banco gera o ID automaticamente (IDENTITY)
+            if (isNew && em.isOpen()) {
+                entity = em.merge(entity);
+            }
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
                 tx.rollback();
             }
             throw e;
         } finally {
-            em.close();
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
     }
-    
+
     public T findById(Long id) {
         EntityManager em = getEntityManager();
         try {
@@ -61,7 +72,7 @@ public class GenericDAO<T> implements Serializable {
             em.close();
         }
     }
-    
+
     public T findById(Object id) {
         EntityManager em = getEntityManager();
         try {
@@ -80,7 +91,7 @@ public class GenericDAO<T> implements Serializable {
             em.close();
         }
     }
-    
+
     public List<T> findAll() {
         EntityManager em = getEntityManager();
         try {
@@ -89,11 +100,11 @@ public class GenericDAO<T> implements Serializable {
             em.close();
         }
     }
-    
+
     public void update(T entity) {
         EntityManager em = getEntityManager();
         EntityTransaction tx = null;
-        
+
         try {
             tx = em.getTransaction();
             tx.begin();
@@ -108,11 +119,11 @@ public class GenericDAO<T> implements Serializable {
             em.close();
         }
     }
-    
+
     public void delete(Long id) {
         EntityManager em = getEntityManager();
         EntityTransaction tx = null;
-        
+
         try {
             tx = em.getTransaction();
             tx.begin();

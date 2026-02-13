@@ -2,632 +2,1060 @@
    VARIÁVEIS E CONFIGURAÇÕES GLOBAIS
    ========================================= */
 :root {
-    /* Cores principais */
-    --primary-color: #3f51b5;
-    --primary-dark: #303f9f;
-    --primary-light: #c5cae9;
-    --secondary-color: #ff4081;
-    --accent-color: #009688;
+  /* Cores principais */
+  --primary-color: #3f51b5;
+  --primary-dark: #303f9f;
+  --primary-light: #c5cae9;
+  --secondary-color: #ff4081;
+  --accent-color: #009688;
 
-    /* Cores de fundo */
-    --bg-primary: #f5f7fa;
-    --bg-secondary: #ffffff;
-    --bg-hover: #f8f9fa;
+  /* Cores de fundo */
+  --bg-primary: #f5f7fa;
+  --bg-secondary: #ffffff;
+  --bg-hover: #f8f9fa;
 
-    /* Cores de texto */
-    --text-primary: #2c3e50;
-    --text-secondary: #7f8c8d;
-    --text-light: #95a5a6;
+  /* Cores de texto */
+  --text-primary: #2c3e50;
+  --text-secondary: #7f8c8d;
+  --text-light: #95a5a6;
 
-    /* Cores de status */
-    --success-color: #4caf50;
-    --warning-color: #ff9800;
-    --danger-color: #f44336;
-    --info-color: #2196f3;
+  /* Cores de status */
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --danger-color: #f44336;
+  --info-color: #2196f3;
 
-    /* Bordas e sombras */
-    --border-color: #e0e0e0;
-    --border-radius: 8px;
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1);
+  /* Bordas e sombras */
+  --border-color: #e0e0e0;
+  --border-radius: 8px;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1);
 
-    /* Transições */
-    --transition-speed: 0.3s;
-    --transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Transições */
+  --transition-speed: 0.3s;
+  --transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* =========================================
    RESET E ESTILOS GERAIS
    ========================================= */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: var(--text-primary);
-    line-height: 1.6;
-    font-size: 14px;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
 /* =========================================
    LAYOUT PRINCIPAL
    ========================================= */
 .layout-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .layout-header {
-    background: white;
-    color: black;
-    box-shadow: var(--shadow-md);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+  background: white;
+  color: black;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .header-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
 .header-title {
-    display: flex;
-    align-items: center;
-    padding: 1rem 0;
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
 }
 
 .header-title i {
-    font-size: 2rem;
-    margin-right: 1rem;
-    color: var(--primary-color);
+  font-size: 2rem;
+  margin-right: 1rem;
+  color: var(--primary-color);
 }
 
 .header-title span {
-    font-size: 1.8rem;
-    font-weight: 600;
-    letter-spacing: -0.5px;
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
 }
 
 /* =========================================
    MENU PRINCIPAL
    ========================================= */
 .main-menu {
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
 }
 
 .main-menu .ui-menuitem-text {
-    color: rgba(0, 0, 0, 1) !important;
+  color: rgba(0, 0, 0, 1) !important;
 }
 
 .main-menu .ui-menuitem-link {
-    color: rgba(255, 255, 255, 0.9) !important;
-    padding: 0.8rem 1.2rem !important;
-    border-radius: var(--border-radius) !important;
-    transition: all var(--transition-speed) var(--transition-easing) !important;
-    margin: 0 0.2rem !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  padding: 0.8rem 1.2rem !important;
+  border-radius: var(--border-radius) !important;
+  transition: all var(--transition-speed) var(--transition-easing) !important;
+  margin: 0 0.2rem !important;
 }
 
 .main-menu .ui-menuitem-link:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    color: white !important;
-    transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  transform: translateY(-2px);
 }
 
 .main-menu .ui-menuitem-active > .ui-menuitem-link {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    color: white !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
 }
 
 .main-menu .ui-submenu-icon {
-    color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
 }
 
 .main-menu .ui-menuitem-icon {
-    color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
 }
 
 .user-info {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .logout-button {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    color: var(--primary-color) !important;
-    transition: all var(--transition-speed) var(--transition-easing) !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: var(--primary-color) !important;
+  transition: all var(--transition-speed) var(--transition-easing) !important;
 }
 
 .logout-button:hover {
-    background-color: rgba(255, 255, 255, 0.25) !important;
-    transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-2px);
 }
 
 #menuForm .mainHeader {
-    display: flex !important;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  display: flex !important;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* =========================================
    CONTEÚDO PRINCIPAL
    ========================================= */
 .layout-content {
-    flex: 1;
-    max-width: 1400px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
-    width: 100%;
+  flex: 1;
+  max-width: 1400px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  width: 100%;
 }
 
 /* =========================================
    CARTÕES E CONTAINERS
    ========================================= */
 .p-card {
-    background: var(--bg-secondary) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--border-radius) !important;
-    box-shadow: var(--shadow-sm) !important;
-    transition: all var(--transition-speed) var(--transition-easing) !important;
-    margin-bottom: 1.5rem;
-    overflow: hidden;
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--border-radius) !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: all var(--transition-speed) var(--transition-easing) !important;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
 }
 
 .p-card:hover {
-    box-shadow: var(--shadow-md) !important;
-    transform: translateY(-2px);
+  box-shadow: var(--shadow-md) !important;
+  transform: translateY(-2px);
 }
 
 .p-card .ui-card-header {
-    background: linear-gradient(
-            135deg,
-            var(--primary-color),
-            var(--primary-dark)
-    ) !important;
-    color: white !important;
-    padding: 1.5rem !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-dark)
+  ) !important;
+  color: white !important;
+  padding: 1.5rem !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .p-card .ui-card-title {
-    font-size: 1.4rem !important;
-    font-weight: 600 !important;
-    display: flex;
-    align-items: center;
+  font-size: 1.4rem !important;
+  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
 }
 
 .p-card .ui-card-content {
-    padding: 1.5rem !important;
+  padding: 1.5rem !important;
 }
 
 /* Cartões do Dashboard */
 .dashboard-card {
-    background: white;
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-sm);
-    transition: all var(--transition-speed) var(--transition-easing);
-    height: 100%;
-    border: 1px solid var(--border-color);
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-speed) var(--transition-easing);
+  height: 100%;
+  border: 1px solid var(--border-color);
 }
 
 .dashboard-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
 }
 
 .dashboard-card i {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    opacity: 0.9;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  opacity: 0.9;
 }
 
 .dashboard-card h1 {
-    font-size: 3rem;
-    font-weight: 300;
-    margin: 1rem 0;
-    color: var(--text-primary);
+  font-size: 3rem;
+  font-weight: 300;
+  margin: 1rem 0;
+  color: var(--text-primary);
 }
 
 .dashboard-card p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
 /* Cartões coloridos */
 .card-success {
-    border-left: 4px solid var(--success-color) !important;
+  border-left: 4px solid var(--success-color) !important;
 }
 
 .card-info {
-    border-left: 4px solid var(--info-color) !important;
+  border-left: 4px solid var(--info-color) !important;
 }
 
 .card-warning {
-    border-left: 4px solid var(--warning-color) !important;
+  border-left: 4px solid var(--warning-color) !important;
 }
 
 /* =========================================
    FORMULÁRIOS E INPUTS
    ========================================= */
 .p-fluid .ui-outputlabel {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--text-primary);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .ui-panel {
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--border-radius) !important;
-    box-shadow: var(--shadow-sm) !important;
-    margin-bottom: 1.5rem !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--border-radius) !important;
+  box-shadow: var(--shadow-sm) !important;
+  margin-bottom: 1.5rem !important;
 }
 
 .ui-panel .ui-panel-titlebar {
-    background: var(--bg-hover) !important;
-    border-bottom: 1px solid var(--border-color) !important;
-    padding: 1rem 1.5rem !important;
-    font-weight: 600 !important;
-    color: var(--text-primary) !important;
+  background: var(--bg-hover) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding: 1rem 1.5rem !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
 }
 
 .ui-inputfield {
-    width: 100% !important;
-    padding: 0.75rem 1rem !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--border-radius) !important;
-    font-size: 1rem !important;
-    transition: all 0.2s ease !important;
-    background-color: white !important;
+  width: 100% !important;
+  padding: 0.75rem 1rem !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--border-radius) !important;
+  font-size: 1rem !important;
+  transition: all 0.2s ease !important;
+  background-color: white !important;
 }
 
 .ui-inputfield:focus {
-    outline: none !important;
-    border-color: var(--primary-color) !important;
-    box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1) !important;
+  outline: none !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1) !important;
 }
 
 .ui-selectonemenu {
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--border-radius) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--border-radius) !important;
 }
 
 .ui-selectonemenu .ui-selectonemenu-label {
-    padding: 0.75rem 1rem !important;
+  padding: 0.75rem 1rem !important;
 }
 
 /* =========================================
    BOTÕES
    ========================================= */
 .p-button {
-    border-radius: var(--border-radius) !important;
-    padding: 0.75rem 1.5rem !important;
-    font-weight: 500 !important;
-    transition: all var(--transition-speed) var(--transition-easing) !important;
-    border: none !important;
+  border-radius: var(--border-radius) !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 500 !important;
+  transition: all var(--transition-speed) var(--transition-easing) !important;
+  border: none !important;
 }
 
 .ui-button-primary {
-    background: linear-gradient(
-            135deg,
-            var(--primary-color),
-            var(--primary-dark)
-    ) !important;
-    color: white !important;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-dark)
+  ) !important;
+  color: white !important;
 }
 
 .ui-button-primary:hover {
-    background: linear-gradient(135deg, var(--primary-dark), #283593) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3) !important;
+  background: linear-gradient(135deg, var(--primary-dark), #283593) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3) !important;
 }
 
 .ui-button-success {
-    background: linear-gradient(135deg, var(--success-color), #388e3c) !important;
-    color: white !important;
+  background: linear-gradient(135deg, var(--success-color), #388e3c) !important;
+  color: white !important;
 }
 
 .ui-button-warning {
-    background: linear-gradient(135deg, var(--warning-color), #f57c00) !important;
-    color: white !important;
+  background: linear-gradient(135deg, var(--warning-color), #f57c00) !important;
+  color: white !important;
 }
 
 .ui-button-danger {
-    background: linear-gradient(135deg, var(--danger-color), #d32f2f) !important;
-    color: white !important;
+  background: linear-gradient(135deg, var(--danger-color), #d32f2f) !important;
+  color: white !important;
 }
 
 /* Botões de ação rápida */
 .p-commandbutton {
-    background: white !important;
-    color: var(--primary-color) !important;
-    border: 1px solid var(--border-color) !important;
-    padding: 1rem !important;
-    height: auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 0.5rem !important;
+  background: white !important;
+  color: var(--primary-color) !important;
+  border: 1px solid var(--border-color) !important;
+  padding: 1rem !important;
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
 }
 
 .p-commandbutton:hover {
-    background: var(--bg-hover) !important;
-    border-color: var(--primary-color) !important;
-    transform: translateY(-2px);
+  background: var(--bg-hover) !important;
+  border-color: var(--primary-color) !important;
+  transform: translateY(-2px);
 }
 
 .p-commandbutton .ui-button-text {
-    font-size: 0.9rem !important;
-    font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
 }
 
 .form-title {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
 /* =========================================
    GRID E ESPAÇAMENTOS
    ========================================= */
 .p-grid {
-    margin: -0.75rem !important;
+  margin: -0.75rem !important;
 }
 
 .p-col-12 {
-    padding: 0.75rem !important;
+  padding: 0.75rem !important;
 }
 
 .p-p-4 {
-    padding: 2rem !important;
+  padding: 2rem !important;
 }
 
 .p-mt-4 {
-    margin-top: 2rem !important;
+  margin-top: 2rem !important;
 }
 
 .p-d-flex {
-    display: flex !important;
+  display: flex !important;
 }
 
 .p-ai-center {
-    align-items: center !important;
+  align-items: center !important;
 }
 
 .p-jc-end {
-    justify-content: flex-end !important;
+  justify-content: flex-end !important;
 }
 
 /* =========================================
    FEEDBACK E MENSAGENS
    ========================================= */
 .ui-growl {
-    top: 80px !important;
-    right: 20px !important;
+  top: 80px !important;
+  right: 20px !important;
 }
 
 .ui-growl-item-container {
-    border-radius: var(--border-radius) !important;
-    box-shadow: var(--shadow-lg) !important;
-    border: none !important;
+  border-radius: var(--border-radius) !important;
+  box-shadow: var(--shadow-lg) !important;
+  border: none !important;
 }
 
 /* =========================================
    PANEL DE CONFIGURAÇÕES
    ========================================= */
 .toggleable-panel {
-    margin-bottom: 1rem !important;
+  margin-bottom: 1rem !important;
 }
 
 .toggleable-panel .ui-panel-titlebar {
-    cursor: pointer !important;
-    user-select: none !important;
+  cursor: pointer !important;
+  user-select: none !important;
 }
 
 .toggleable-panel .ui-panel-content {
-    padding: 1.5rem !important;
+  padding: 1.5rem !important;
 }
 
 /* =========================================
    RESPONSIVIDADE
    ========================================= */
 @media (max-width: 1200px) {
-    .layout-content {
-        padding: 0 1rem;
-    }
+  .layout-content {
+    padding: 0 1rem;
+  }
 }
 
 @media (max-width: 992px) {
-    .header-title span {
-        font-size: 1.5rem;
-    }
+  .header-title span {
+    font-size: 1.5rem;
+  }
 
-    .main-menu .ui-menuitem-link {
-        padding: 0.6rem 0.8rem !important;
-        font-size: 0.9rem !important;
-    }
+  .main-menu .ui-menuitem-link {
+    padding: 0.6rem 0.8rem !important;
+    font-size: 0.9rem !important;
+  }
 
-    .dashboard-card h1 {
-        font-size: 2.5rem;
-    }
+  .dashboard-card h1 {
+    font-size: 2.5rem;
+  }
 }
 
 @media (max-width: 768px) {
-    .layout-header {
-        padding: 0.5rem 0;
-    }
+  .layout-header {
+    padding: 0.5rem 0;
+  }
 
-    .header-content {
-        padding: 0 1rem;
-    }
+  .header-content {
+    padding: 0 1rem;
+  }
 
-    .user-info {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 0.5rem;
-    }
+  .user-info {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
 
-    .layout-content {
-        margin: 1rem auto;
-        padding: 0 0.75rem;
-    }
+  .layout-content {
+    margin: 1rem auto;
+    padding: 0 0.75rem;
+  }
 
-    .p-grid {
-        margin: -0.5rem !important;
-    }
+  .p-grid {
+    margin: -0.5rem !important;
+  }
 
-    .p-col-12 {
-        padding: 0.5rem !important;
-    }
+  .p-col-12 {
+    padding: 0.5rem !important;
+  }
 
-    .p-card .ui-card-content {
-        padding: 1rem !important;
-    }
+  .p-card .ui-card-content {
+    padding: 1rem !important;
+  }
 }
 
 @media (max-width: 576px) {
-    .header-title {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
+  .header-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 
-    .header-title i {
-        margin-right: 0;
-        font-size: 1.5rem;
-    }
+  .header-title i {
+    margin-right: 0;
+    font-size: 1.5rem;
+  }
 
-    .header-title span {
-        font-size: 1.2rem;
-    }
+  .header-title span {
+    font-size: 1.2rem;
+  }
 
-    .main-menu {
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-    }
+  .main-menu {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
 
-    .dashboard-card {
-        padding: 1rem;
-    }
+  .dashboard-card {
+    padding: 1rem;
+  }
 
-    .dashboard-card h1 {
-        font-size: 2rem;
-    }
+  .dashboard-card h1 {
+    font-size: 2rem;
+  }
 }
 
 /* =========================================
    ANIMAÇÕES E EFEITOS ESPECIAIS
    ========================================= */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .fade-in {
-    animation: fadeIn 0.5s var(--transition-easing);
+  animation: fadeIn 0.5s var(--transition-easing);
 }
 
 /* Efeito de loading */
 .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 }
 
 .spinner {
-    width: 50px;
-    height: 50px;
-    border: 3px solid var(--border-color);
-    border-top-color: var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  width: 50px;
+  height: 50px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* =========================================
    UTILITÁRIOS
    ========================================= */
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 .text-muted {
-    color: var(--text-light);
+  color: var(--text-light);
 }
 
 .shadow-sm {
-    box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm);
 }
 
 .shadow-md {
-    box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-md);
 }
 
 .shadow-lg {
-    box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg);
 }
 
 .rounded {
-    border-radius: var(--border-radius);
+  border-radius: var(--border-radius);
 }
 
 /* Status badges */
 .status-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .status-emitida {
-    background-color: rgba(76, 175, 80, 0.1);
-    color: var(--success-color);
-    border: 1px solid rgba(76, 175, 80, 0.2);
+  background-color: rgba(76, 175, 80, 0.1);
+  color: var(--success-color);
+  border: 1px solid rgba(76, 175, 80, 0.2);
 }
 
 .status-pendente {
-    background-color: rgba(255, 152, 0, 0.1);
-    color: var(--warning-color);
-    border: 1px solid rgba(255, 152, 0, 0.2);
+  background-color: rgba(255, 152, 0, 0.1);
+  color: var(--warning-color);
+  border: 1px solid rgba(255, 152, 0, 0.2);
 }
 
 .status-erro {
-    background-color: rgba(244, 67, 54, 0.1);
-    color: var(--danger-color);
-    border: 1px solid rgba(244, 67, 54, 0.2);
+  background-color: rgba(244, 67, 54, 0.1);
+  color: var(--danger-color);
+  border: 1px solid rgba(244, 67, 54, 0.2);
+}
+/* =========================================
+   ESTILOS E-COMMERCE - PÁGINA INDEX
+   ========================================= */
+
+.ecommerce-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Banner Hero */
+.hero-banner {
+  background: white;
+  color: black;
+  padding: 3rem 2rem;
+  text-align: center;
+  border-radius: var(--border-radius);
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.hero-title i {
+  font-size: 2.5rem;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  opacity: 0.95;
+  font-weight: 300;
+}
+
+/* Seção de Busca */
+.search-section {
+  margin-bottom: 2rem;
+}
+
+.search-wrapper {
+  display: flex;
+  gap: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.search-input {
+  flex: 1;
+  height: 3.5rem !important;
+  font-size: 1rem !important;
+  border-radius: 50px !important;
+  padding: 0 1.5rem !important;
+  border: 2px solid var(--border-color) !important;
+  transition: all 0.3s ease !important;
+}
+
+.search-input:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 4px rgba(63, 81, 181, 0.1) !important;
+}
+
+.search-button {
+  height: 3.5rem !important;
+  width: 3.5rem !important;
+  border-radius: 50% !important;
+  background: var(--primary-color) !important;
+  border: none !important;
+}
+
+/* Seção de Produtos */
+.products-section {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.section-title i {
+  color: var(--primary-color);
+}
+
+/* Card do Produto */
+.product-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-color);
+}
+
+/* Imagem do Produto */
+.product-image-wrapper {
+  position: relative;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: #cbd5e0;
+}
+
+.product-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.badge-new {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+/* Informações do Produto */
+.product-info {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex: 1;
+}
+
+.product-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+  height: 2.8em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.product-code {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.product-details {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.detail-item i {
+  color: var(--primary-color);
+  font-size: 0.85rem;
+}
+
+/* Preço e Footer */
+.product-footer {
+  margin-top: auto;
+}
+
+.product-price-section {
+  margin-bottom: 1rem;
+}
+
+.product-price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--success-color);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.product-installment {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.product-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.add-cart-btn {
+  flex: 1 !important;
+  height: 2.8rem !important;
+  font-weight: 600 !important;
+}
+
+.favorite-btn {
+  width: 2.8rem !important;
+  height: 2.8rem !important;
+}
+
+.product-stock {
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--success-color);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 500;
+}
+
+.product-stock i {
+  font-size: 1rem;
+}
+
+/* DataGrid customização */
+.ui-datagrid-content {
+  padding: 15px !important;
+}
+
+.ui-datagrid-content .ui-g {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 1.5rem !important;
+  margin: 0 !important;
+}
+
+.ui-datagrid-column {
+  flex: 0 0 calc(25% - 1.125rem) !important;
+  max-width: calc(25% - 1.125rem) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.ui-datagrid-column .product-card {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Rodapé Informativo */
+.info-footer {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  margin-top: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.info-item {
+  text-align: center;
+  padding: 1rem;
+}
+
+.info-item i {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.info-item h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0.5rem 0;
+}
+
+.info-item p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+  .ui-datagrid-column {
+    flex: 0 0 calc(33.333% - 1rem) !important;
+    max-width: calc(33.333% - 1rem) !important;
+  }
+
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ui-datagrid-column {
+    flex: 0 0 calc(50% - 0.75rem) !important;
+    max-width: calc(50% - 0.75rem) !important;
+  }
+
+  .ui-datagrid-content .ui-g {
+    gap: 1rem !important;
+  }
+
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .product-price {
+    font-size: 1.5rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ui-datagrid-column {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  .search-wrapper {
+    flex-direction: column;
+  }
+
+  .search-button {
+    width: 100% !important;
+    border-radius: var(--border-radius) !important;
+  }
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Melhorias no Paginator */
+.ui-paginator {
+  background: transparent !important;
+  border: none !important;
+  padding: 2rem 0 !important;
+}
+
+.ui-paginator .ui-paginator-page {
+  border-radius: 50% !important;
+  min-width: 2.5rem !important;
+  height: 2.5rem !important;
+  margin: 0 0.2rem !important;
+}
+
+.ui-paginator .ui-state-active {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
 }
