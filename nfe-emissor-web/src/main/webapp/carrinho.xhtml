@@ -1,0 +1,119 @@
+<ui:composition
+  template="template.xhtml"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+  <ui:define name="content">
+    <div class="p-p-4">
+      <h:form id="form">
+        <p:growl id="growl" showDetail="true" life="3000" />
+
+        <p:card>
+          <f:facet name="title">
+            <div class="p-d-flex p-ai-center">
+              <i class="pi pi-shopping-cart p-mr-2"></i>
+              <span>Meu Carrinho</span>
+            </div>
+          </f:facet>
+
+          <!-- Tabela de Itens -->
+          <p:dataTable
+            var="item"
+            value="#{ecommerceController.carrinho}"
+            emptyMessage="Carrinho vazio"
+          >
+            <p:column headerText="Produto">
+              <h:outputText value="#{item.produto.xprod}" />
+            </p:column>
+
+            <p:column headerText="Preço" style="width: 120px">
+              <h:outputText value="#{item.produto.vuncom}">
+                <f:convertNumber type="currency" currencyCode="BRL" />
+              </h:outputText>
+            </p:column>
+
+            <p:column headerText="Quantidade" style="width: 120px">
+              <p:inputNumber
+                value="#{item.quantidade}"
+                minValue="0.001"
+                decimalPlaces="2"
+                style="width: 100%"
+              >
+                <p:ajax
+                  event="change"
+                  listener="#{ecommerceController.atualizarQuantidadeCarrinho(item.produto, item.quantidade)}"
+                  update="@form"
+                />
+              </p:inputNumber>
+            </p:column>
+
+            <p:column headerText="Subtotal" style="width: 120px">
+              <h:outputText value="#{item.subtotal}">
+                <f:convertNumber type="currency" currencyCode="BRL" />
+              </h:outputText>
+            </p:column>
+
+            <p:column headerText="Ação" style="width: 80px">
+              <p:commandButton
+                icon="pi pi-trash"
+                action="#{ecommerceController.removerDoCarrinho(item.produto)}"
+                update="@form"
+                style="margin-left: 5px"
+              />
+            </p:column>
+          </p:dataTable>
+
+          <!-- Resumo -->
+          <div style="margin-top: 30px; text-align: right">
+            <h3>
+              Total:
+              <span style="color: #4caf50">
+                R$
+                <h:outputText
+                  value="#{ecommerceController.calcularTotalCarrinho()}"
+                >
+                  <f:convertNumber type="currency" currencyCode="BRL" />
+                </h:outputText>
+              </span>
+            </h3>
+          </div>
+
+          <!-- Ações -->
+          <div
+            style="
+              margin-top: 20px;
+              display: flex;
+              gap: 10px;
+              justify-content: flex-end;
+            "
+          >
+            <p:commandButton
+              value="Continuar Comprando"
+              icon="pi pi-arrow-left"
+              action="index.xhtml?faces-redirect=true"
+              style="background: #999; border: none"
+            />
+
+            <p:commandButton
+              value="Limpar Carrinho"
+              icon="pi pi-trash"
+              action="#{ecommerceController.limparCarrinho}"
+              update="@form"
+              style="background: #f44336; border: none"
+            />
+
+            <p:commandButton
+              value="Ir para Checkout"
+              icon="pi pi-check"
+              action="#{ecommerceController.irParaCheckout()}"
+              style="background: #4caf50; border: none"
+            />
+          </div>
+        </p:card>
+      </h:form>
+    </div>
+  </ui:define>
+</ui:composition>

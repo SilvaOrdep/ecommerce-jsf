@@ -1,0 +1,167 @@
+<ui:composition
+  template="template.xhtml"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+  <ui:define name="content">
+    <div class="p-p-4">
+      <h:form id="form">
+        <p:growl id="growl" showDetail="true" life="3000" />
+
+        <p:card>
+          <f:facet name="title">
+            <div class="p-d-flex p-ai-center">
+              <i class="pi pi-check p-mr-2"></i>
+              <span>Checkout</span>
+            </div>
+          </f:facet>
+
+          <div class="p-grid">
+            <!-- Informações do Cliente -->
+            <div class="p-col-12 p-md-6">
+              <p:panel header="Dados do Cliente" style="margin-bottom: 20px">
+                <div class="p-fluid">
+                  <div class="p-field">
+                    <label>Nome:</label>
+                    <h:outputText
+                      value="#{ecommerceController.clienteLogado.xnome}"
+                      style="font-weight: bold"
+                    />
+                  </div>
+                  <div class="p-field">
+                    <label>CPF/CNPJ:</label>
+                    <h:outputText
+                      value="#{ecommerceController.clienteLogado.documentoFormatado}"
+                      style="font-weight: bold"
+                    />
+                  </div>
+                  <div class="p-field">
+                    <label>Email:</label>
+                    <h:outputText
+                      value="#{ecommerceController.clienteLogado.email}"
+                      style="font-weight: bold"
+                    />
+                  </div>
+                </div>
+              </p:panel>
+            </div>
+
+            <!-- Resumo da Compra -->
+            <div class="p-col-12 p-md-6">
+              <p:panel header="Resumo da Compra" style="margin-bottom: 20px">
+                <p:dataTable
+                  var="item"
+                  value="#{ecommerceController.vendaEcommerce.itemVendaCollection}"
+                >
+                  <p:column headerText="Produto">
+                    <h:outputText value="#{item.produtoId.xprod}" />
+                  </p:column>
+                  <p:column headerText="Qtd" style="width: 60px">
+                    <h:outputText value="#{item.quantidade}" />
+                  </p:column>
+                  <p:column headerText="Total" style="width: 100px">
+                    <h:outputText value="#{item.valorTotal}">
+                      <f:convertNumber type="currency" currencyCode="BRL" />
+                    </h:outputText>
+                  </p:column>
+                </p:dataTable>
+
+                <div
+                  style="
+                    margin-top: 20px;
+                    border-top: 1px solid #ddd;
+                    padding-top: 10px;
+                  "
+                >
+                  <h3>
+                    Total:
+                    <span style="color: #4caf50">
+                      R$
+                      <h:outputText
+                        value="#{ecommerceController.vendaEcommerce.valorTotal}"
+                      >
+                        <f:convertNumber type="currency" currencyCode="BRL" />
+                      </h:outputText>
+                    </span>
+                  </h3>
+                </div>
+              </p:panel>
+            </div>
+
+            <!-- Endereço de Entrega -->
+            <div class="p-col-12">
+              <p:panel header="Endereço de Entrega" style="margin-bottom: 20px">
+                <div class="p-fluid p-grid">
+                  <div class="p-col-12">
+                    <label>Rua:</label>
+                    <h:outputText
+                      value="#{ecommerceController.clienteLogado.xlgr}"
+                      style="font-weight: bold"
+                    />
+                  </div>
+                  <div class="p-col-12 p-md-6">
+                    <label>Número:</label>
+                    <h:outputText
+                      value="#{ecommerceController.clienteLogado.nro}"
+                      style="font-weight: bold"
+                    />
+                  </div>
+                  <div class="p-col-12 p-md-6">
+                    <label>CEP:</label>
+                    <h:outputText
+                      value="#{ecommerceController.clienteLogado.cep}"
+                      style="font-weight: bold"
+                    />
+                  </div>
+                </div>
+              </p:panel>
+            </div>
+
+            <!-- Forma de Pagamento -->
+            <div class="p-col-12">
+              <p:panel header="Forma de Pagamento" style="margin-bottom: 20px">
+                <div class="p-fluid">
+                  <div class="p-field-checkbox">
+                    <p:selectOneRadio value="#" layout="pageDirection">
+                      <f:selectItem itemLabel="PIX" itemValue="pix" />
+                      <f:selectItem itemLabel="Crédito" itemValue="credito" />
+                      <f:selectItem itemLabel="Débito" itemValue="debito" />
+                    </p:selectOneRadio>
+                  </div>
+                </div>
+              </p:panel>
+            </div>
+          </div>
+
+          <!-- Ações -->
+          <div
+            style="
+              display: flex;
+              gap: 10px;
+              justify-content: flex-end;
+              margin-top: 20px;
+            "
+          >
+            <p:commandButton
+              value="Voltar"
+              icon="pi pi-arrow-left"
+              action="carrinho.xhtml?faces-redirect=true"
+              style="background: #999; border: none"
+            />
+
+            <p:commandButton
+              value="Confirmar Compra"
+              icon="pi pi-check"
+              action="#{ecommerceController.finalizarCompra()}"
+              update="@form"
+              style="background: #4caf50; border: none"
+            />
+          </div>
+        </p:card>
+      </h:form>
+    </div>
+  </ui:define>
+</ui:composition>

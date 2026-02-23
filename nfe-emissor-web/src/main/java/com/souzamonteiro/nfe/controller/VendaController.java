@@ -27,17 +27,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-
 @ManagedBean
 @ViewScoped
 public class VendaController implements Serializable {
-    
+
     private transient VendaDAO vendaDAO = new VendaDAO();
     private transient ClienteDAO clienteDAO = new ClienteDAO();
     private transient ProdutoDAO produtoDAO = new ProdutoDAO();
     private transient ConfiguracaoDAO configuracaoDAO = new ConfiguracaoDAO();
     private transient EmpresaDAO empresaDAO = new EmpresaDAO();
-    
+
     private List<Venda> vendas;
     private Venda venda;
     private List<Cliente> clientes;
@@ -46,19 +45,19 @@ public class VendaController implements Serializable {
     private Produto produtoSelecionado;
     private ItemVenda itemVenda;
     private boolean editando = false; // Inicialize como false
-    
+
     @PostConstruct
     public void init() {
         carregarVendas();
         carregarClientes();
         carregarProdutos();
     }
-    
+
     public void carregarVendas() {
         vendas = vendaDAO.findEmitidas();
         editando = false;
     }
-    
+
     public void novaVenda() {
         venda = new Venda();
         venda.setDataVenda(new Date());
@@ -71,26 +70,26 @@ public class VendaController implements Serializable {
         produtoSelecionado = null;
         editando = true;
     }
-    
+
     public void carregarClientes() {
         clientes = clienteDAO.findAtivos();
     }
-    
+
     public void carregarProdutos() {
         produtos = produtoDAO.findAtivos();
     }
-    
+
     public void adicionarItem() {
-        if (produtoSelecionado != null && itemVenda.getQuantidade() != null && 
-            itemVenda.getQuantidade().compareTo(BigDecimal.ZERO) > 0) {
+        if (produtoSelecionado != null && itemVenda.getQuantidade() != null &&
+                itemVenda.getQuantidade().compareTo(BigDecimal.ZERO) > 0) {
 
             // Verificar se produto já está na venda
             for (ItemVenda item : venda.getItemVendaCollection()) {
-                if (item.getProdutoId() != null && 
-                    item.getProdutoId().getId().equals(produtoSelecionado.getId())) {
+                if (item.getProdutoId() != null &&
+                        item.getProdutoId().getId().equals(produtoSelecionado.getId())) {
                     FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_WARN, 
-                        "Aviso", "Produto já adicionado à venda."));
+                            new FacesMessage(FacesMessage.SEVERITY_WARN,
+                                    "Aviso", "Produto já adicionado à venda."));
                     return;
                 }
             }
@@ -101,7 +100,7 @@ public class VendaController implements Serializable {
             novoItem.setValorUnitario(produtoSelecionado.getVuncom());
             novoItem.setValorTotal(itemVenda.getQuantidade().multiply(produtoSelecionado.getVuncom()));
             novoItem.setDataCriacao(new Date()); // Adicionar data de criação
-            
+
             // *** CORREÇÃO CRÍTICA: Associar a venda ao item ***
             novoItem.setVendaId(venda);
 
@@ -117,12 +116,12 @@ public class VendaController implements Serializable {
 
             // Atualizar componente via AJAX
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
-                .add("form:vendaItens");
+                    .add("form:vendaItens");
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
-                .add("form:totalVenda");
+                    .add("form:totalVenda");
         }
     }
-    
+
     public void removerItem(ItemVenda item) {
         if (venda.getItemVendaCollection() != null) {
             venda.getItemVendaCollection().remove(item); // Corrigido: usando getItemVendaCollection()
@@ -130,7 +129,7 @@ public class VendaController implements Serializable {
             FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("form:vendaItens");
         }
     }
-    
+
     private void calcularTotalVenda() {
         BigDecimal total = BigDecimal.ZERO;
         if (venda.getItemVendaCollection() != null) {
@@ -142,25 +141,26 @@ public class VendaController implements Serializable {
         }
         venda.setValorTotal(total);
     }
-    
+
     public void finalizarVenda() {
         if (venda.getClienteId() == null) {
             System.out.println("ERRO: Cliente é null");
             FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                "Erro", "Selecione um cliente."));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Erro", "Selecione um cliente."));
             return;
         }
-        
+
         if (venda.getItemVendaCollection() == null || venda.getItemVendaCollection().isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                "Erro", "Adicione pelo menos um item à venda."));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Erro", "Adicione pelo menos um item à venda."));
             return;
         }
-        
+
         try {
-            // *** CORREÇÃO CRÍTICA: Garantir que todos os itens tenham referência à venda ***
+            // *** CORREÇÃO CRÍTICA: Garantir que todos os itens tenham referência à venda
+            // ***
             for (ItemVenda item : venda.getItemVendaCollection()) {
                 if (item.getVendaId() == null) {
                     item.setVendaId(venda);
@@ -169,111 +169,111 @@ public class VendaController implements Serializable {
                     item.setDataCriacao(new Date());
                 }
             }
-            
+
             // Associar cliente à venda
             venda.setClienteId(clienteSelecionado);
-            
+
             // Preencher datas obrigatórias
             venda.setDataCriacao(new Date());
-            
+
             Empresa empresa = empresaDAO.getEmpresa();
             Configuracao config = configuracaoDAO.getConfiguracao();
-            
+
             // Gerar número da NF-e
             Integer numeroNFe = config.getNumeroNfe();
             venda.setNumeroNfe(numeroNFe);
-            
+
             // Salvar venda
             vendaDAO.save(venda);
-            
+
             // Emitir NF-e
             boolean sucesso = emitirNFe(venda);
-            
+
             if (sucesso) {
                 venda.setStatus("EMITIDA");
                 venda.setDataAtualizacao(new Date());
-                
+
                 String chavePix = PixService.gerarChavePixParaVenda(venda, empresa);
                 if (PixService.isChavePixValida(chavePix)) {
                     venda.setChavePix(chavePix);
                 }
-                
+
                 vendaDAO.save(venda);
-                
+
                 config.setNumeroNfe(numeroNFe + 1);
                 configuracaoDAO.save(config);
-                
+
                 abrirPDFAposEmissao();
-                
+
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                    "Sucesso", "Venda finalizada e NF-e emitida com sucesso."));
-                
+                        new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Sucesso", "Venda finalizada e NF-e emitida com sucesso."));
+
                 carregarVendas();
             } else {
                 venda.setStatus("ERRO");
                 venda.setDataAtualizacao(new Date());
                 vendaDAO.save(venda);
-                
+
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Erro", "Erro ao emitir NF-e. Venda salva como pendente."));
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Erro", "Erro ao emitir NF-e. Venda salva como pendente."));
             }
-            
+
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                "Erro", "Erro ao finalizar venda: " + e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Erro", "Erro ao finalizar venda: " + e.getMessage()));
             e.printStackTrace(); // Para debug
         }
     }
-    
+
     public void cancelarVenda() {
         carregarVendas();
     }
-    
+
     private boolean emitirNFe(Venda venda) {
         try {
             Configuracao config = configuracaoDAO.getConfiguracao();
             Empresa empresa = empresaDAO.getEmpresa();
-            
+
             if (config == null || empresa == null) {
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Erro", "Configure empresa e configurações antes de emitir NF-e."));
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Erro", "Configure empresa e configurações antes de emitir NF-e."));
                 return false;
             }
-            
+
             // Construir JSON para envio ao servidor de NF-e
             JSONObject nfeJson = construirJsonNFe(venda, empresa, config);
-            
+
             // Enviar para servidor de NF-e
             String url = "http://localhost:" + config.getPortaServidor() + "/NFeAutorizacao";
             String resposta = enviarParaServidor(url, nfeJson.toString());
-            
+
             // Processar resposta
             JSONObject respostaJson = new JSONObject(resposta);
             String cStat = respostaJson.getString("cStat");
-            
+
             if ("100".equals(cStat)) {
                 venda.setChaveNfe(respostaJson.getString("chave"));
                 venda.setProtocoloNfe(respostaJson.getString("nProt"));
                 return true;
             } else {
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                    "Erro NF-e", respostaJson.getString("xMotivo")));
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Erro NF-e", respostaJson.getString("xMotivo")));
                 return false;
             }
-            
+
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                "Erro", "Erro ao emitir NF-e: " + e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Erro", "Erro ao emitir NF-e: " + e.getMessage()));
             return false;
         }
     }
-    
+
     private JSONObject construirJsonNFe(Venda venda, Empresa empresa, Configuracao config) {
         JSONObject nfeJson = new JSONObject();
         JSONObject infNFe = new JSONObject();
@@ -339,7 +339,7 @@ public class VendaController implements Serializable {
         if (empresa.getFone() != null) {
             enderEmit.put("fone", empresa.getFone());
         }
-        
+
         emit.put("enderEmit", enderEmit);
         infNFe.put("emit", emit);
 
@@ -384,7 +384,7 @@ public class VendaController implements Serializable {
         if (cliente.getFone() != null) {
             enderDest.put("fone", cliente.getFone());
         }
-        
+
         dest.put("enderDest", enderDest);
         infNFe.put("dest", dest);
 
@@ -395,7 +395,7 @@ public class VendaController implements Serializable {
 
         // 5. DETALHES (produtos)
         JSONArray detArray = new JSONArray();
-        
+
         for (ItemVenda item : venda.getItemVendaCollection()) {
             Produto produto = item.getProdutoId();
 
@@ -467,8 +467,8 @@ public class VendaController implements Serializable {
 
             // Calcular valor do ICMS
             BigDecimal valorICMS = item.getValorTotal()
-                .multiply(new BigDecimal(pICMS))
-                .divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP);
+                    .multiply(new BigDecimal(pICMS))
+                    .divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP);
             icms00.put("vICMS", String.format(Locale.US, "%.2f", valorICMS));
 
             icms.put("ICMS00", icms00);
@@ -489,8 +489,8 @@ public class VendaController implements Serializable {
             pisAliq.put("pPIS", pPIS);
 
             BigDecimal valorPIS = item.getValorTotal()
-                .multiply(new BigDecimal(pPIS))
-                .divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP);
+                    .multiply(new BigDecimal(pPIS))
+                    .divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP);
             pisAliq.put("vPIS", String.format(Locale.US, "%.2f", valorPIS));
 
             pis.put("PISAliq", pisAliq);
@@ -511,8 +511,8 @@ public class VendaController implements Serializable {
             cofinsAliq.put("pCOFINS", pCOFINS);
 
             BigDecimal valorCOFINS = item.getValorTotal()
-                .multiply(new BigDecimal(pCOFINS))
-                .divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP);
+                    .multiply(new BigDecimal(pCOFINS))
+                    .divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP);
             cofinsAliq.put("vCOFINS", String.format(Locale.US, "%.2f", valorCOFINS));
 
             cofins.put("COFINSAliq", cofinsAliq);
@@ -540,15 +540,18 @@ public class VendaController implements Serializable {
 
             // ICMS
             BigDecimal pICMS = produto.getPicms() != null ? produto.getPicms() : new BigDecimal("7.00");
-            totalICMS = totalICMS.add(valorItem.multiply(pICMS).divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP));
+            totalICMS = totalICMS
+                    .add(valorItem.multiply(pICMS).divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP));
 
             // PIS
             BigDecimal pPIS = produto.getPpis() != null ? produto.getPpis() : new BigDecimal("1.65");
-            totalPIS = totalPIS.add(valorItem.multiply(pPIS).divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP));
+            totalPIS = totalPIS
+                    .add(valorItem.multiply(pPIS).divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP));
 
             // COFINS
             BigDecimal pCOFINS = produto.getPcofins() != null ? produto.getPcofins() : new BigDecimal("7.60");
-            totalCOFINS = totalCOFINS.add(valorItem.multiply(pCOFINS).divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP));
+            totalCOFINS = totalCOFINS
+                    .add(valorItem.multiply(pCOFINS).divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP));
         }
 
         icmsTot.put("vBC", String.format(Locale.US, "%.2f", totalVenda));
@@ -596,8 +599,9 @@ public class VendaController implements Serializable {
 
         // Calcular total de tributos (Lei Federal 12.741/2012)
         BigDecimal totalTributos = totalICMS.add(totalPIS).add(totalCOFINS);
-        String infCpl = String.format(Locale.US, "Tributos Totais Incidentes (Lei Federal 12.741/2012): R$%.2f", totalTributos);
-        
+        String infCpl = String.format(Locale.US, "Tributos Totais Incidentes (Lei Federal 12.741/2012): R$%.2f",
+                totalTributos);
+
         infAdic.put("infCpl", infCpl);
         infNFe.put("infAdic", infAdic);
 
@@ -606,7 +610,7 @@ public class VendaController implements Serializable {
 
         return nfeJson;
     }
-    
+
     private String enviarParaServidor(String urlString, String json) throws Exception {
         System.out.println("=== ENVIANDO PARA SERVIDOR NF-e ===");
         System.out.println("URL: " + urlString);
@@ -660,80 +664,143 @@ public class VendaController implements Serializable {
             return response.toString();
         }
     }
-    
+
     private String getCodigoUF(String uf) {
         switch (uf.toUpperCase()) {
-            case "AC": return "12";
-            case "AL": return "27";
-            case "AM": return "13";
-            case "AP": return "16";
-            case "BA": return "29";
-            case "CE": return "23";
-            case "DF": return "53";
-            case "ES": return "32";
-            case "GO": return "52";
-            case "MA": return "21";
-            case "MG": return "31";
-            case "MS": return "50";
-            case "MT": return "51";
-            case "PA": return "15";
-            case "PB": return "25";
-            case "PE": return "26";
-            case "PI": return "22";
-            case "PR": return "41";
-            case "RJ": return "33";
-            case "RN": return "24";
-            case "RO": return "11";
-            case "RR": return "14";
-            case "RS": return "43";
-            case "SC": return "42";
-            case "SE": return "28";
-            case "SP": return "35";
-            case "TO": return "17";
-            default: return "29";
+            case "AC":
+                return "12";
+            case "AL":
+                return "27";
+            case "AM":
+                return "13";
+            case "AP":
+                return "16";
+            case "BA":
+                return "29";
+            case "CE":
+                return "23";
+            case "DF":
+                return "53";
+            case "ES":
+                return "32";
+            case "GO":
+                return "52";
+            case "MA":
+                return "21";
+            case "MG":
+                return "31";
+            case "MS":
+                return "50";
+            case "MT":
+                return "51";
+            case "PA":
+                return "15";
+            case "PB":
+                return "25";
+            case "PE":
+                return "26";
+            case "PI":
+                return "22";
+            case "PR":
+                return "41";
+            case "RJ":
+                return "33";
+            case "RN":
+                return "24";
+            case "RO":
+                return "11";
+            case "RR":
+                return "14";
+            case "RS":
+                return "43";
+            case "SC":
+                return "42";
+            case "SE":
+                return "28";
+            case "SP":
+                return "35";
+            case "TO":
+                return "17";
+            default:
+                return "29";
         }
     }
-    
+
     // *** CORREÇÃO: Getters e Setters simplificados ***
-    public List<Venda> getVendas() { return vendas; }
-    public void setVendas(List<Venda> vendas) { this.vendas = vendas; }
-    
-    public Venda getVenda() { return venda; }
-    public void setVenda(Venda venda) { this.venda = venda; }
-    
-    public List<Cliente> getClientes() { return clientes; }
-    public void setClientes(List<Cliente> clientes) { this.clientes = clientes; }
-    
-    public List<Produto> getProdutos() { return produtos; }
-    public void setProdutos(List<Produto> produtos) { this.produtos = produtos; }
-    
+    public List<Venda> getVendas() {
+        return vendas;
+    }
+
+    public void setVendas(List<Venda> vendas) {
+        this.vendas = vendas;
+    }
+
+    public Venda getVenda() {
+        return venda;
+    }
+
+    public void setVenda(Venda venda) {
+        this.venda = venda;
+    }
+
+    public List<Cliente> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(List<Cliente> clientes) {
+        this.clientes = clientes;
+    }
+
+    public List<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
+    }
+
     // *** CORREÇÃO: Usar apenas uma propriedade para o cliente ***
-    public Cliente getClienteSelecionado() { 
+    public Cliente getClienteSelecionado() {
         // Se já temos cliente na venda, retorna ele
         if (venda != null && venda.getClienteId() != null) {
             return venda.getClienteId();
         }
         // Caso contrário, retorna o selecionado temporariamente
-        return clienteSelecionado; 
+        return clienteSelecionado;
     }
-    
-    public void setClienteSelecionado(Cliente clienteSelecionado) { 
+
+    public void setClienteSelecionado(Cliente clienteSelecionado) {
         this.clienteSelecionado = clienteSelecionado;
         // Atualiza também na venda
         if (venda != null) {
             venda.setClienteId(clienteSelecionado);
         }
     }
-    
-    public Produto getProdutoSelecionado() { return produtoSelecionado; }
-    public void setProdutoSelecionado(Produto produtoSelecionado) { this.produtoSelecionado = produtoSelecionado; }
-    
-    public ItemVenda getItemVenda() { return itemVenda; }
-    public void setItemVenda(ItemVenda itemVenda) { this.itemVenda = itemVenda; }
-    
-    public boolean isEditando() { return editando; }
-    public void setEditando(boolean editando) { this.editando = editando; }
-    
+
+    public Produto getProdutoSelecionado() {
+        return produtoSelecionado;
+    }
+
+    public void setProdutoSelecionado(Produto produtoSelecionado) {
+        this.produtoSelecionado = produtoSelecionado;
+    }
+
+    public ItemVenda getItemVenda() {
+        return itemVenda;
+    }
+
+    public void setItemVenda(ItemVenda itemVenda) {
+        this.itemVenda = itemVenda;
+    }
+
+    public boolean isEditando() {
+        return editando;
+    }
+
+    public void setEditando(boolean editando) {
+        this.editando = editando;
+    }
+
     // *** MANTER os métodos auxiliares para compatibilidade com a página ***
     public Cliente getClienteSelecionadoParaVenda() {
         if (venda != null && venda.getClienteId() != null) {
@@ -762,7 +829,7 @@ public class VendaController implements Serializable {
         }
         return null;
     }
-    
+
     public String getQrCodePixBase64() {
         try {
             if (venda != null && venda.getChavePix() != null && !venda.getChavePix().isEmpty()) {
@@ -785,13 +852,13 @@ public class VendaController implements Serializable {
         }
         return null;
     }
-    
+
     public void downloadPDF() {
         if (venda != null && venda.getChaveNfe() != null) {
             try {
                 // Armazenar chave na sessão temporariamente
                 Map<String, Object> sessionMap = FacesContext.getCurrentInstance()
-                    .getExternalContext().getSessionMap();
+                        .getExternalContext().getSessionMap();
                 sessionMap.put("pdfDownloadChave", venda.getChaveNfe());
 
                 // Fechar o dialog primeiro
@@ -799,17 +866,17 @@ public class VendaController implements Serializable {
 
                 // Redirecionar para o servlet de download (fora do AJAX)
                 String contextPath = FacesContext.getCurrentInstance()
-                    .getExternalContext().getRequestContextPath();
+                        .getExternalContext().getRequestContextPath();
                 String downloadUrl = contextPath + "/pdf/download?chave=" + venda.getChaveNfe();
 
                 // Usar redirect não-AJAX
                 FacesContext.getCurrentInstance().getExternalContext()
-                    .redirect(downloadUrl);
+                        .redirect(downloadUrl);
 
             } catch (Exception e) {
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Erro", "Erro ao preparar download: " + e.getMessage()));
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Erro", "Erro ao preparar download: " + e.getMessage()));
                 e.printStackTrace();
             }
         }
@@ -819,7 +886,7 @@ public class VendaController implements Serializable {
         if (venda != null && venda.getChaveNfe() != null) {
             try {
                 String contextPath = FacesContext.getCurrentInstance()
-                    .getExternalContext().getRequestContextPath();
+                        .getExternalContext().getRequestContextPath();
                 String pdfUrl = contextPath + "/pdf/view?chave=" + venda.getChaveNfe();
 
                 // Abrir em nova aba
@@ -831,17 +898,17 @@ public class VendaController implements Serializable {
 
             } catch (Exception e) {
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Erro", "Erro ao abrir PDF: " + e.getMessage()));
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Erro", "Erro ao abrir PDF: " + e.getMessage()));
                 e.printStackTrace();
             }
         }
     }
-    
+
     // Método para preparar download (será chamado pelo h:commandLink)
     public String prepararDownload() {
         String chave = FacesContext.getCurrentInstance()
-            .getExternalContext().getRequestParameterMap().get("chave");
+                .getExternalContext().getRequestParameterMap().get("chave");
 
         if (chave != null && !chave.isEmpty()) {
             // Redirecionar para o servlet de download
@@ -858,11 +925,11 @@ public class VendaController implements Serializable {
 
         // Depois abre o diálogo
         PrimeFaces.current().executeScript(
-            "setTimeout(function() { " +
-            "  if (PF('pdfDialog')) { " +
-            "    PF('pdfDialog').show(); " +
-            "  } " +
-            "}, 1000);"
-        );
+                "setTimeout(function() { " +
+                        "  if (PF('pdfDialog')) { " +
+                        "    PF('pdfDialog').show(); " +
+                        "  } " +
+                        "}, 1000);");
     }
+
 }

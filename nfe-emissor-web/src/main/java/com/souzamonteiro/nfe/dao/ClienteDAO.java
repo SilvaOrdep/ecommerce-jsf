@@ -7,26 +7,25 @@ import java.io.Serializable;
 import java.util.List;
 
 public class ClienteDAO extends GenericDAO<Cliente> implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     public ClienteDAO() {
         super(Cliente.class);
     }
-    
+
     public List<Cliente> findAtivos() {
         EntityManager em = getEntityManager();
         try {
             TypedQuery<Cliente> query = em.createQuery(
-                "SELECT c FROM Cliente c WHERE c.ativo = true ORDER BY c.xnome", 
-                Cliente.class
-            );
+                    "SELECT c FROM Cliente c WHERE c.ativo = true ORDER BY c.xnome",
+                    Cliente.class);
             return query.getResultList();
         } finally {
             em.close();
         }
     }
-    
+
     public Cliente findByDocumento(String documento) {
         // Se documento for null ou vazio, retorna null IMEDIATAMENTE
         if (documento == null || documento.trim().isEmpty()) {
@@ -40,12 +39,11 @@ public class ClienteDAO extends GenericDAO<Cliente> implements Serializable {
 
             // Query que IGNORA registros onde cpf/cnpj são NULL ou vazios
             TypedQuery<Cliente> query = em.createQuery(
-                "SELECT c FROM Cliente c WHERE " +
-                "c.ativo = true AND " +  // Só clientes ativos
-                "((c.cpf IS NOT NULL AND c.cpf = :doc) OR " +
-                "(c.cnpj IS NOT NULL AND c.cnpj = :doc))", 
-                Cliente.class
-            );
+                    "SELECT c FROM Cliente c WHERE " +
+                            "c.ativo = true AND " + // Só clientes ativos
+                            "((c.cpf IS NOT NULL AND c.cpf = :doc) OR " +
+                            "(c.cnpj IS NOT NULL AND c.cnpj = :doc))",
+                    Cliente.class);
             query.setParameter("doc", documento);
 
             List<Cliente> resultados = query.getResultList();
@@ -57,10 +55,10 @@ public class ClienteDAO extends GenericDAO<Cliente> implements Serializable {
                 // Log detalhado do problema
                 System.err.println("ERRO: Múltiplos clientes ativos com documento '" + documento + "':");
                 for (Cliente c : resultados) {
-                    System.err.println("  - ID: " + c.getId() + 
-                                     ", Nome: " + c.getXnome() + 
-                                     ", CPF: '" + c.getCpf() + 
-                                     "', CNPJ: '" + c.getCnpj() + "'");
+                    System.err.println("  - ID: " + c.getId() +
+                            ", Nome: " + c.getXnome() +
+                            ", CPF: '" + c.getCpf() +
+                            "', CNPJ: '" + c.getCnpj() + "'");
                 }
                 // Para não quebrar, retorna o primeiro
                 return resultados.get(0);
@@ -70,6 +68,27 @@ public class ClienteDAO extends GenericDAO<Cliente> implements Serializable {
 
         } catch (Exception e) {
             System.err.println("ERRO em findByDocumento: " + e.getMessage());
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    public Cliente findByEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return null;
+        }
+
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Cliente> query = em.createQuery(
+                    "SELECT c FROM Cliente c WHERE c.ativo = true AND c.email = :email",
+                    Cliente.class);
+            query.setParameter("email", email);
+            List<Cliente> resultados = query.getResultList();
+            return resultados.isEmpty() ? null : resultados.get(0);
+        } catch (Exception e) {
+            System.err.println("ERRO em findByEmail: " + e.getMessage());
             return null;
         } finally {
             em.close();

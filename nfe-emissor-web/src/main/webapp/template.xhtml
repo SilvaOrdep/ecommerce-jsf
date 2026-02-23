@@ -22,7 +22,10 @@
             <div class="header-content">
               <!-- Form para o menu -->
               <h:form id="menuForm">
-                <div class="mainHeader">
+                <div
+                  class="mainHeader"
+                  style="border-bottom: 1px solid rgba(0, 0, 0, 0.15)"
+                >
                   <div class="header-title">
                     <i
                       class="pi pi-file"
@@ -39,6 +42,34 @@
                       style="width: 100%; padding: 10px; box-sizing: border-box"
                       placeholder="Buscar produtos, marcas e muito mais..."
                     />
+                  </div>
+                  <div class="cart-container">
+                    <h:form>
+                      <p:commandButton
+                        value="#{ecommerceController.quantidadeItensCarrinho}"
+                        icon="pi pi-shopping-cart"
+                        action="#{ecommerceController.irParaCarrinho()}"
+                        ajax="false"
+                        style="
+                          background: none !important;
+                          border: none;
+                          padding: 10px 10px;
+                          border-radius: 5px;
+                          cursor: pointer;
+                          color: black !important;
+                          font-weight: bold;
+                          box-shadow: none !important;
+                        "
+                        onmouseover="
+                          this.style.background = 'none';
+                          this.style.color = 'black';
+                        "
+                        onmouseout="
+                          this.style.background = 'none';
+                          this.style.color = 'black';
+                        "
+                      />
+                    </h:form>
                   </div>
                   <div class="user-info">
                     <p:outputLabel
@@ -106,6 +137,7 @@
                     value="Vendas"
                     icon="pi pi-shopping-cart"
                     outcome="/vendas.xhtml"
+                    rendered="#{loginController.admin}"
                   />
 
                   <f:facet name="options"> </f:facet>
@@ -123,6 +155,11 @@
               </div>
             </ui:insert>
           </div>
+
+          <!-- Footer Slot (fora do layout-content para ocupar largura total) -->
+          <ui:insert name="footer">
+            <!-- Footer opcional para as páginas -->
+          </ui:insert>
         </div>
       </ui:fragment>
 
