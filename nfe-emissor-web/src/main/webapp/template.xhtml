@@ -17,10 +17,8 @@
     <h:body>
       <ui:fragment rendered="#{loginController.loggedIn}">
         <div class="layout-container">
-          <!-- Header -->
           <div class="layout-header">
             <div class="header-content">
-              <!-- Form para o menu -->
               <h:form id="menuForm">
                 <div
                   class="mainHeader"
@@ -46,7 +44,7 @@
                   <div class="cart-container">
                     <h:form>
                       <p:commandButton
-                        value="#{ecommerceController.quantidadeItensCarrinho}"
+                        value=""
                         icon="pi pi-shopping-cart"
                         action="#{ecommerceController.irParaCarrinho()}"
                         ajax="false"
@@ -76,7 +74,6 @@
                       value="Bem-vindo, #{loginController.usuarioLogado.nome}"
                       style="margin-right: 10px"
                     />
-                    <!-- Botão de logout -->
                     <p:commandButton
                       value="Sair"
                       icon="pi pi-power-off"
@@ -146,7 +143,6 @@
             </div>
           </div>
 
-          <!-- Main Content -->
           <div class="layout-content">
             <ui:insert name="content">
               <div class="welcome-content">
@@ -156,9 +152,7 @@
             </ui:insert>
           </div>
 
-          <!-- Footer Slot (fora do layout-content para ocupar largura total) -->
           <ui:insert name="footer">
-            <!-- Footer opcional para as páginas -->
           </ui:insert>
         </div>
       </ui:fragment>

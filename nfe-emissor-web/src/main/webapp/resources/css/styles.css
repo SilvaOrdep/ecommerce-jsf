@@ -643,7 +643,7 @@ body {
 }
 
 .content-with-padding {
-  padding: 0 1.5rem;
+  padding: 0;
 }
 
 /* Banner Hero */
@@ -718,6 +718,10 @@ body {
   padding: 2rem;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-sm);
+}
+
+.products-section div .ui-datagrid-content {
+    border: none !important;
 }
 
 .section-header {

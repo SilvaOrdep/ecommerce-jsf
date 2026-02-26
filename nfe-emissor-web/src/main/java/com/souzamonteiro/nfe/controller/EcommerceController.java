@@ -6,6 +6,8 @@ package com.souzamonteiro.nfe.controller;
 
 import com.souzamonteiro.nfe.dao.*;
 import com.souzamonteiro.nfe.model.*;
+import com.souzamonteiro.nfe.service.PixService;
+import com.souzamonteiro.nfe.service.NFeService;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -24,6 +26,9 @@ public class EcommerceController implements Serializable {
 
   private transient ProdutoDAO produtoDAO = new ProdutoDAO();
   private transient VendaDAO vendaDAO = new VendaDAO();
+  private transient ConfiguracaoDAO configuracaoDAO = new ConfiguracaoDAO();
+  private transient EmpresaDAO empresaDAO = new EmpresaDAO();
+  private transient NFeService nfeService = new NFeService();
 
   private Venda vendaEcommerce;
 
@@ -259,18 +264,76 @@ public class EcommerceController implements Serializable {
         return null;
       }
 
-      // TODO: Implementar lógica de emissão de NF-e (reutilizar VendaController)
-      // Por enquanto, apenas salvar venda
+      // Garantir referencia da venda nos itens e datas obrigatorias
+      for (ItemVenda item : vendaEcommerce.getItemVendaCollection()) {
+        if (item.getVendaId() == null) {
+          item.setVendaId(vendaEcommerce);
+        }
+        if (item.getDataCriacao() == null) {
+          item.setDataCriacao(new Date());
+        }
+      }
+
+      vendaEcommerce.setClienteId(clienteLogado);
+      if (vendaEcommerce.getDataVenda() == null) {
+        vendaEcommerce.setDataVenda(new Date());
+      }
+      vendaEcommerce.setDataCriacao(new Date());
+
+      Empresa empresa = empresaDAO.getEmpresa();
+      Configuracao config = configuracaoDAO.getConfiguracao();
+
+      if (config == null || empresa == null) {
+        FacesContext.getCurrentInstance().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                "Erro", "Configure empresa e configurações antes de emitir NF-e."));
+        return null;
+      }
+
+      Integer numeroNFe = config.getNumeroNfe();
+      vendaEcommerce.setNumeroNfe(numeroNFe);
+
+      // Salvar venda para persistir dados base
       vendaDAO.save(vendaEcommerce);
 
-      // Limpar carrinho
-      limparCarrinho();
+      NFeService.NFeEmissaoResult resultado = nfeService.emitirNFe(vendaEcommerce);
+
+      if (resultado.isSucesso()) {
+        vendaEcommerce.setStatus("EMITIDA");
+        vendaEcommerce.setDataAtualizacao(new Date());
+
+        String chavePix = PixService.gerarChavePixParaVenda(vendaEcommerce, empresa);
+        if (PixService.isChavePixValida(chavePix)) {
+          vendaEcommerce.setChavePix(chavePix);
+        }
+
+        vendaEcommerce.setChaveNfe(resultado.getChaveNfe());
+        vendaEcommerce.setProtocoloNfe(resultado.getProtocoloNfe());
+
+        vendaDAO.save(vendaEcommerce);
+
+        config.setNumeroNfe(numeroNFe + 1);
+        configuracaoDAO.save(config);
+
+        // Limpar carrinho apos sucesso
+        limparCarrinho();
+
+        FacesContext.getCurrentInstance().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_INFO,
+                "Sucesso", "Compra finalizada e NF-e emitida com sucesso!"));
+
+        return "index.xhtml?faces-redirect=true";
+      }
+
+      vendaEcommerce.setStatus("ERRO");
+      vendaEcommerce.setDataAtualizacao(new Date());
+      vendaDAO.save(vendaEcommerce);
 
       FacesContext.getCurrentInstance().addMessage(null,
-          new FacesMessage(FacesMessage.SEVERITY_INFO,
-              "Sucesso", "Compra finalizada com sucesso!"));
+          new FacesMessage(FacesMessage.SEVERITY_ERROR,
+              "Erro", "Erro ao emitir NF-e. Venda salva como pendente."));
 
-      return "confirmacao.xhtml?faces-redirect=true";
+      return null;
 
     } catch (Exception e) {
       FacesContext.getCurrentInstance().addMessage(null,
@@ -280,6 +343,7 @@ public class EcommerceController implements Serializable {
     }
   }
 
+  // Getters e Setters
   public Venda getVendaEcommerce() {
     return vendaEcommerce;
   }
