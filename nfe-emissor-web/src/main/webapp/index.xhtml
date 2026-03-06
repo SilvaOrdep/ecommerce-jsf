@@ -19,6 +19,22 @@
           "
         >
           <h1><i class="pi pi-shopping-cart"></i> Produtos</h1>
+          <p:panel
+            header="Sincronização com ERP"
+            style="margin-top: 20px"
+            rendered="#{loginController.admin}"
+          >
+            <h:form>
+              <p:commandButton
+                value="Sincronizar Produtos do ERP"
+                icon="pi pi-refresh"
+                action="#{sincronizacaoERPController.sincronizarProdutosDoERP}"
+                update=":formProdutos:produtosGrid :formProdutos:messages"
+                styleClass="ui-button-success"
+                style="margin-right: 10px"
+              />
+            </h:form>
+          </p:panel>
         </div>
 
         <h:form id="formProdutos">
@@ -95,19 +111,15 @@
                         icon="pi pi-shopping-cart"
                         styleClass="p-button-success p-button-rounded"
                       />
-
                     </div>
                   </div>
-                  
                 </div>
               </div>
             </p:dataGrid>
           </div>
         </h:form>
       </div>
-
     </div>
-
   </ui:define>
 
   <ui:define name="footer">
